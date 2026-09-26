@@ -1,0 +1,597 @@
+@import "tailwindcss";
+
+@theme {
+  /* Brand Colors - Keep existing orange accent */
+  --color-brand: #ff5a00;
+  --color-brand-dark: #e04e00;
+  --color-brand-light: #ff7a33;
+  --color-brand-soft: #fff0e6;
+
+  /* Neutral Palette - Light, clean reference-style */
+  --color-white: #ffffff;
+  --color-gray-50: #f9fafb;
+  --color-gray-100: #f3f4f6;
+  --color-gray-200: #e5e7eb;
+  --color-gray-300: #d1d5db;
+  --color-gray-400: #9ca3af;
+  --color-gray-500: #6b7280;
+  --color-gray-600: #4b5563;
+  --color-gray-700: #374151;
+  --color-gray-800: #1f2937;
+  --color-gray-900: #111827;
+
+  /* Legacy colors for compatibility */
+  --color-charcoal: #171717;
+  --color-coal: #222222;
+  --color-cream: #faf8f4;
+  --color-sand: #f3eee7;
+  --color-stone2: #e8e5e1;
+
+  /* Typography */
+  --font-display: "Vazirmatn", "Noto Sans Arabic", "Arkan ABC Favorit", system-ui, sans-serif;
+  --font-body: "Vazirmatn", "Noto Sans Arabic", "Arkan ABC Favorit", system-ui, sans-serif;
+
+  /* Spacing Scale (4px base) */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-20: 80px;
+  --space-24: 96px;
+
+  /* Border Radius */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-2xl: 24px;
+  --radius-full: 9999px;
+
+  /* Shadows - Subtle, professional */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+
+  /* Container */
+  --container-max: 1280px;
+  --container-padding-mobile: 16px;
+  --container-padding-desktop: 40px;
+
+  /* Transitions */
+  --transition-fast: 150ms ease-out;
+  --transition-base: 300ms ease-out;
+}
+
+@font-face {
+  font-family: "Arkan ABC Favorit";
+  src: url("/fonts/Arkan ABC Favorit Regular-s.p.13709ce1.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Arkan ABC Favorit";
+  src: url("/fonts/Arkan ABC Favorit Medium-s.p.8ec3f1e7.otf") format("opentype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Arkan ABC Favorit";
+  src: url("/fonts/Arkan ABC Favorit Book-s.p.85946152.ttf") format("truetype");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Arkan ABC Favorit";
+  src: url("/fonts/Arkan ABC Favorit Light-s.p.7dfab851.otf") format("opentype");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Arkan ABC Favorit";
+  src: url("/fonts/Arkan ABC Favorit Bold-s.p.62621432.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+html {
+  scroll-behavior: smooth;
+  direction: rtl;
+}
+
+/* Support for dynamic viewport height */
+.hero-section {
+  min-height: 100vh;
+}
+
+.hero-background {
+  object-position: center center;
+  animation: hero-zoom 12s ease-out both;
+}
+
+@keyframes hero-zoom {
+  from {
+    transform: scale(1.05);
+  }
+
+  to {
+    transform: scale(1);
+  }
+}
+
+@keyframes hero-wipe-ltr {
+  0% {
+    clip-path: polygon(0% 0%, 0% 0%, 0% 100%, 0% 100%);
+  }
+
+  100% {
+    clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
+  }
+}
+
+/* Hero text fade-up on slide change */
+@keyframes hero-text-in {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hero-text-item {
+  animation: hero-text-in 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.hero-text-item:nth-child(1) { animation-delay: 0ms; }
+.hero-text-item:nth-child(2) { animation-delay: 90ms; }
+.hero-text-item:nth-child(3) { animation-delay: 180ms; }
+.hero-text-item:nth-child(4) { animation-delay: 260ms; }
+
+/* Slot-machine motion blur: زۆر لە کۆتایی بە هێواشی ئاشکرا دەبات */
+@keyframes counter-motion-blur {
+  0% {
+    filter: blur(6px);
+  }
+
+  40% {
+    filter: blur(5px);
+  }
+
+  70% {
+    filter: blur(3px);
+  }
+
+  88% {
+    filter: blur(1.2px);
+  }
+
+  96% {
+    filter: blur(0.3px);
+  }
+
+  100% {
+    filter: blur(0px);
+  }
+}
+
+@supports (min-height: 100svh) {
+  .hero-section {
+    min-height: 100svh;
+  }
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--color-white);
+  color: var(--color-charcoal);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Global reset for media in base layer so utility classes can override */
+@layer base {
+
+  img,
+  video,
+  svg,
+  canvas,
+  iframe {
+    max-width: 100%;
+    height: auto;
+    display: block;
+  }
+}
+
+/* Touch action for better mobile interaction */
+button,
+a,
+input,
+textarea {
+  touch-action: manipulation;
+}
+
+/* Focus visible styles for accessibility */
+:focus-visible {
+  outline: 2px solid #ff5a00;
+  outline-offset: 2px;
+}
+
+/* Text wrap optimization for headings */
+h1,
+h2,
+h3,
+h4 {
+  text-wrap: balance;
+}
+
+h1,
+h2,
+h3,
+h4,
+.font-display {
+  font-family: var(--font-display);
+}
+
+::selection {
+  background: #ff5a00;
+  color: #fff;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f3f4f6;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 99px;
+  border: 2px solid #f3f4f6;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #ff5a00;
+}
+
+/* ---------- Reveal animation (simplified) ---------- */
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  transition-delay: var(--reveal-delay, 0ms);
+  will-change: opacity, transform;
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* ---------- Subtle hover effects ---------- */
+.card-hover {
+  transition: transform 0.3s ease-out, box-shadow 0.3s ease-out;
+}
+
+.card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* ---------- Button styles ---------- */
+.btn-primary {
+  background: var(--color-brand);
+  color: white;
+  transition: background-color var(--transition-fast);
+}
+
+.btn-primary:hover {
+  background: var(--color-brand-dark);
+}
+
+.btn-secondary {
+  background: white;
+  color: var(--color-charcoal);
+  border: 1px solid var(--color-gray-200);
+  transition: all var(--transition-fast);
+}
+
+.btn-secondary:hover {
+  border-color: var(--color-brand);
+  color: var(--color-brand);
+}
+
+/* ---------- Navigation link underline ---------- */
+.nav-link {
+  position: relative;
+}
+
+.nav-link::after {
+  content: "";
+  position: absolute;
+  bottom: -4px;
+  inset-inline-end: 0;
+  width: 0;
+  height: 2px;
+  border-radius: 99px;
+  background: var(--color-brand);
+  transition: width 0.3s ease-out;
+}
+
+.nav-link:hover::after,
+.nav-link.active::after {
+  width: 100%;
+}
+
+.nav-link.active {
+  color: var(--color-brand);
+}
+
+/* ---------- Card image zoom ---------- */
+.zoom-img img {
+  transition: transform 0.6s ease-out;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .zoom-img:hover img {
+    transform: scale(1.05);
+  }
+}
+
+/* ---------- Container utility ---------- */
+.container {
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: var(--container-padding-mobile);
+}
+
+@media (min-width: 1024px) {
+  .container {
+    padding-inline: var(--container-padding-desktop);
+  }
+}
+
+/* ---------- RTL-specific fixes ---------- */
+[dir="rtl"] {
+  text-align: right;
+}
+
+/* NOTE: Do NOT override .text-right or .text-left here — that would invert them! */
+/* Tailwind's text-right/text-left/text-center classes work correctly with dir="rtl" */
+
+[dir="rtl"] .rotate-180 {
+  transform: rotate(-180deg);
+}
+
+[dir="rtl"] .-scale-x-100 {
+  transform: scaleX(-1);
+}
+
+/* ---------- Responsive typography for mobile ---------- */
+@media (max-width: 767px) {
+  body {
+    font-size: 16px;
+    line-height: 1.6;
+  }
+
+  h1 {
+    font-size: clamp(28px, 8vw, 48px);
+  }
+
+  h2 {
+    font-size: clamp(24px, 6vw, 36px);
+  }
+
+  h3 {
+    font-size: clamp(20px, 5vw, 28px);
+  }
+}
+
+/* ---------- Tablet layer (768-1023px) ---------- */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .container {
+    padding-inline: 24px;
+  }
+}
+
+/* ---------- Prevent horizontal scroll ---------- */
+html,
+body {
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
+/* ---------- Safe area handling for mobile ---------- */
+@supports (padding: max(0px)) {
+  .safe-bottom {
+    padding-bottom: max(16px, env(safe-area-inset-bottom));
+  }
+
+  .safe-top {
+    padding-top: max(16px, env(safe-area-inset-top));
+  }
+}
+
+/* ---------- Infinite Logo Marquee (Left to Right) ---------- */
+@keyframes marquee-ltr {
+  0% {
+    transform: translate3d(-50%, 0, 0);
+  }
+
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.animate-marquee-ltr {
+  display: flex;
+  width: max-content;
+  animation: marquee-ltr 45s linear infinite;
+  will-change: transform;
+}
+
+.animate-marquee-ltr:hover {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee-ltr {
+    animation-play-state: paused;
+  }
+
+  .hero-background {
+    animation: none;
+  }
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.25s ease-out forwards;
+}
+
+/* ---------- Slanted Parallax Section 1 (Banner between Team & Process) ---------- */
+/* Uses vw-based offset so the slant angle stays visually consistent across all screen widths */
+.slanted-parallax-section {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  clip-path: polygon(0 6vw, 100% 0, 100% 100%, 0 100%);
+  margin-top: -6vw;
+  padding-bottom: 0;
+  background-color: #111827;
+  isolation: isolate;
+  z-index: 5;
+}
+
+@media (max-width: 600px) {
+  .slanted-parallax-section {
+    clip-path: polygon(0 3vw, 100% 0, 100% 100%, 0 100%);
+    margin-top: -3vw;
+  }
+}
+
+.slanted-parallax-inner {
+  position: absolute;
+  top: -25vh;
+  left: 0;
+  width: 100%;
+  height: calc(100% + 50vh);
+  background-image: url('/images/diognal-1-mobile.jpg');
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  will-change: transform;
+  pointer-events: none;
+}
+
+@media (min-width: 640px) {
+  .slanted-parallax-inner {
+    background-image: url('/images/diognal-1.jpg');
+  }
+}
+
+/* ---------- Process Diagonal White/Light Section (Dividing the two images) ---------- */
+/* Both top and bottom are clipped with the same 6vw so all diagonal seams stay parallel */
+.process-diagonal-section {
+  position: relative;
+  background-color: #ffffff;
+  clip-path: polygon(0 6vw, 100% 0, 100% calc(100% - 6vw), 0 100%);
+  margin-top: -6vw;
+  margin-bottom: -6vw;
+  z-index: 20;
+  padding-top: calc(6vw + 64px);
+  padding-bottom: calc(6vw + 64px);
+}
+
+@media (max-width: 600px) {
+  .process-diagonal-section {
+    clip-path: polygon(0 3vw, 100% 0, 100% calc(100% - 3vw), 0 100%);
+    margin-top: -3vw;
+    margin-bottom: -3vw;
+    padding-top: calc(3vw + 48px);
+    padding-bottom: calc(3vw + 48px);
+  }
+}
+
+/* ---------- Contact CTA Slanted Parallax Section 2 (Unique Second Image) ---------- */
+/* Same 6vw offset keeps all diagonal seams parallel down the page */
+.contact-cta-parallax {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  clip-path: polygon(0 6vw, 100% 0, 100% 100%, 0 100%);
+  margin-top: -6vw;
+  background-color: #111827;
+  isolation: isolate;
+  z-index: 10;
+  padding-top: 0;
+}
+
+@media (max-width: 600px) {
+  .contact-cta-parallax {
+    clip-path: polygon(0 3vw, 100% 0, 100% 100%, 0 100%);
+    margin-top: -3vw;
+  }
+}
+
+.contact-parallax-inner {
+  position: absolute;
+  top: -25vh;
+  left: 0;
+  width: 100%;
+  height: calc(100% + 50vh);
+  background-image: url('/images/diognal-2-mobile.jpg');
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  will-change: transform;
+  pointer-events: none;
+}
+
+@media (min-width: 640px) {
+  .contact-parallax-inner {
+    background-image: url('/images/diognal-2.jpg');
+  }
+}

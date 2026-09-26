@@ -1,0 +1,25 @@
+ .gitignore                             |   1 [32m+[m
+ dist/images/capsule-1.jpg              | Bin [31m59883[m -> [32m0[m bytes
+ dist/images/capsule-2.jpg              | Bin [31m74899[m -> [32m0[m bytes
+ dist/images/capsule-3.jpg              | Bin [31m65038[m -> [32m0[m bytes
+ dist/images/capsule-4.jpg              | Bin [31m48610[m -> [32m0[m bytes
+ dist/images/capsule-5.jpg              | Bin [31m61942[m -> [32m0[m bytes
+ dist/images/craft-detail.jpg           | Bin [31m180760[m -> [32m0[m bytes
+ dist/images/hero-2.jpg                 | Bin [31m0[m -> [32m106829[m bytes
+ dist/images/hero-capsule.png           | Bin [31m1687302[m -> [32m0[m bytes
+ dist/images/npc.jpg                    | Bin [31m0[m -> [32m45254[m bytes
+ dist/index.html                        |  16 [32m+[m[31m-[m
+ node_modules/.bin/vite                 |   0
+ node_modules/.vite/deps/_metadata.json |  22 [32m+[m[31m--[m
+ public/images/capsule-1.jpg            | Bin [31m59883[m -> [32m0[m bytes
+ public/images/capsule-2.jpg            | Bin [31m74899[m -> [32m0[m bytes
+ public/images/capsule-3.jpg            | Bin [31m65038[m -> [32m0[m bytes
+ public/images/capsule-4.jpg            | Bin [31m48610[m -> [32m0[m bytes
+ public/images/capsule-5.jpg            | Bin [31m61942[m -> [32m0[m bytes
+ public/images/craft-detail.jpg         | Bin [31m180760[m -> [32m0[m bytes
+ public/images/hero-2.jpg               | Bin [31m0[m -> [32m106829[m bytes
+ public/images/hero-capsule.png         | Bin [31m1687302[m -> [32m0[m bytes
+ public/images/npc.jpg                  | Bin [31m0[m -> [32m45254[m bytes
+ src/App.tsx                            | 298 [32m++++++++++++++++++++++++++++[m[31m-----[m
+ src/data/productData.ts                |   6 [32m+[m[31m-[m
+ 24 files changed, 276 insertions(+), 67 deletions(-)
