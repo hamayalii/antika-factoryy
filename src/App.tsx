@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { BrowserRouter, Routes, Route, Link, useLocation } from "react-router-dom";
 import { SolutionPage } from "./pages/SolutionPage";
 import { solutions } from "./data/solutions";
@@ -13,14 +13,16 @@ import { AllProductsPage } from "./pages/AllProductsPage";
 import { NewsPage } from "./pages/NewsPage";
 import { NewsDetailPage } from "./pages/NewsDetailPage";
 import { GalleryPage } from "./pages/GalleryPage";
+import { AboutPage } from "./pages/AboutPage";
 import { TrustMarquee } from "./components/TrustMarquee";
-import { CertificatesMarquee } from "./components/CertificatesMarquee";
+import { SpecialFeatures } from "./components/SpecialFeatures";
 import {
   ArrowLeft,
   ArrowRight,
   ArrowUp,
-  Check,
   ChevronDown,
+  ChevronLeft,
+  ChevronRight,
   Clock,
   Mail,
   MapPin,
@@ -29,20 +31,16 @@ import {
   Send,
   Sparkles,
   X,
-  MessageCircle,
-  PhoneCall,
 } from "lucide-react";
 
 const FacebookIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
-    <path d="M13.5 21v-7h2.4l.4-3h-2.8V9.1c0-.9.3-1.5 1.6-1.5h1.3V4.9c-.3 0-1.1-.1-2-.1-2 0-3.4 1.2-3.4 3.5V11H8.5v3H11v7h2.5Z" />
+    <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
   </svg>
 );
 const InstagramIcon = (props: React.SVGProps<SVGSVGElement>) => (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} {...props}>
-    <rect x="3.5" y="3.5" width="17" height="17" rx="5" />
-    <circle cx="12" cy="12" r="4" />
-    <circle cx="17.2" cy="6.8" r="1.2" fill="currentColor" stroke="none" />
+  <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
+    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
   </svg>
 );
 const LinkedinIcon = (props: React.SVGProps<SVGSVGElement>) => (
@@ -52,7 +50,17 @@ const LinkedinIcon = (props: React.SVGProps<SVGSVGElement>) => (
 );
 const YoutubeIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
-    <path d="M21.6 7.2a2.6 2.6 0 0 0-1.8-1.9C18.2 4.9 12 4.9 12 4.9s-6.2 0-7.8.4A2.6 2.6 0 0 0 2.4 7.2 27.3 27.3 0 0 0 2 12a27.3 27.3 0 0 0 .4 4.8 2.6 2.6 0 0 0 1.8 1.9c1.6.4 7.8.4 7.8.4s6.2 0 7.8-.4a2.6 2.6 0 0 0 1.8-1.9A27.3 27.3 0 0 0 22 12a27.3 27.3 0 0 0-.4-4.8ZM10 15.2V8.8L15.5 12 10 15.2Z" />
+    <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+  </svg>
+);
+const TikTokIcon = (props: React.SVGProps<SVGSVGElement>) => (
+  <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
+    <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/>
+  </svg>
+);
+const WhatsAppIcon = (props: React.SVGProps<SVGSVGElement>) => (
+  <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
   </svg>
 );
 
@@ -126,7 +134,7 @@ const NAV = [
   { id: "artworks", label: "کارە هونەریەکان", isDropdown: true },
   { id: "workImages", label: "وێنەی کارەکانمان", path: "/gallery", isDropdown: false },
   { id: "news", label: "هەواڵەکان", path: "/news", isDropdown: false },
-  { id: "about", label: "دەربارەی ئێمە", path: "/#about" },
+  { id: "about", label: "دەربارەی ئێمە", path: "/about" },
 ];
 
 const CAPSULE_ITEMS = [
@@ -732,8 +740,8 @@ function Hero() {
               <ArrowLeft className="h-4 w-4" />
             </a>
             <a
-              href="#about"
-              className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-white/70 bg-black/20 px-8 py-4 text-[15px] font-bold text-white backdrop-blur-sm transition hover:bg-white hover:text-gray-900"
+              href="/about"
+              className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-white/70 bg-black/20 px-8 py-4 text-[15px] font-bold text-white backdrop-blur-sm transition hover:bg-brand/12 hover:backdrop-blur-md hover:border-brand/30 hover:shadow-[0_4px_16px_rgba(255,90,0,0.15)]"
             >
               {slide.cta2}
             </a>
@@ -779,8 +787,8 @@ function Hero() {
                 <ArrowLeft className="h-4 w-4" />
               </a>
               <a
-                href="#about"
-                className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-white/70 bg-black/10 px-8 py-4 text-[15px] font-bold text-white backdrop-blur-sm transition hover:bg-white hover:text-gray-900 sm:w-auto"
+                href="/about"
+                className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-white/70 bg-black/10 px-8 py-4 text-[15px] font-bold text-white backdrop-blur-sm transition hover:bg-brand/12 hover:backdrop-blur-md hover:border-brand/30 hover:shadow-[0_4px_16px_rgba(255,90,0,0.15)] sm:w-auto"
               >
                 {slide.cta2}
               </a>
@@ -856,6 +864,8 @@ const USE_CASES = [
 ];
 
 function UseCases() {
+  const [activeCase, setActiveCase] = useState(USE_CASES[0]);
+
   return (
     <section className="bg-white py-16 sm:py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -870,355 +880,67 @@ function UseCases() {
           </h2>
         </Reveal>
 
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {USE_CASES.map((uc, i) => (
-            <Reveal key={uc.title} delay={i * 100}>
-              <div className="group overflow-hidden rounded-xl bg-gray-50 shadow-sm transition hover:shadow-md">
-                <div className="zoom-img relative h-48 overflow-hidden sm:h-56">
-                  <img
-                    src={uc.img}
-                    alt={uc.title}
-                    className="h-full w-full object-cover"
-                    loading="lazy"
-                    width="400"
-                    height="300"
-                  />
-                  <div className="absolute inset-0 bg-brand/0 transition group-hover:bg-brand/20" />
-                </div>
-                <div className="p-5">
-                  <h3 className="font-display text-[18px] font-bold text-gray-900">{uc.title}</h3>
-                  <p className="mt-2 text-[14px] text-gray-600">{uc.desc}</p>
-                </div>
-              </div>
-            </Reveal>
+        {/* Main Image Display - Significantly smaller and further back */}
+        <div className="relative mb-12 mx-auto max-w-5xl">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center" dir="ltr">
+            {/* Image - Left side */}
+            <div className="relative aspect-[4/3] overflow-hidden">
+              <img
+                key={activeCase.img}
+                src={activeCase.img}
+                alt={activeCase.title}
+                className="h-full w-full object-contain transition-all duration-700 ease-in-out"
+                loading="eager"
+              />
+            </div>
+            
+            {/* Text - Right side, black color */}
+            <div className="text-right">
+              <h3 className="font-display text-2xl font-bold sm:text-3xl text-gray-900">
+                {activeCase.title}
+              </h3>
+              <p className="mt-3 text-sm sm:text-base text-gray-600 leading-relaxed">
+                {activeCase.desc}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Glassmorphism Buttons */}
+        <div className="flex flex-wrap items-center justify-center gap-3 mb-10">
+          {USE_CASES.map((useCase) => (
+            <button
+              key={useCase.title}
+              onMouseEnter={() => setActiveCase(useCase)}
+              className={`
+                relative overflow-hidden rounded-xl px-5 py-3 text-sm font-bold transition-all duration-300
+                backdrop-blur-md border
+                ${
+                  activeCase.img === useCase.img
+                    ? 'bg-brand/15 border-brand/40 scale-105'
+                    : 'bg-white/60 border-gray-200/50 hover:bg-brand/12 hover:backdrop-blur-md hover:border-brand/30 hover:scale-102'
+                }
+              `}
+            >
+              <span className="relative z-10 text-gray-900">
+                {useCase.title}
+              </span>
+              {activeCase.img === useCase.img && (
+                <div className="absolute inset-0 bg-brand/10" />
+              )}
+            </button>
           ))}
         </div>
 
-        <Reveal delay={300} className="mt-10 text-center">
+        <Reveal delay={300} className="text-center">
           <a
-            href="#contact"
+            href="/products"
             className="inline-flex items-center gap-2 rounded-full border-2 border-gray-200 px-8 py-3.5 text-[14px] font-bold text-gray-900 transition hover:border-brand hover:text-brand"
           >
             هەموو ببینە
             <ArrowLeft className="h-4 w-4" />
           </a>
         </Reveal>
-      </div>
-    </section>
-  );
-}
-
-/* ---------------------------------- Products Grid (بەرهەمەکانمان) ---------------------------------- */
-type Work = {
-  id: string;
-  cat: string;
-  img: string;
-  title: string;
-  desc: string;
-  tag: string;
-  link: string;
-};
-
-const WORKS: Work[] = [
-  {
-    id: "capsule",
-    cat: "کەپسولە مۆدولارەکان",
-    img: "/images/work-capsule.png",
-    title: "کەپسولەکان",
-    desc: "کەپسولە مۆدێرن و پێشکەوتووەکان بۆ نیشتەجێبوون، ئیش و کار، و خزمەتگوزاری لە زنجیرەکانی AL, AM, AS",
-    tag: "٣ زنجیرە • ١٦+ مۆدێل",
-    link: "/products/capsules",
-  },
-  {
-    id: "houses",
-    cat: "خانووە مۆدولارەکان",
-    img: "/images/container-cabin-2.jpg",
-    title: "خانوو",
-    desc: "خانووی حاویە، کابینەی ئاسایی، خانووی باخچە، خانووی کوخ و خانووی کۆنکریت بە دیزاینی ئەندازیاری و کوالێتی بەرز",
-    tag: "٥ جۆری سەرەکی",
-    link: "/products/houses",
-  },
-  {
-    id: "koshk",
-    cat: "کۆشکی بازرگانی",
-    img: "/images/am-k.jpg",
-    title: "کۆشکەکان",
-    desc: "کۆشکی بازرگانی KA بۆ فرۆشگا، پارک، نیشتەجێبوون و بەکارهێنانی بازرگانی بە مۆدێلی جیاواز",
-    tag: "KA • ٤ مۆدێل",
-    link: "/products/koshk",
-  },
-];
-
-function Works() {
-  return (
-    <section id="products" className="relative bg-gray-50 py-16 sm:py-24" style={{ scrollMarginTop: '80px' }}>
-      <span id="works" className="absolute -top-20" />
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <Reveal className="mb-8 text-center">
-          <span className="inline-flex items-center gap-2 text-[14px] font-bold text-brand">
-            <span className="h-[2px] w-6 rounded bg-brand" />
-            بەرهەمەکانمان
-            <span className="h-[2px] w-6 rounded bg-brand" />
-          </span>
-          <h2 className="mx-auto mt-4 max-w-2xl font-display font-black leading-[1.3] text-gray-900" style={{ fontSize: 'clamp(28px, 4vw, 48px)' }}>
-            دروستکردنی ژینگەیەکی هونەری و مۆدێرن
-          </h2>
-          <p className="mx-auto mt-4 max-w-xl text-[15px] text-gray-600">
-            لە کەپسولە مۆدولارەکان، خانوو و کۆشکی بازرگانی، هەموو وردەکارییەک بەوپەڕی داهێنان و شارەزایی ئەندازیارییەوە جێبەجێ دەکەین
-          </p>
-        </Reveal>
-
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {WORKS.map((w, i) => (
-            <Reveal key={w.id} delay={i * 100}>
-              <article className="group overflow-hidden rounded-2xl bg-white shadow-md transition hover:shadow-lg flex flex-col h-full">
-                <Link to={w.link} className="zoom-img relative h-60 overflow-hidden block">
-                  <img
-                    src={w.img}
-                    alt={w.title}
-                    className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
-                    loading="lazy"
-                    decoding="async"
-                    width="400"
-                    height="300"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-0 transition group-hover:opacity-100" />
-                  <span className="absolute right-4 top-4 rounded-full bg-white/90 px-3 py-1 text-[11px] font-bold text-gray-900 backdrop-blur">
-                    {w.tag}
-                  </span>
-                </Link>
-                <div className="p-5 flex flex-col flex-1 justify-between text-right">
-                  <div>
-                    <h3 className="font-display text-[18px] font-bold text-gray-900">
-                      <Link to={w.link} className="hover:text-brand transition">
-                        {w.title}
-                      </Link>
-                    </h3>
-                    <p className="mt-2 text-[13.5px] text-gray-600 leading-relaxed">{w.desc}</p>
-                  </div>
-                  <Link
-                    to={w.link}
-                    className="mt-5 inline-flex items-center gap-2 text-sm font-bold text-brand transition hover:text-brand-dark"
-                  >
-                    زیاتر بزانە
-                    <ArrowLeft className="h-4 w-4" />
-                  </Link>
-                </div>
-              </article>
-            </Reveal>
-          ))}
-        </div>
-
-        <Reveal delay={200} className="mt-10 text-center">
-          <Link
-            to="/products"
-            className="inline-flex items-center gap-2 rounded-full border-2 border-gray-200 bg-white px-8 py-3.5 text-[14px] font-bold text-gray-900 transition hover:border-brand hover:text-brand shadow-sm"
-          >
-            بینینی سەرجەم بەرهەمەکانمان
-            <ArrowLeft className="h-4 w-4" />
-          </Link>
-        </Reveal>
-      </div>
-    </section>
-  );
-}
-
-function AnimatedCounter({
-  target,
-  suffix = "",
-  prefix = "",
-  duration = 4000,
-  digitHeight = 44,
-}: {
-  target: number;
-  suffix?: string;
-  prefix?: string;
-  duration?: number;
-  digitHeight?: number;
-}) {
-  const ref = useRef<HTMLSpanElement>(null);
-  const [started, setStarted] = useState(false);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          requestAnimationFrame(() => setStarted(true));
-          observer.disconnect();
-        }
-      },
-      { rootMargin: "0px 0px -100px 0px", threshold: 0.75 }
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
-
-  const numbers = Array.from({ length: target + 1 }, (_, i) => i);
-
-  // gradient mask — سەر و خوار محو دەبن
-  const maskStyle = {
-    WebkitMaskImage:
-      "linear-gradient(to bottom, transparent 0%, black 28%, black 72%, transparent 100%)",
-    maskImage:
-      "linear-gradient(to bottom, transparent 0%, black 28%, black 72%, transparent 100%)",
-  };
-
-  return (
-    <span
-      ref={ref}
-      dir="ltr"
-      className="inline-flex items-center tabular-nums select-none"
-      style={{ verticalAlign: "middle" }}
-    >
-      {prefix && (
-        <span style={{ lineHeight: `${digitHeight}px` }}>{prefix}</span>
-      )}
-
-      {/* پنجەرەی دیتن + gradient mask */}
-      <span
-        style={{
-          display: "inline-block",
-          height: `${digitHeight}px`,
-          overflow: "hidden",
-          position: "relative",
-          ...maskStyle,
-        }}
-      >
-        {/* ستوونی خلیسکان + motion blur */}
-        <span
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            transform: started
-              ? `translateY(-${target * digitHeight}px)`
-              : "translateY(0px)",
-            transition: started
-              ? `transform ${duration}ms cubic-bezier(0.08, 0.92, 0.18, 1)`
-              : "none",
-            willChange: "transform",
-          }}
-        >
-          {numbers.map((n) => (
-            <span
-              key={n}
-              style={{
-                height: `${digitHeight}px`,
-                lineHeight: `${digitHeight}px`,
-                display: "block",
-              }}
-            >
-              {n}
-            </span>
-          ))}
-        </span>
-      </span>
-
-      {suffix && (
-        <span style={{ lineHeight: `${digitHeight}px` }}>{suffix}</span>
-      )}
-    </span>
-  );
-}
-
-/* ---------------------------------- About ---------------------------------- */
-function About() {
-  return (
-    <section id="about" className="bg-white py-16 sm:py-24" style={{ scrollMarginTop: '80px' }}>
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
-
-          {/* Text RIGHT */}
-          <div className="order-1 lg:order-2 w-full text-right">
-            <div className="text-right inline-block w-full">
-              <Reveal>
-                <span className="inline-flex items-center gap-2 rounded-full bg-brand-soft px-4 py-2 text-[13px] font-bold text-brand">
-                  <Sparkles className="h-4 w-4" />
-                  دەربارەی ئێمە
-                </span>
-                <h2 className="mt-5 font-display text-[32px] font-black leading-[1.3] text-gray-900 sm:text-[42px] text-right">
-                  کارگەیەک کە هونەر
-                  <br />
-                  دەکاتە <span className="text-brand">ژیان</span>
-                </h2>
-                <p className="mt-5 text-[24px] font-light leading-9 text-gray-600 text-right">
-                  ئێمە لە کارگەی ئەنتیکا ژینگەیەک بونیاد دەنێین کە شایەنی متمانەی ئێوەبێت
-                  تیمەکەمان لە کۆمەڵێک ئەندازیار و تەکنیککاری خاوەن ئەزموون پێکهاتووە کە ساڵانێکی درێژە لە بواری بیناسازی
-                  و خانوی کەپسولیدا کار دەکەن...<br></br>
-                  ئامانجی ئێمە دابینکردنی شوێنێکی مۆدێرن و ئارامە بۆ ئەوەی داهاتوویەکی گەش بۆ خۆت و خێزانەکەت مسۆگەر بکەیت
-                </p>
-              </Reveal>
-              <Reveal delay={150}>
-                <ul className="mt-6 space-y-3.5">
-                  {[
-                    "تیمی ئەندازیار و دیزاینەری نێودەوڵەتی",
-                    "کارگەی تایبەتی خۆمان بۆ بەرهەمهێنان",
-                    "مەوادی کوالێتی بەرز و ئۆرجیناڵ",
-                  ].map((t) => (
-                    <li key={t} className="flex items-center gap-3 text-[14.5px] font-semibold text-gray-700">
-                      <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-brand text-white">
-                        <Check className="h-4 w-4" strokeWidth={3} />
-                      </span>
-                      {t}
-                    </li>
-                  ))}
-                </ul>
-              </Reveal>
-              <Reveal delay={250}>
-                <div className="mt-8 grid grid-cols-3 gap-4 border-t border-gray-200 pt-7">
-                  {[
-                    { target: 300, suffix: "+", l: "پرۆژەی تەواو", d: 4000 },
-                    { target: 20, suffix: "", l: "ساڵ ئەزموون", d: 2500 },
-                    { target: 100, suffix: "%", l: "ڕەزامەندی", d: 3500 },
-                  ].map((s) => (
-                    <div key={s.l}>
-                      <div className="font-display text-[26px] font-black text-gray-900 sm:text-[32px]">
-                        <AnimatedCounter target={s.target} suffix={s.suffix} duration={s.d} digitHeight={34} />
-                      </div>
-                      <div className="mt-1 text-[12.5px] font-medium text-gray-500">
-                        {s.l}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                <div className="mt-8">
-                  <a
-                    href="#contact"
-                    className="inline-flex items-center gap-2 rounded-full bg-brand px-8 py-4 text-[14.5px] font-bold text-white transition hover:bg-brand-dark"
-                  >
-                    پەیوەندیمان پێوە بکە
-                    <ArrowLeft className="h-4 w-4" />
-                  </a>
-                </div>
-              </Reveal>
-            </div>
-          </div>
-          {/* Images LEFT */}
-          <Reveal className="order-2 lg:order-2">
-            <div className="relative">
-              <div className="zoom-img overflow-hidden rounded-2xl shadow-lg">
-                <img
-                  src="/images/studio-about.jpg"
-                  alt="ستۆدیۆی ANTIKA FACTORY"
-                  className="h-[400px] w-full object-cover sm:h-[500px]"
-                  loading="lazy"
-                  decoding="async"
-                  width="600"
-                  height="500"
-                />
-              </div>
-              <div className="absolute -bottom-6 -right-6 hidden rounded-2xl bg-brand px-6 py-4 text-white shadow-xl sm:block">
-                <div className="font-display text-[32px] font-black leading-none">
-                  <AnimatedCounter target={300} suffix="+" duration={3200} />
-                </div>
-                <div className="text-[12px] font-medium text-white/80">
-                  پرۆژەی سەرکەوتوو
-                </div>
-              </div>
-            </div>
-          </Reveal>
-        </div>
       </div>
     </section>
   );
@@ -1232,8 +954,6 @@ function useParallax(speed = 0.16) {
   const bgRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    let animationFrameId: number;
-
     const handleScroll = () => {
       if (!ref.current || !bgRef.current) return;
       const rect = ref.current.getBoundingClientRect();
@@ -1253,7 +973,6 @@ function useParallax(speed = 0.16) {
     return () => {
       window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("resize", handleScroll);
-      if (animationFrameId) cancelAnimationFrame(animationFrameId);
     };
   }, [speed]);
 
@@ -1395,7 +1114,7 @@ function ContactCTA() {
               href="tel:+9647501234567"
               className="inline-flex items-center gap-2 rounded-full bg-brand px-8 py-4 text-[15px] font-bold text-white shadow-xl transition hover:bg-brand-dark hover:scale-105"
             >
-              <PhoneCall className="h-5 w-5" />
+              <Phone className="h-5 w-5" />
               <span dir="ltr">+964 750 123 4567</span>
             </a>
             <a
@@ -1412,13 +1131,86 @@ function ContactCTA() {
   );
 }
 
+/* ---------------------------------- Footer Reveal ---------------------------------- */
+function FooterReveal({ children, footerContent }: { children: React.ReactNode; footerContent: React.ReactNode }) {
+  const [footerHeight, setFooterHeight] = useState(0);
+  const [useStaticFooter, setUseStaticFooter] = useState(false);
+  const footerRef = useRef<HTMLDivElement | null>(null);
+  const contentRef = useRef<HTMLDivElement | null>(null);
+  const prefersReducedMotion = useRef<boolean>(false);
+
+  useEffect(() => {
+    prefersReducedMotion.current = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  }, []);
+
+  const measureFooterHeight = useCallback(() => {
+    if (!footerRef.current) return;
+    const height = footerRef.current.offsetHeight;
+    const viewportHeight = window.innerHeight;
+    const viewportWidth = window.innerWidth;
+    
+    // Fall back to static footer only if footer is taller than viewport OR on very small mobile screens
+    const shouldUseStatic = height >= viewportHeight || viewportWidth < 768 || prefersReducedMotion.current;
+    setUseStaticFooter(shouldUseStatic);
+    
+    if (!shouldUseStatic) {
+      setFooterHeight(height);
+    } else {
+      setFooterHeight(0);
+    }
+  }, []);
+
+  useEffect(() => {
+    // Wait for footer to render before measuring
+    const timer = setTimeout(() => {
+      measureFooterHeight();
+    }, 100);
+    
+    window.addEventListener('resize', measureFooterHeight);
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('resize', measureFooterHeight);
+    };
+  }, [measureFooterHeight]);
+
+  return (
+    <>
+      <div 
+        ref={contentRef}
+        style={{ 
+          marginBottom: useStaticFooter ? 0 : footerHeight,
+          position: 'relative',
+          zIndex: 1,
+          background: '#fff'
+        }}
+      >
+        {children}
+      </div>
+      <div 
+        ref={footerRef}
+        style={{
+          position: useStaticFooter ? 'relative' : 'fixed',
+          bottom: useStaticFooter ? 'auto' : 0,
+          left: 0,
+          right: 0,
+          width: '100%',
+          zIndex: 0,
+          height: 'auto'
+        }}
+      >
+        {footerContent}
+      </div>
+    </>
+  );
+}
+
 /* ---------------------------------- Footer ---------------------------------- */
-function Footer({ onNav: _onNav }: { onNav?: (id: string) => void }) {
+function FooterContent({ onNav: _onNav }: { onNav?: (id: string) => void }) {
   const [form, setForm] = useState({ name: "", email: "", msg: "" });
   const [sent, setSent] = useState(false);
 
   return (
-    <footer id="contact" className="bg-gray-900 pt-16 text-white">
+    <div className="bg-gray-900 pt-16 text-white">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid gap-10 pb-12 lg:grid-cols-4 lg:gap-8">
           {/* 1 BRAND */}
@@ -1562,54 +1354,187 @@ function Footer({ onNav: _onNav }: { onNav?: (id: string) => void }) {
           <div className="flex items-center gap-2 text-[12.5px] font-medium text-gray-500">
             <Link to="/#works" className="px-4 py-4 transition hover:text-brand">دیزاین</Link>
             <span className="h-1 w-1 rounded-full bg-gray-700" />
-            <Link to="/#about" className="px-4 py-4 transition hover:text-brand">هونەر</Link>
+            <Link to="/about" className="px-4 py-4 transition hover:text-brand">هونەر</Link>
             <span className="h-1 w-1 rounded-full bg-gray-700" />
             <Link to="/#contact" className="px-4 py-4 transition hover:text-brand">ئەندازیاری</Link>
           </div>
           <p className="text-[12.5px] text-gray-500">© 2026 ANTIKA FACTORY. هەموو مافەکان پارێزراون.</p>
         </div>
       </div>
-
-      {/* Floating Actions */}
-      <FloatingActions />
-      <BackToTop />
-    </footer>
-  );
-}
-
-/* ---------------------------------- Floating Actions ---------------------------------- */
-function FloatingActions() {
-  return (
-    <div className="fixed bottom-24 left-6 z-40 flex flex-col gap-3 sm:bottom-24 sm:left-6" style={{
-      left: 'max(24px, env(safe-area-inset-left))',
-      bottom: 'max(100px, env(safe-area-inset-bottom))'
-    }}>
-      <a
-        href="https://wa.me/9647501234567"
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="WhatsApp"
-        className="grid h-12 w-12 place-items-center rounded-full bg-green-500 text-white shadow-lg transition hover:-translate-y-1 hover:shadow-xl"
-      >
-        <MessageCircle className="h-5 w-5" />
-      </a>
-      <a
-        href="tel:+9647501234567"
-        aria-label="Call"
-        className="grid h-12 w-12 place-items-center rounded-full bg-brand text-white shadow-lg transition hover:-translate-y-1 hover:shadow-xl"
-      >
-        <PhoneCall className="h-5 w-5" />
-      </a>
-      <a
-        href="mailto:info@antika-factory.com"
-        aria-label="Email"
-        className="grid h-12 w-12 place-items-center rounded-full bg-gray-700 text-white shadow-lg transition hover:-translate-y-1 hover:shadow-xl"
-      >
-        <Mail className="h-5 w-5" />
-      </a>
     </div>
   );
 }
+
+function Footer({ onNav }: { onNav?: (id: string) => void }) {
+  return (
+    <FooterContent onNav={onNav} />
+  );
+}
+
+/* ---------------------------------- Social Sidebar ---------------------------------- */
+function SocialSidebar() {
+  const [isVisible, setIsVisible] = useState(() => {
+    // Check localStorage for saved state
+    const saved = localStorage.getItem('socialSidebarVisible');
+    // Default to hidden on mobile screens (< 768px), visible on desktop
+    const isMobile = window.innerWidth < 768;
+    if (saved === null) {
+      return !isMobile; // Default based on screen size
+    }
+    return saved !== 'false';
+  });
+
+  // Save state to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem('socialSidebarVisible', String(isVisible));
+  }, [isVisible]);
+
+  const toggleSidebar = () => {
+    setIsVisible(!isVisible);
+  };
+
+  return (
+    <>
+      {/* Toggle Tab (visible when sidebar is hidden) */}
+      <button
+        onClick={toggleSidebar}
+        aria-label="Show sidebar"
+        className={`fixed left-0 z-50 grid h-12 w-8 place-items-center rounded-r-full bg-gray-800 text-white shadow-lg transition-all duration-300 hover:bg-gray-700 ${isVisible ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
+        style={{ 
+          top: '50%',
+          transform: 'translateY(-50%)',
+          left: 'max(0px, env(safe-area-inset-left))'
+        }}
+      >
+        <ChevronRight className="h-5 w-5" />
+      </button>
+
+      {/* Sidebar */}
+      <div 
+        className="fixed left-0 z-50 flex flex-col items-center rounded-[14px] bg-white transition-all duration-300"
+        style={{
+          top: 'calc(50% + 6px)',
+          transform: `translateY(-50%) ${isVisible ? 'translateX(0)' : 'translateX(calc(-100% - 12px))'}`,
+          opacity: isVisible ? '1' : '0',
+          left: 'max(14px, calc(14px + env(safe-area-inset-left)))',
+          padding: 'clamp(12px, 2vh, 24px)',
+          gap: 'clamp(8px, 1.5vh, 16px)',
+          boxShadow: '0 8px 24px rgba(0,0,0,0.25)',
+          maxHeight: 'calc(100vh - 114px)',
+          overflow: 'hidden'
+        }}
+        data-social-sidebar
+      >
+        {/* Facebook */}
+        <a
+          href="https://facebook.com/share/1JNDKJeTu4/"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Facebook"
+          className="group flex flex-col items-center transition-transform hover:scale-110"
+          style={{ gap: 'clamp(4px, 0.8vh, 8px)' }}
+        >
+          <div className="grid place-items-center rounded-lg bg-[#1877F2] text-white transition-transform group-hover:-translate-y-0.5" style={{ 
+            height: 'clamp(48px, 7vh, 64px)', 
+            width: 'clamp(48px, 7vh, 64px)' 
+          }}>
+            <FacebookIcon style={{ height: 'clamp(24px, 3.5vh, 32px)', width: 'clamp(24px, 3.5vh, 32px)' }} />
+          </div>
+          <span className="font-semibold text-[#ff4500]" style={{ fontSize: 'clamp(13px, 2vh, 16px)' }}>فەیسبووک</span>
+        </a>
+
+        {/* YouTube */}
+        <a
+          href="https://youtube.com/"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="YouTube"
+          className="group flex flex-col items-center transition-transform hover:scale-110"
+          style={{ gap: 'clamp(4px, 0.8vh, 8px)' }}
+        >
+          <div className="grid place-items-center rounded-lg bg-[#FF0000] text-white transition-transform group-hover:-translate-y-0.5" style={{ 
+            height: 'clamp(48px, 7vh, 64px)', 
+            width: 'clamp(48px, 7vh, 64px)' 
+          }}>
+            <YoutubeIcon style={{ height: 'clamp(24px, 3.5vh, 32px)', width: 'clamp(24px, 3.5vh, 32px)' }} />
+          </div>
+          <span className="font-semibold text-[#ff4500]" style={{ fontSize: 'clamp(13px, 2vh, 16px)' }}>یوتیوب</span>
+        </a>
+
+        {/* Instagram */}
+        <a
+          href="https://instagram.com/antika.factory"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Instagram"
+          className="group flex flex-col items-center transition-transform hover:scale-110"
+          style={{ gap: 'clamp(4px, 0.8vh, 8px)' }}
+        >
+          <div className="grid place-items-center rounded-lg text-white transition-transform group-hover:-translate-y-0.5" style={{ 
+            height: 'clamp(48px, 7vh, 64px)', 
+            width: 'clamp(48px, 7vh, 64px)',
+            background: 'linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%)'
+          }}>
+            <InstagramIcon style={{ height: 'clamp(24px, 3.5vh, 32px)', width: 'clamp(24px, 3.5vh, 32px)' }} />
+          </div>
+          <span className="font-semibold text-[#ff4500]" style={{ fontSize: 'clamp(13px, 2vh, 16px)' }}>ئینستاگرام</span>
+        </a>
+
+        {/* TikTok */}
+        <a
+          href="https://tiktok.com/@antika.factory"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="TikTok"
+          className="group flex flex-col items-center transition-transform hover:scale-110"
+          style={{ gap: 'clamp(4px, 0.8vh, 8px)' }}
+        >
+          <div className="grid place-items-center rounded-lg bg-black text-white transition-transform group-hover:-translate-y-0.5" style={{ 
+            height: 'clamp(48px, 7vh, 64px)', 
+            width: 'clamp(48px, 7vh, 64px)' 
+          }}>
+            <TikTokIcon style={{ height: 'clamp(24px, 3.5vh, 32px)', width: 'clamp(24px, 3.5vh, 32px)' }} />
+          </div>
+          <span className="font-semibold text-[#ff4500]" style={{ fontSize: 'clamp(13px, 2vh, 16px)' }}>تیکتۆک</span>
+        </a>
+
+        {/* WhatsApp */}
+        <a
+          href="https://wa.me/7701242724"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="WhatsApp"
+          className="group flex flex-col items-center transition-transform hover:scale-110"
+          style={{ gap: 'clamp(4px, 0.8vh, 8px)' }}
+        >
+          <div className="grid place-items-center rounded-lg bg-[#25D366] text-white transition-transform group-hover:-translate-y-0.5" style={{ 
+            height: 'clamp(48px, 7vh, 64px)', 
+            width: 'clamp(48px, 7vh, 64px)' 
+          }}>
+            <WhatsAppIcon style={{ height: 'clamp(24px, 3.5vh, 32px)', width: 'clamp(24px, 3.5vh, 32px)' }} />
+          </div>
+          <span className="font-semibold text-[#ff4500]" style={{ fontSize: 'clamp(13px, 2vh, 16px)' }}>واتسئاپ</span>
+        </a>
+
+        {/* Toggle Button (inside sidebar) */}
+        <button
+          onClick={toggleSidebar}
+          aria-label="Hide sidebar"
+          className="grid place-items-center rounded-full bg-gray-200 text-gray-700 transition-all hover:bg-gray-300"
+          style={{ 
+            height: 'clamp(40px, 6vh, 48px)', 
+            width: 'clamp(40px, 6vh, 48px)',
+            marginTop: 'clamp(8px, 1.2vh, 12px)'
+          }}
+        >
+          <ChevronLeft style={{ height: 'clamp(20px, 3vh, 24px)', width: 'clamp(20px, 3vh, 24px)' }} />
+        </button>
+      </div>
+    </>
+  );
+}
+
+
 
 function BackToTop() {
   const [show, setShow] = useState(false);
@@ -1622,11 +1547,11 @@ function BackToTop() {
     <button
       onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
       aria-label="بگەڕێوە سەرەوە"
-      className={`fixed bottom-6 left-6 z-50 grid h-12 w-12 place-items-center rounded-full bg-gray-700 text-white shadow-lg transition-all duration-300 hover:bg-gray-600 ${show ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-4 opacity-0"
+      className={`fixed bottom-6 right-6 z-30 grid h-12 w-12 place-items-center rounded-full bg-gray-700 text-white shadow-lg transition-all duration-300 hover:bg-gray-600 ${show ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-4 opacity-0"
         }`}
       style={{
         bottom: 'max(24px, env(safe-area-inset-bottom))',
-        left: 'max(24px, env(safe-area-inset-left))'
+        right: 'max(24px, env(safe-area-inset-right))'
       }}
     >
       <ArrowUp className="h-5 w-5" />
@@ -1640,10 +1565,8 @@ function HomePage() {
     <>
       <Hero />
       <UseCases />
-      <Works />
       <TrustMarquee />
-      <About />
-      <CertificatesMarquee />
+      <SpecialFeatures />
       <SlantedBanner />
       <Process />
       <WhyChooseUs />
@@ -1661,7 +1584,7 @@ function AppContent() {
   useEffect(() => {
     if (location.pathname !== "/") return;
 
-    const ids = ["home", "products", "works", "about", "contact"];
+    const ids = ["home", "products", "works", "contact"];
     const obs = new IntersectionObserver(
       (entries) => {
         entries.forEach((e) => {
@@ -1680,41 +1603,49 @@ function AppContent() {
   }, [location.pathname]);
 
   return (
-    <div dir="rtl" className="min-h-screen bg-white font-body text-gray-900 flex flex-col">
+    <div dir="rtl" className="min-h-screen bg-white font-body text-gray-900">
       <Header active={active} onNav={setActive} />
-      <main id="main-content" className="flex-1">
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/solutions/:id" element={<SolutionPage />} />
+      <FooterReveal
+        footerContent={<Footer onNav={setActive} />}
+      >
+        <main id="main-content" className="flex-1">
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/solutions/:id" element={<SolutionPage />} />
 
-          {/* News pages */}
-          <Route path="/news" element={<NewsPage />} />
-          <Route path="/news/:slug" element={<NewsDetailPage />} />
+            {/* News pages */}
+            <Route path="/news" element={<NewsPage />} />
+            <Route path="/news/:slug" element={<NewsDetailPage />} />
 
-          {/* Gallery page */}
-          <Route path="/gallery" element={<GalleryPage />} />
+            {/* Gallery page */}
+            <Route path="/gallery" element={<GalleryPage />} />
 
-          {/* Product and Category pages */}
-          <Route path="/products/capsules" element={<CapsulesPage />} />
-          <Route path="/products/houses" element={<HousesPage />} />
-          <Route path="/products/koshk" element={<KoshkPage />} />
-          <Route path="/what-we-do" element={<AllProductsPage />} />
-          <Route path="/products" element={<AllProductsPage />} />
-          <Route path="/products/lighting" element={<LightingPage />} />
-          <Route path="/products/shelves" element={<ShelvesPage />} />
-          <Route path="/products/category/:categorySlug" element={<CategoryOverviewPage />} />
-          <Route path="/products/am" element={<CategoryOverviewPage />} />
-          <Route path="/products/as" element={<CategoryOverviewPage />} />
-          <Route path="/products/al" element={<CategoryOverviewPage />} />
-          <Route path="/products/container-house" element={<CategoryOverviewPage />} />
-          <Route path="/products/standard-house" element={<CategoryOverviewPage />} />
-          <Route path="/products/garden-house" element={<CategoryOverviewPage />} />
-          <Route path="/products/cabin-house" element={<CategoryOverviewPage />} />
-          <Route path="/products/concrete-house" element={<CategoryOverviewPage />} />
-          <Route path="/products/:slug" element={<ProductDetailPage />} />
-        </Routes>
-      </main>
-      <Footer onNav={setActive} />
+            {/* About page */}
+            <Route path="/about" element={<AboutPage />} />
+
+            {/* Product and Category pages */}
+            <Route path="/products/capsules" element={<CapsulesPage />} />
+            <Route path="/products/houses" element={<HousesPage />} />
+            <Route path="/products/koshk" element={<KoshkPage />} />
+            <Route path="/what-we-do" element={<AllProductsPage />} />
+            <Route path="/products" element={<AllProductsPage />} />
+            <Route path="/products/lighting" element={<LightingPage />} />
+            <Route path="/products/shelves" element={<ShelvesPage />} />
+            <Route path="/products/category/:categorySlug" element={<CategoryOverviewPage />} />
+            <Route path="/products/am" element={<CategoryOverviewPage />} />
+            <Route path="/products/as" element={<CategoryOverviewPage />} />
+            <Route path="/products/al" element={<CategoryOverviewPage />} />
+            <Route path="/products/container-house" element={<CategoryOverviewPage />} />
+            <Route path="/products/standard-house" element={<CategoryOverviewPage />} />
+            <Route path="/products/garden-house" element={<CategoryOverviewPage />} />
+            <Route path="/products/cabin-house" element={<CategoryOverviewPage />} />
+            <Route path="/products/concrete-house" element={<CategoryOverviewPage />} />
+            <Route path="/products/:slug" element={<ProductDetailPage />} />
+          </Routes>
+        </main>
+      </FooterReveal>
+      <SocialSidebar />
+      <BackToTop />
     </div>
   );
 }

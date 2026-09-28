@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Award, X, ZoomIn } from "lucide-react";
+import { X, ZoomIn } from "lucide-react";
 
 interface Certificate {
   id: string;
@@ -60,7 +60,7 @@ function CertificateCard({
       key={`${prefix}-${idx}`}
       onClick={() => onSelect(cert)}
       className="group relative mx-4 flex-shrink-0 cursor-pointer overflow-hidden rounded-2xl border border-gray-200 bg-white p-3 shadow-md transition-all duration-300 hover:-translate-y-1 hover:border-brand/50 hover:shadow-xl sm:mx-6 sm:p-4"
-      style={{ width: "240px" }}
+      style={{ width: "clamp(120px, 30vw, 240px)" }}
     >
       <div className="relative aspect-[3/4] w-full overflow-hidden rounded-xl bg-gray-50 flex items-center justify-center">
         <img

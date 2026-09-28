@@ -94,8 +94,13 @@ export const TRUST_LOGOS: TrustLogo[] = [
   },
 ];
 
+// Split logos into 2 different rows
+const ROW1_LOGOS = TRUST_LOGOS.slice(0, Math.ceil(TRUST_LOGOS.length / 2));
+const ROW2_LOGOS = TRUST_LOGOS.slice(Math.ceil(TRUST_LOGOS.length / 2));
+
 // Double chunk per track to guarantee 100% seamless continuity across any screen size
-const CHUNK_LOGOS = [...TRUST_LOGOS, ...TRUST_LOGOS];
+const CHUNK_ROW1 = [...ROW1_LOGOS, ...ROW1_LOGOS];
+const CHUNK_ROW2 = [...ROW2_LOGOS, ...ROW2_LOGOS];
 
 // Logo item shared between primary and secondary chunks
 function LogoItem({ logo, prefix, idx }: { logo: { name: string; src: string }; prefix: string; idx: number }) {
@@ -243,11 +248,11 @@ export function TrustMarquee() {
             lineHeight: 1.7,
           }}
         >
-          شانازی دەکەین بە هاوبەشی و جێبەجێکردنی پڕۆژە بۆ دیارترین کۆمپانیا، هوتێل، نەخۆشخانە و شوێنە گەشتیارییەکان
+          شانازی دەکەین بە هاوبەشی و جێبەجێکردنی پڕۆژە بۆ دیارترین کۆمپانیا، هوتێل، نەخۆشخانە، چێشتخانە و شوێنە گەشتیارییەکان
         </p>
       </div>
 
-      {/* Marquee track */}
+      {/* Marquee track - Row 1 */}
       <div
         dir="ltr"
         style={{
@@ -286,14 +291,66 @@ export function TrustMarquee() {
         <div className="animate-marquee-ltr" style={{ display: "flex", width: "max-content", alignItems: "center" }}>
           {/* Primary chunk */}
           <div style={{ display: "flex", flexShrink: 0, alignItems: "center" }}>
-            {CHUNK_LOGOS.map((logo, idx) => (
-              <LogoItem key={`p-${idx}`} logo={logo} prefix="p" idx={idx} />
+            {CHUNK_ROW1.map((logo, idx) => (
+              <LogoItem key={`p1-${idx}`} logo={logo} prefix="p1" idx={idx} />
             ))}
           </div>
           {/* Secondary chunk (identical, for seamless loop) */}
           <div style={{ display: "flex", flexShrink: 0, alignItems: "center" }} aria-hidden="true">
-            {CHUNK_LOGOS.map((logo, idx) => (
-              <LogoItem key={`s-${idx}`} logo={logo} prefix="s" idx={idx} />
+            {CHUNK_ROW1.map((logo, idx) => (
+              <LogoItem key={`s1-${idx}`} logo={logo} prefix="s1" idx={idx} />
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Marquee track - Row 2 */}
+      <div
+        dir="ltr"
+        style={{
+          position: "relative",
+          width: "100%",
+          overflow: "hidden",
+          userSelect: "none",
+          paddingTop: "8px",
+          paddingBottom: "8px",
+        }}
+      >
+        {/* Left fade */}
+        <div
+          style={{
+            pointerEvents: "none",
+            position: "absolute",
+            inset: "0 auto 0 0",
+            zIndex: 10,
+            width: "140px",
+            background: "linear-gradient(to right, #fff 30%, transparent)",
+          }}
+        />
+        {/* Right fade */}
+        <div
+          style={{
+            pointerEvents: "none",
+            position: "absolute",
+            inset: "0 0 0 auto",
+            zIndex: 10,
+            width: "140px",
+            background: "linear-gradient(to left, #fff 30%, transparent)",
+          }}
+        />
+
+        {/* Animated strip */}
+        <div className="animate-marquee-ltr" style={{ display: "flex", width: "max-content", alignItems: "center" }}>
+          {/* Primary chunk */}
+          <div style={{ display: "flex", flexShrink: 0, alignItems: "center" }}>
+            {CHUNK_ROW2.map((logo, idx) => (
+              <LogoItem key={`p2-${idx}`} logo={logo} prefix="p2" idx={idx} />
+            ))}
+          </div>
+          {/* Secondary chunk (identical, for seamless loop) */}
+          <div style={{ display: "flex", flexShrink: 0, alignItems: "center" }} aria-hidden="true">
+            {CHUNK_ROW2.map((logo, idx) => (
+              <LogoItem key={`s2-${idx}`} logo={logo} prefix="s2" idx={idx} />
             ))}
           </div>
         </div>

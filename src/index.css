@@ -454,7 +454,7 @@ body {
 .animate-marquee-ltr {
   display: flex;
   width: max-content;
-  animation: marquee-ltr 45s linear infinite;
+  animation: marquee-ltr 50s linear infinite;
   will-change: transform;
 }
 
@@ -594,4 +594,57 @@ body {
   .contact-parallax-inner {
     background-image: url('/images/diognal-2.jpg');
   }
+}
+
+/* Social Sidebar Responsive Styles */
+@media (max-width: 768px) {
+  /* Mobile: sidebar uses same clamp() sizing, hidden by default via JavaScript logic */
+}
+
+/* Compact sidebar for screens shorter than 750px height */
+@media (max-height: 750px) {
+  [data-social-sidebar] {
+    /* Override clamp() values for short screens - keep them reasonably large */
+    padding: 10px !important;
+    gap: 8px !important;
+  }
+
+  [data-social-sidebar] a > div {
+    height: 40px !important;
+    width: 40px !important;
+  }
+
+  [data-social-sidebar] a > div svg {
+    height: 20px !important;
+    width: 20px !important;
+  }
+
+  [data-social-sidebar] a {
+    gap: 4px !important;
+  }
+
+  [data-social-sidebar] span {
+    font-size: 11px !important;
+  }
+
+  [data-social-sidebar] button {
+    height: 36px !important;
+    width: 36px !important;
+    margin-top: 6px !important;
+  }
+
+  [data-social-sidebar] button svg {
+    height: 18px !important;
+    width: 18px !important;
+  }
+}
+
+/* Hide scrollbar for social sidebar */
+[data-social-sidebar]::-webkit-scrollbar {
+  display: none;
+}
+
+[data-social-sidebar] {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
