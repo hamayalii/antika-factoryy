@@ -1,27 +1,22 @@
 import { useState, useEffect } from "react";
-import { useParams, Link, useNavigate } from "react-router-dom";
-import { 
-  Home as HomeIcon, 
-  ChevronLeft, 
-  Calendar, 
-  Clock, 
-  ArrowLeft, 
-  ArrowRight, 
-  Share2, 
-  Video, 
-  Tag, 
+import { useParams, Link } from "react-router-dom";
+import {
+  Home as HomeIcon,
+  ChevronLeft,
+  Calendar,
+  Clock,
+  ArrowLeft,
+  ArrowRight,
+  Share2,
+  Video,
+  Tag,
   Sparkles,
   Building2,
-  CheckCircle2,
-  PhoneCall,
-  MessageCircle,
-  Mail,
-  ExternalLink,
   Home,
   Lamp,
   ShieldCheck,
 } from "lucide-react";
-import { getNewsBySlug, newsArticles } from "../data/newsData";
+import { getNewsBySlug } from "../data/newsData";
 import { Reveal } from "../components/Reveal";
 import { SEO } from "../components/SEO";
 
@@ -46,7 +41,6 @@ const FacebookIcon = (props: React.SVGProps<SVGSVGElement>) => (
 
 export function NewsDetailPage() {
   const { slug } = useParams<{ slug: string }>();
-  const navigate = useNavigate();
   const [lang, setLang] = useState<"ku" | "ar">("ku");
   const [copied, setCopied] = useState(false);
 
@@ -204,9 +198,11 @@ export function NewsDetailPage() {
                 alt={title}
                 className="w-full h-auto max-h-[550px] object-cover object-center"
               />
-              <div className="absolute bottom-4 right-4 bg-black/70 backdrop-blur-md rounded-xl px-4 py-2 text-xs text-white">
-                {lang === "ku" ? "بەشداری تیمی کارگەی ئەنتیکا لە پێشانگای Invest Expo 2025" : "مشاركة فريق مصنع أنتيكا في معرض Invest Expo 2025"}
-              </div>
+              {(article.overlayCaptionKu || article.overlayCaptionAr) && (
+                <div className="absolute bottom-4 right-4 bg-black/70 backdrop-blur-md rounded-xl px-4 py-2 text-xs text-white">
+                  {lang === "ku" ? article.overlayCaptionKu : article.overlayCaptionAr}
+                </div>
+              )}
             </div>
           </Reveal>
 
