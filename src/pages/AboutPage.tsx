@@ -165,31 +165,13 @@ export function AboutPage() {
       />
 
       {/* Hero Section */}
-      <section className="bg-white pt-24 pb-16 sm:pt-32 sm:pb-24 lg:pt-32 lg:pb-32 overflow-x-hidden">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
-            
-            {/* Image LEFT - Second in RTL order (appears on left) */}
-            <div className="order-2 lg:order-2">
-              <Reveal>
-                <div className="relative">
-                  <div className="overflow-hidden rounded-2xl shadow-xl bg-gray-100 flex items-center justify-center">
-                    <img
-                      src="/images/al-4.jpg"
-                      alt="Container Home - ANTIKA FACTORY"
-                      className="max-h-[320px] w-full object-contain sm:max-h-[400px] lg:max-h-[450px]"
-                      loading="eager"
-                      decoding="async"
-                      width="800"
-                      height="600"
-                    />
-                  </div>
-                </div>
-              </Reveal>
-            </div>
-
-            {/* Text RIGHT - First in RTL order (appears on right) */}
-            <div className="order-1 lg:order-1 w-full">
+      <section
+        className="relative pt-24 pb-16 sm:pt-32 sm:pb-24 lg:pt-32 lg:pb-32 overflow-x-hidden bg-center bg-no-repeat"
+        style={{ backgroundImage: "url('/images/about-bg.jpg')", backgroundSize: '87%' }}
+      >
+        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-center">
+            <div className="w-full">
               <div dir="rtl" className="text-right inline-block w-full">
                 <Reveal>
                   <h1 className="font-display text-[28px] sm:text-[36px] md:text-[44px] lg:text-[52px] font-black leading-[1.2] text-gray-900 text-right">
@@ -197,11 +179,15 @@ export function AboutPage() {
                     <br />
                     بەرهەمەکانمانەوە
                   </h1>
-                  <p className="mt-6 text-[16px] sm:text-[18px] md:text-[20px] lg:text-[22px] font-normal leading-relaxed text-gray-600 text-right">
-                    ئێمە خاوەنی ئەزموونێکی فراوانین لە دیزاینکردن و دروستکردنی خانووە کەپسولییە ئاستبەرزەکاندا
+                  <p className="mt-6 text-[16px] sm:text-[18px] md:text-[20px] lg:text-[22px] font-normal leading-relaxed text-gray-900 text-right">
+                    ئێمە خاوەنی ئەزموونێکی فراوانین لە دیزاینکردن و دروستکردنی
+                    <br /> خانووە کەپسولییە ئاستبەرزەکاندا
                   </p>
-                  <p className="mt-4 text-[16px] sm:text-[18px] md:text-[20px] lg:text-[22px] font-normal leading-relaxed text-gray-600 text-right">
-                    چاوێک بە نموونەی کارەکانماندا بخشێنە کە تێیدا ئەو پڕۆژانە خراونەتەڕوو کە بۆ کڕیارە ڕازییەکانمان لە سەرانسەری عێراق جێبەجێمان کردوون.
+                  <p className="mt-4 text-[16px] sm:text-[18px] md:text-[20px] lg:text-[22px] font-normal leading-relaxed text-gray-900 text-right">
+                    چاوێک بە نموونەی کارەکانماندا بخشێنە کە تێیدا ئەو پڕۆژانە <br />
+                    خراونەتەڕوو کە 
+                    بۆ کڕیارە ڕازییەکانمان لە سەرانسەری <br />
+                    عێراق جێبەجێمان کردوون.
                   </p>
                 </Reveal>
                 <Reveal delay={150}>
@@ -309,7 +295,7 @@ export function AboutPage() {
                   className="zoom-img overflow-hidden rounded-2xl shadow-lg will-change-transform"
                 >
                   <img
-                    src="/images/studio-about.jpg"
+                    src="/images/factory-preview2.jpg"
                     alt="ستۆدیۆی ANTIKA FACTORY"
                     className="h-[400px] w-full object-cover sm:h-[500px]"
                     loading="lazy"

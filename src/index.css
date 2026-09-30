@@ -28,8 +28,8 @@
   --color-stone2: #e8e5e1;
 
   /* Typography */
-  --font-display: "Vazirmatn", "Noto Sans Arabic", "Arkan ABC Favorit", system-ui, sans-serif;
-  --font-body: "Vazirmatn", "Noto Sans Arabic", "Arkan ABC Favorit", system-ui, sans-serif;
+  --font-display: "Arkan ABC Favorit", "Vazirmatn", "Noto Sans Arabic", system-ui, sans-serif;
+  --font-body: "Arkan ABC Favorit", "Vazirmatn", "Noto Sans Arabic", system-ui, sans-serif;
 
   /* Spacing Scale (4px base) */
   --space-1: 4px;
@@ -206,6 +206,11 @@ body {
   text-rendering: optimizeLegibility;
 }
 
+/* Ensure all elements use the correct font */
+* {
+  font-family: inherit;
+}
+
 /* Global reset for media in base layer so utility classes can override */
 @layer base {
 
@@ -288,8 +293,38 @@ h4,
   transform: translateY(0);
 }
 
+/* ---------- Slide from left animation ---------- */
+.reveal-slide-left {
+  opacity: 0;
+  transform: translateX(-40px);
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+  transition-delay: var(--reveal-delay, 0ms);
+  will-change: opacity, transform;
+}
+
+.reveal-slide-left.is-visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* ---------- Slide from right animation ---------- */
+.reveal-slide-right {
+  opacity: 0;
+  transform: translateX(40px);
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+  transition-delay: var(--reveal-delay, 0ms);
+  will-change: opacity, transform;
+}
+
+.reveal-slide-right.is-visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .reveal {
+  .reveal,
+  .reveal-slide-left,
+  .reveal-slide-right {
     opacity: 1;
     transform: none;
     transition: none;

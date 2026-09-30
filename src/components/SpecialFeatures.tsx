@@ -6,7 +6,7 @@ const features = [
     title: "بەرگریی ئاگر لە ئاستی A2 ",
     description: "دیوارە عەزلکراوەکان بەرگرییەکی زۆر بەرزیان بۆ ئاگر هەیە لەگەڵ توانایەکی نایاب بۆ هێشتنەوەی پلەی گەرمی (بۆ ڕێگریکردن لە گەرمای تاقەتپڕووکێنی هاوین و سەرمای زستان)، ئەمەش سەلامەتی و پاشەکەوتکردنی وزە زیاتر دەکات",
     icon: (
-      <svg viewBox="0 0 64 64" fill="none" stroke="#111827" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <svg viewBox="0 0 64 64" fill="none" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <path d="M32 4L8 14v24c0 14.4 10.4 27.8 24 30 13.6-2.2 24-15.6 24-30V14L32 4z" />
         <path d="M32 22v8" />
         <path d="M32 14h.5" />
@@ -19,9 +19,9 @@ const features = [
   {
     id: 2,
     title: "بەرگەگرتنی با لە ئاستی ١١ ",
-    description: "ئاستی ١١ی بەرگەگرتنی با، تەمەندرێژییەکی زۆر و پاراستنێکی تەواو لە بەرامبەر ڕەشەبا و گەردەلولە بەهێزەکان مسۆگەر دەکات",
+    description: "تەنانەت لە کاتی هەڵکردنی گەردەلول و ڕەشەبای زۆر بەهێزیشدا (بای ئاستی ١١)، کەپسولەکانمان سەقامگیریی و پتەویی خۆیان لەدەست نادەن ئەم هێزە ئەندازیارییە تەمەندرێژییەکی زۆر و ژینگەیەکی سەلامەت و بێدەنگ بۆ کڕیارەکانمان مسۆگەر دەکات، جا پڕۆژەکەت لە هەر کوێیەکی ئەم سروشتەدا بێت",
     icon: (
-      <svg viewBox="0 0 64 64" fill="none" stroke="#111827" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <svg viewBox="0 0 64 64" fill="none" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <path d="M12 20c2-4 6-6 10-4s6 6 4 10" />
         <path d="M10 32c2-4 6-6 10-4s6 6 4 10" />
         <path d="M8 44c2-4 6-6 10-4s6 6 4 10" />
@@ -40,7 +40,7 @@ const features = [
     title: "بەرگەگرتنی بومەلەرزە لە ئاستی ٧",
     description: "بەشێوەیەک کاری ئەندازیاری بۆ کەپسولەکان کراوە کە بەرگەی جووڵە بەهێزەکانی بومەلەرزە بگرێت، بۆ دڵنیابوون لە سەلامەتی و جێگیریی پێکهاتەی کەپسولەکە و ئەوەشی لە ناویەتی",
     icon: (
-      <svg viewBox="0 0 64 64" fill="none" stroke="#111827" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <svg viewBox="0 0 64 64" fill="none" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <path d="M20 50h24" />
         <path d="M24 50V30l8-20 8 20v20" />
         <path d="M28 50V35" />
@@ -57,7 +57,7 @@ const features = [
     title: "پانێڵی بەتەواوی عەزلکراو (Insulated)",
     description: "بەهۆی بوونی سیستەمێکی عەزلی گشتگیر لە سەرانسەری کەپسولەکەدا، باشترین ئاستی پاراستنی پلەی گەرمی و ئاسوودەیی تەواو بۆ سەرنشینەکانی مسۆگەر دەکات",
     icon: (
-      <svg viewBox="0 0 64 64" fill="none" stroke="#111827" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <svg viewBox="0 0 64 64" fill="none" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <path d="M8 56h48" />
         <path d="M12 56V12l20-8 20 8v44" />
         <path d="M16 20h32" />
@@ -78,7 +78,7 @@ const features = [
     title: "ڕووکەشی شووشەیی پانۆراما (بە جامی دەبڵ)",
     description: "کەپسولەکانمان ڕووکەشێکی شووشەیی پانۆرامای سەرنجڕاکێشیان هەیە بە جامی دەبڵ، کە جگە لە بەخشینی دیمەنێکی فراوان بۆ بینینی سروشتی دەرەوە، لە هەمان کاتدا عەزلێکی نایابی دەنگ و پلەی گەرمی دابین دەکات",
     icon: (
-      <svg viewBox="0 0 64 64" fill="none" stroke="#111827" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <svg viewBox="0 0 64 64" fill="none" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <rect x="8" y="8" width="48" height="48" rx="2" />
         <line x1="32" y1="8" x2="32" y2="56" />
         <line x1="8" y1="32" x2="56" y2="32" />
@@ -96,7 +96,7 @@ const features = [
     title: "دەرگای چوونەژوورەوەی مۆدێرن بە قفڵی زیرەک",
     description: "دەرگاکانمان بە کوالێتییەکی بەرز و بە دیزاینێکی مۆدێرن دروستکراون کە گونجاوە بۆ شێوەی ئەندازەیی کەپسولەکە، هەروەها بە سیستەمی قفڵی زیرەک (Smart Lock) ڕێکخراون کە ئاسایشێکی تەواو و بەکارهێنانێکی سەردەمیانە بەیەکەوە کۆدەکاتەوە",
     icon: (
-      <svg viewBox="0 0 64 64" fill="none" stroke="#111827" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <svg viewBox="0 0 64 64" fill="none" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <rect x="12" y="4" width="40" height="56" rx="2" />
         <path d="M16 8h32v48H16z" />
         <path d="M20 12h24v40H20z" />
@@ -198,7 +198,7 @@ export function SpecialFeatures() {
       style={{
         unicodeBidi: 'isolate',
         textAlign: 'center',
-        backgroundColor: '#FFFFFF',
+        backgroundColor: '#111827',
         paddingTop: 'clamp(60px, 8vw, 90px)',
         paddingBottom: 'clamp(60px, 8vw, 110px)',
         overflowX: 'hidden'
@@ -219,10 +219,10 @@ export function SpecialFeatures() {
           <h2
             dir="rtl"
             style={{
-              fontFamily: 'Arkan ABC Favorit, sans-serif',
+              fontFamily: 'var(--font-display)',
               fontWeight: 700,
               fontSize: 'clamp(28px, 5vw, 48px)',
-              color: '#111827',
+              color: '#FFFFFF',
               textTransform: 'uppercase',
               letterSpacing: '-0.5px',
               marginBottom: '12px',
@@ -235,10 +235,10 @@ export function SpecialFeatures() {
           <p
             dir="rtl"
             style={{
-              fontFamily: 'Arkan ABC Favorit, sans-serif',
+              fontFamily: 'var(--font-body)',
               fontWeight: 400,
               fontSize: 'clamp(16px, 3vw, 20px)',
-              color: '#111827',
+              color: '#FFFFFF',
               margin: '0',
               textAlign: 'center',
               padding: '0 clamp(8px, 2vw, 20px)'
@@ -264,23 +264,23 @@ export function SpecialFeatures() {
             const initialState = reducedMotion ? {
               opacity: 1,
               transform: 'translateY(0)',
-              color: '#111827',
-              descriptionColor: '#ff5a00',
-              iconColor: '#111827'
+              color: '#FFFFFF',
+              descriptionColor: '#FFFFFF',
+              iconColor: '#FFFFFF'
             } : {
               opacity: 0,
               transform: 'translateY(40px)',
-              color: '#8b9096',
-              descriptionColor: '#0f8f86',
-              iconColor: '#8b9096'
+              color: '#9ca3af',
+              descriptionColor: '#9ca3af',
+              iconColor: '#9ca3af'
             };
 
             const finalState = {
               opacity: 1,
               transform: 'translateY(0)',
-              color: '#111827',
-              descriptionColor: '#ff5a00',
-              iconColor: '#111827'
+              color: '#FFFFFF',
+              descriptionColor: '#FFFFFF',
+              iconColor: '#FFFFFF'
             };
 
             const animationDuration = '700ms';
@@ -306,7 +306,7 @@ export function SpecialFeatures() {
                   style={{
                     width: isMobile ? '64px' : '84px',
                     height: isMobile ? '64px' : '84px',
-                    border: '2px solid #111827',
+                    border: '2px solid #FFFFFF',
                     borderRadius: '10px',
                     backgroundColor: 'transparent',
                     display: 'flex',
@@ -337,7 +337,7 @@ export function SpecialFeatures() {
                 <h3
                   dir={feature.isKurdish ? "rtl" : "ltr"}
                   style={{
-                    fontFamily: 'Arkan ABC Favorit, sans-serif',
+                    fontFamily: 'var(--font-display)',
                     fontWeight: 600,
                     fontSize: isMobile ? '20px' : '26px',
                     lineHeight: '1.15',
@@ -355,7 +355,7 @@ export function SpecialFeatures() {
                 <p
                   dir={feature.isKurdish ? "rtl" : "ltr"}
                   style={{
-                    fontFamily: 'Arkan ABC Favorit, sans-serif',
+                    fontFamily: 'var(--font-body)',
                     fontWeight: 400,
                     fontSize: isMobile ? '14px' : '16.5px',
                     lineHeight: '1.45',
@@ -413,7 +413,7 @@ export function SpecialFeatures() {
                   style={{
                     width: isMobile ? '72px' : '112px',
                     height: isMobile ? '72px' : '112px',
-                    border: '2px solid #111827',
+                    border: '2px solid #FFFFFF',
                     borderRadius: '10px',
                     backgroundColor: 'transparent',
                     display: 'flex',
@@ -425,7 +425,7 @@ export function SpecialFeatures() {
                   <svg
                     viewBox="0 0 64 64"
                     fill="none"
-                    stroke="#111827"
+                    stroke="#FFFFFF"
                     strokeWidth="2"
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -442,11 +442,11 @@ export function SpecialFeatures() {
                 <h3
                   dir={feature.isKurdish ? "rtl" : "ltr"}
                   style={{
-                    fontFamily: 'Arkan ABC Favorit, sans-serif',
+                    fontFamily: 'var(--font-display)',
                     fontWeight: 600,
                     fontSize: isMobile ? '22px' : '26px',
                     lineHeight: '1.15',
-                    color: '#111827',
+                    color: '#FFFFFF',
                     marginBottom: isMobile ? '8px' : '12px',
                     margin: `0 0 ${isMobile ? '8px' : '12px'} 0`
                   }}
@@ -458,11 +458,11 @@ export function SpecialFeatures() {
                 <p
                   dir={feature.isKurdish ? "rtl" : "ltr"}
                   style={{
-                    fontFamily: 'Arkan ABC Favorit, sans-serif',
+                    fontFamily: 'var(--font-body)',
                     fontWeight: 400,
                     fontSize: isMobile ? '14px' : '16.5px',
                     lineHeight: '1.45',
-                    color: '#ff5a00',
+                    color: '#FFFFFF',
                     maxWidth: isMobile ? '300px' : '255px',
                     margin: '0'
                   }}
