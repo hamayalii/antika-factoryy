@@ -831,7 +831,7 @@ function Hero() {
           <div className="hero-text-item" style={{ animationDelay: '280ms' }}>
             <div className="mt-8 flex flex-col items-center gap-4 sm:flex-row sm:justify-center lg:justify-start">
               <a
-                href="#works"
+                href="/products"
                 className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-brand px-8 py-4 text-[15px] font-bold text-white shadow-lg transition hover:bg-brand-dark sm:w-auto"
               >
                 {slide.cta1}
