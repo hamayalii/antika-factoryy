@@ -604,7 +604,7 @@ function Header({
 /* ---------------------------------- Hero Slider ---------------------------------- */
 const HERO_SLIDES = [
   {
-    tag: "ئێمە هونەر و مۆدێرنمان بۆ ئێوە تێکەڵ کردووە",
+    tag: "سلێمانی - کوردستان، عێراق",
     title: "داهێنان لە دیزاین، وردی لە دروستکردن",
     desc: (
       <>
@@ -621,7 +621,7 @@ const HERO_SLIDES = [
     cta2: "دەربارەی ئێمە",
   },
   {
-    tag: "ئێمە هونەر و مۆدێرنمان بۆ ئێوە تێکەڵ کردووە",
+    tag: "سلێمانی - کوردستان، عێراق",
     title: "دیزاینێکی نوێ بۆ شێوازی ژیانێکی نوێ",
     desc: (
       <>
@@ -739,9 +739,16 @@ function Hero() {
           }}
         >
           <div className="hero-text-item">
-            <span className="inline-flex items-center gap-2 border-b-2 border-brand px-1 pb-2 text-[12px] font-semibold text-white drop-shadow-md">
-              {slide.tag}
-            </span>
+            <a
+              href="https://maps.app.goo.gl/naP6mrMRYWPuMmrw7"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Open factory location in Google Maps"
+              className="inline-flex items-center gap-2 border-b-2 border-brand px-1 pb-2 text-[12px] font-semibold text-white drop-shadow-md transition-opacity duration-200 hover:opacity-80 no-underline"
+            >
+              <MapPin className="h-3.5 w-3.5 text-brand shrink-0" aria-hidden="true" />
+              <span className="whitespace-nowrap">{slide.tag}</span>
+            </a>
           </div>
           <div className="hero-text-item">
             <h1 className="mt-4 font-display font-black leading-[1.2] text-white drop-shadow-lg" style={{ fontSize: 'clamp(28px, 7vw, 42px)' }}>
@@ -800,9 +807,16 @@ function Hero() {
           }}
         >
           <div className="hero-text-item">
-            <span className="inline-flex items-center gap-2 border-b-2 border-brand px-1 pb-2 text-[13px] font-semibold text-white drop-shadow-md">
-              {slide.tag}
-            </span>
+            <a
+              href="https://maps.app.goo.gl/naP6mrMRYWPuMmrw7"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Open factory location in Google Maps"
+              className="inline-flex items-center gap-2 border-b-2 border-brand px-1 pb-2 text-[13px] font-semibold text-white drop-shadow-md transition-opacity duration-200 hover:opacity-80 no-underline"
+            >
+              <MapPin className="h-4 w-4 text-brand shrink-0" aria-hidden="true" />
+              <span className="whitespace-nowrap">{slide.tag}</span>
+            </a>
           </div>
           <div className="hero-text-item">
             <h1 className="mt-6 font-display font-black leading-[1.2] text-white drop-shadow-lg" style={{ fontSize: 'clamp(36px, 6vw, 68px)' }}>
