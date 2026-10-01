@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
-import { ArrowLeft, Check, Sparkles } from "lucide-react";
+import { ArrowLeft, Check, Sparkles, DraftingCompass, Factory, Truck } from "lucide-react";
 import { Reveal } from "../components/Reveal";
 import { SEO } from "../components/SEO";
 import { CertificatesMarquee } from "../components/CertificatesMarquee";
+import { TeamMemberCard } from "../components/TeamMemberCard";
+import { useContactModal } from "../contexts/ContactModalContext";
 
 function useParallax(speed = 0.16) {
   const ref = useRef<HTMLDivElement>(null);
@@ -147,12 +148,68 @@ function AnimatedCounter({
   );
 }
 
+function useImageSlider(interval: number = 5000) {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    // Check for reduced motion preference
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) return;
+
+    const startInterval = () => {
+      intervalRef.current = setInterval(() => {
+        setActiveIndex((prev) => (prev + 1) % 3);
+      }, interval);
+    };
+
+    const stopInterval = () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+    };
+
+    // Start the interval
+    startInterval();
+
+    // Handle visibility change
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        stopInterval();
+      } else {
+        startInterval();
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    return () => {
+      stopInterval();
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, [interval]);
+
+  return activeIndex;
+}
+
 export function AboutPage() {
   const parallaxSection = useParallax(0.2);
   const { isVisible, imageRef, textRef, isMobile } = useScrollAnimation();
+  const { openContactModal } = useContactModal();
+  const activeSlideIndex = useImageSlider(5000);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
+
+  // Preload images
+  useEffect(() => {
+    const images = ['/images/about-bg.jpg', '/images/studio-about.jpg', '/images/factory-preview2.jpg'];
+    images.forEach((src) => {
+      const img = new Image();
+      img.src = src;
+    });
   }, []);
 
   return (
@@ -164,43 +221,217 @@ export function AboutPage() {
         image="/images/logo.png"
       />
 
-      {/* Hero Section */}
+      {/* Hero Section - Full-width Image Slider */}
       <section
-        className="relative pt-24 pb-16 sm:pt-32 sm:pb-24 lg:pt-32 lg:pb-32 overflow-x-hidden bg-center bg-no-repeat"
-        style={{ backgroundImage: "url('/images/about-bg.jpg')", backgroundSize: '87%' }}
+        className="innovation-slider relative w-full overflow-hidden"
+        style={{
+          height: '100vh',
+          width: '100%',
+          position: 'relative',
+          overflow: 'hidden',
+        }}
       >
-        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-center">
-            <div className="w-full">
-              <div dir="rtl" className="text-right inline-block w-full">
-                <Reveal>
-                  <h1 className="font-display text-[28px] sm:text-[36px] md:text-[44px] lg:text-[52px] font-black leading-[1.2] text-gray-900 text-right">
-                    داهێنان لە پشت
-                    <br />
-                    بەرهەمەکانمانەوە
-                  </h1>
-                  <p className="mt-6 text-[16px] sm:text-[18px] md:text-[20px] lg:text-[22px] font-normal leading-relaxed text-gray-900 text-right">
-                    ئێمە خاوەنی ئەزموونێکی فراوانین لە دیزاینکردن و دروستکردنی
-                    <br /> خانووە کەپسولییە ئاستبەرزەکاندا
-                  </p>
-                  <p className="mt-4 text-[16px] sm:text-[18px] md:text-[20px] lg:text-[22px] font-normal leading-relaxed text-gray-900 text-right">
-                    چاوێک بە نموونەی کارەکانماندا بخشێنە کە تێیدا ئەو پڕۆژانە <br />
-                    خراونەتەڕوو کە 
-                    بۆ کڕیارە ڕازییەکانمان لە سەرانسەری <br />
-                    عێراق جێبەجێمان کردوون.
-                  </p>
-                </Reveal>
-                <Reveal delay={150}>
-                  <div className="mt-8">
-                    <Link
-                      to="/products"
-                      className="inline-flex items-center gap-2 rounded-full bg-brand px-8 py-4 text-[15px] font-bold text-white transition hover:bg-brand-dark shadow-lg hover:shadow-xl"
-                    >
-                      بینینی کارەکانمان
-                      <ArrowLeft className="h-4 w-4" />
-                    </Link>
-                  </div>
-                </Reveal>
+        {/* Slides */}
+        {['/images/diognal-1.jpg', '/images/hero-antika.png', '/images/hero-2.jpg'].map((image, index) => (
+          <div
+            key={index}
+            className={`slide absolute inset-0 w-full h-full ${index === activeSlideIndex ? 'is-active' : ''}`}
+            style={{
+              backgroundImage: `url('${image}')`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              backgroundRepeat: 'no-repeat',
+              opacity: index === activeSlideIndex ? 1 : 0,
+              transition: 'opacity 0.5s ease-in-out',
+            }}
+          />
+        ))}
+
+        {/* Grey haze overlay */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background: 'rgba(120, 118, 110, 0.38)',
+            '--overlay-color': 'rgba(120, 117, 110, 0.38)',
+          } as React.CSSProperties}
+        />
+
+        {/* Content */}
+        <div
+          className="content relative z-10 flex flex-col items-center justify-center px-[5%] text-center"
+          style={{
+            height: 'calc(100vh - 80px)',
+            marginTop: '80px',
+          }}
+        >
+          <div dir="rtl" className="text-center w-full max-w-[1100px]">
+            <h1
+              className="font-display font-black leading-[1.15] text-white text-center"
+              style={{
+                fontSize: 'clamp(28px, 3vw, 56px)',
+                fontWeight: 600,
+              }}
+            >
+              داهێنان لە پشت
+              <br />
+              بەرهەمەکانمانەوە
+            </h1>
+            <p
+              className="mt-[0.6em] font-normal leading-[1.6] text-white text-center"
+              style={{
+                fontSize: 'clamp(16px, 1.5vw, 26px)',
+                letterSpacing: '0.04em',
+                fontWeight: 400,
+              }}
+            >
+              ئێمە خاوەنی ئەزموونێکی فراوانین لە دیزاینکردن و دروستکردنی
+              <br /> خانووە کەپسولییە ئاستبەرزەکاندا
+            </p>
+            <p
+              className="mt-4 font-normal leading-[1.6] text-white text-center"
+              style={{
+                fontSize: 'clamp(16px, 1.5vw, 26px)',
+                letterSpacing: '0.04em',
+                fontWeight: 400,
+              }}
+            >
+              چاوێک بە نموونەی کارەکانماندا بخشێنە کە تێیدا ئەو پڕۆژانە <br />
+              خراونەتەڕوو کە
+              بۆ کڕیارە ڕازییەکانمان لە سەرانسەری <br />
+              عێراق جێبەجێمان کردوون
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* 3-Icon Steps Strip */}
+      <section
+        className="relative w-full"
+        style={{
+          backgroundColor: '#f8f9fe',
+          paddingBlock: '48px',
+        }}
+      >
+        <div
+          className="mx-auto"
+          style={{
+            width: '88%',
+            maxWidth: '1400px',
+          }}
+        >
+          <div
+            className="grid gap-6 md:gap-8 lg:gap-10"
+            style={{
+              gridTemplateColumns: 'repeat(3, 1fr)',
+            }}
+          >
+            <style>{`
+              @media (max-width: 768px) {
+                [data-stack-mobile="true"] {
+                  grid-template-columns: 1fr !important;
+                  gap: 28px !important;
+                }
+              }
+            `}</style>
+            {/* Step 1 */}
+            <div
+              dir="rtl"
+              className="flex items-start gap-[18px]"
+            >
+              <Truck
+                className="shrink-0"
+                style={{
+                  width: '44px',
+                  height: '44px',
+                  color: '#4a4a4a',
+                }}
+              />
+              <div className="flex flex-col">
+                <span
+                  style={{
+                    fontSize: '20px',
+                    fontWeight: 300,
+                    color: '#555',
+                  }}
+                >
+گواستنەوە و ڕادەستکردن (Turnkey)                                  </span>
+                <span
+                  className="mt-3"
+                  style={{
+                    fontSize: '17px',
+                    fontWeight: 400,
+                    color: '#999',
+                  }}
+                >
+جێبەجێکردنی خێرا و دانانی تەواوەتی پڕۆژەکە لە هەر شوێنێکی عێراق بێت               </span>
+              </div>
+            </div>
+
+            {/* Step 2 */}
+            <div
+              dir="rtl"
+              className="flex items-start gap-[18px]"
+            >
+              <DraftingCompass
+                className="shrink-0"
+                style={{
+                  width: '44px',
+                  height: '44px',
+                  color: '#4a4a4a',
+                }}
+              />
+              <div className="flex flex-col">
+                <span
+                  style={{
+                    fontSize: '20px',
+                    fontWeight: 300,
+                    color: '#555',
+                  }}
+                >
+دیزاین و نەخشەسازیی ورد                </span>
+                <span
+                  className="mt-3"
+                  style={{
+                    fontSize: '17px',
+                    fontWeight: 400,
+                    color: '#999',
+                  }}
+                >
+گۆڕینی خەیاڵ و پێداویستییەکانی کڕیار بۆ دیزاینی 3D و ئەندازیاریی سەرنجڕاکێش                </span>
+              </div>
+            </div>
+
+            {/* Step 3 */}
+            <div
+              dir="rtl"
+              className="flex items-start gap-[18px]"
+            >
+              <Factory
+                className="shrink-0"
+                style={{
+                  width: '44px',
+                  height: '44px',
+                  color: '#4a4a4a',
+                }}
+              />
+              <div className="flex flex-col">
+                <span
+                  style={{
+                    fontSize: '20px',
+                    fontWeight: 300,
+                    color: '#555',
+                  }}
+                >
+دروستکردن بە کوالێتیی بەرز                </span>
+                <span
+                  className="mt-3"
+                  style={{
+                    fontSize: '17px',
+                    fontWeight: 400,
+                    color: '#999',
+                  }}
+                >
+پشت بەستن بە کەرەستەی بڕوانامەدار و تەکنەلۆجیای مۆدێرن لە کارگەی تایبەتی خۆماندا                </span>
               </div>
             </div>
           </div>
@@ -263,13 +494,13 @@ export function AboutPage() {
                 </Reveal>
                 <Reveal delay={250}>
                   <div className="mt-8">
-                    <Link
-                      to="/#contact"
+                    <button
+                      onClick={openContactModal}
                       className="inline-flex items-center gap-2 rounded-full bg-brand px-8 py-4 text-[14.5px] font-bold text-white transition hover:bg-brand-dark"
                     >
                       پەیوەندیمان پێوە بکە
                       <ArrowLeft className="h-4 w-4" />
-                    </Link>
+                    </button>
                   </div>
                 </Reveal>
               </div>
@@ -334,6 +565,33 @@ export function AboutPage() {
               ))}
             </div>
           </Reveal>
+        </div>
+      </section>
+
+      {/* Team Member Section */}
+      <section className="bg-white py-16 sm:py-24">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+            <div dir="rtl" className="text-right">
+              <p className="text-[17px] sm:text-[16px] md:text-[17px] font-normal leading-relaxed text-gray-700">
+                کارگەی ئەنتیکا لە تێبینییەکی سادەوە سەری هەڵدا: شێوازی نەریتیی بیناسازی زۆر خاو، تێچووی زۆر و زۆر نەگونجاو بوو بۆ پێداویستییە سەردەمییەکان و وەک کەسێک کە بە قووڵی لە بواری ئەندازیاری و بیناسازیدا کارم کردووە، بە چاوی خۆم دەمبینی کە چۆن کڕیاران لە عێراقدا کێشەی دۆزینەوەی خانووی پێشوەختە دروستکراوی باوەڕپێکراویان هەیە. بازاڕ پڕ بوو لە بژاردە، کەچی هیچ ڕێگەیەکی ڕوون نەبوو بۆ بەراوردکردنی کوالێتی، پتەوی، یان بەهای کارەکان
+              </p>
+              <p className="mt-6 text-[17px] sm:text-[16px] md:text-[17px] font-normal leading-relaxed text-gray-700">
+                مەرجە شاراوەکان، ڕوون نەبوونی تایبەتمەندییەکان و نەبوونی ڕێنمایی پیشەگەرانە، پرۆسەی بڕیاردانیان زۆر ماندووکەر کردبوو ئەو کاتەی کە دەبوو بۆ دروستکردنی شوێنی جوان تەرخان بکرێت، لە گەڕان و دوودڵیدا بەفیڕۆ دەچوو
+              </p>
+              <p className="mt-6 text-[17px] sm:text-[16px] md:text-[17px] font-normal leading-relaxed text-gray-700">
+                دەرکم بەوە کرد کە دەبێت ڕێگەیەکی باشتر هەبێت — کارگەیەک کە نەک تەنها بەرهەم، بەڵکو شەفافییەتی تەواو، ئامۆژگاریی شارەزایان و چارەسەری گشتگیر (Turnkey) پێشکەش بکات. بە پشتبەستن بە ٢٠ ساڵ ئەزموونی ئەندازیاری و بە پاڵپشتیی تیمێکی نێودەوڵەتی لە پسپۆڕان، کارگەی ئەنتیکام دامەزراند بۆ ئەوەی ببێتە ئەو هاوبەشە جێمتمانەیە و ئێمە تەنها کەپسوول و پێکهاتەی پێشوەختە دروستکراو بەرهەم ناهێنین؛ بەڵکو شارەزایی، کەرەستەی کوالێتی بەرز و پاڵپشتییەکی پیشەگەرانە پێشکەش دەکەین کە دڵنیایی دەدات لە سەرکەوتنی هەر پڕۆژەیەک، لە دیزاینی سەرەتاییەوە تا قۆناغی کۆتایی جێگیرکردن لە سەرتاسەری عێراقدا
+              </p>
+            </div>
+            <div className="flex justify-center lg:justify-end">
+              <TeamMemberCard
+                name="Karzan"
+                description="An expert in Capsules, Prefab Houses, Apple Cabins & Container Homes"
+                imageSrc="/images/factory-preview2.jpg"
+                style={{ marginLeft: '76px' }}
+              />
+            </div>
+          </div>
         </div>
       </section>
 

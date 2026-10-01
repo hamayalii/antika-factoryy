@@ -17,6 +17,8 @@ import { AboutPage } from "./pages/AboutPage";
 import { TrustMarquee } from "./components/TrustMarquee";
 import { SpecialFeatures } from "./components/SpecialFeatures";
 import { FactoryInfoSection } from "./components/FactoryInfoSection";
+import { ContactModal } from "./components/ContactModal";
+import { ContactModalProvider, useContactModal } from "./contexts/ContactModalContext";
 import {
   ArrowLeft,
   ArrowRight,
@@ -33,7 +35,6 @@ import {
   Sparkles,
   X,
 } from "lucide-react";
-import { features } from "process";
 
 const FacebookIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
@@ -107,9 +108,36 @@ function Reveal({
 }
 
 /* ---------------------------------- Logo ---------------------------------- */
-function Logo() {
+function Logo({
+  isMobileMenuOpen,
+  setIsMobileMenuOpen,
+  location,
+}: {
+  isMobileMenuOpen?: boolean;
+  setIsMobileMenuOpen?: (open: boolean) => void;
+  location?: ReturnType<typeof useLocation>;
+}) {
+  const handleLogoClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (isMobileMenuOpen && setIsMobileMenuOpen) {
+      setIsMobileMenuOpen(false);
+    }
+
+    if (location && location.pathname === "/") {
+      e.preventDefault();
+      const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      window.scrollTo({
+        top: 0,
+        behavior: prefersReducedMotion ? "auto" : "smooth",
+      });
+    }
+  };
+
   return (
-    <a href="#home" className="flex items-center gap-2 group">
+    <a
+      href="/"
+      onClick={handleLogoClick}
+      className="flex items-center gap-2 group transition-transform duration-200 hover:scale-105"
+    >
       <span className="relative grid h-12 w-12 shrink-0 place-items-center sm:h-16 sm:w-16">
         <img
           src="/images/logo.png"
@@ -175,6 +203,7 @@ function Header({
   active: string;
   onNav: (id: string) => void;
 }) {
+  const { openContactModal } = useContactModal();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
@@ -306,7 +335,11 @@ function Header({
       >
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
           {/* Logo RIGHT (first in RTL) */}
-          <Logo />
+          <Logo
+            isMobileMenuOpen={open}
+            setIsMobileMenuOpen={setOpen}
+            location={location}
+          />
 
           {/* Nav center */}
           <nav className="hidden items-center gap-6 lg:flex">
@@ -421,8 +454,8 @@ function Header({
 
           {/* CTA LEFT */}
           <div className="flex items-center gap-2">
-            <Link
-              to="/#contact"
+            <button
+              onClick={openContactModal}
               className={`hidden items-center gap-2 rounded-full px-6 py-3 text-[13px] font-bold transition sm:inline-flex ${isOverlay
                 ? "border border-white/70 bg-white/10 text-white hover:bg-white hover:text-gray-900"
                 : "bg-brand text-white hover:bg-brand-dark"
@@ -430,7 +463,7 @@ function Header({
             >
               پەیوەندیمان پێوە بکە
               <ArrowLeft className="h-4 w-4" strokeWidth={2.5} />
-            </Link>
+            </button>
             <button
               ref={menuButtonRef}
               onClick={() => setOpen(!open)}
@@ -551,14 +584,16 @@ function Header({
                 </Link>
               )
             ))}
-            <Link
-              to="/#contact"
-              onClick={() => setOpen(false)}
+            <button
+              onClick={() => {
+                setOpen(false);
+                openContactModal();
+              }}
               className="mt-2 inline-flex items-center justify-center gap-2 rounded-xl bg-brand px-4 py-3 text-[13.5px] font-semibold text-white"
             >
               پەیوەندیمان پێوە بکە
               <ArrowLeft className="h-4 w-4" />
-            </Link>
+            </button>
           </nav>
         </div>
       </header>
@@ -1023,55 +1058,10 @@ function UseCases() {
 
 
 
-/* ---------------------------------- Custom Parallax Hook ---------------------------------- */
-function useParallax(speed = 0.16) {
-  const ref = useRef<HTMLDivElement>(null);
-  const bgRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      if (!ref.current || !bgRef.current) return;
-      const rect = ref.current.getBoundingClientRect();
-      const windowHeight = window.innerHeight;
-
-      // Only calculate if visible on screen
-      if (rect.top <= windowHeight && rect.bottom >= 0) {
-        const offset = (rect.top - windowHeight / 2) * speed;
-        bgRef.current.style.transform = `translate3d(0, ${offset}px, 0) scale(1.04)`;
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    window.addEventListener("resize", handleScroll, { passive: true });
-    handleScroll();
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-      window.removeEventListener("resize", handleScroll);
-    };
-  }, [speed]);
-
-  return { ref, bgRef };
-}
-
 /* ---------------------------------- Slanted Parallax Banner ---------------------------------- */
 function SlantedBanner() {
-  const { ref, bgRef } = useParallax(0.15);
-
   return (
-    <section ref={ref} className="slanted-parallax-section relative isolate min-h-[360px] sm:min-h-[480px] lg:min-h-[560px] flex items-center justify-center overflow-hidden">
-      {/* Background layer with parallax translateY */}
-      <div
-        ref={bgRef}
-        className="slanted-parallax-inner"
-        role="img"
-        aria-label="کەپسولی نیشتەجێبوون و مۆدێرنی کارگەی ئەنتیکا"
-      />
-
-      {/* Subtle black overlay to give soft dark tint */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/20 to-black/30 pointer-events-none" />
-      <div className="absolute inset-0 bg-black/10 mix-blend-overlay pointer-events-none" />
-
+    <section className="slanted-parallax-section relative isolate min-h-[360px] sm:min-h-[480px] lg:min-h-[560px] flex items-center justify-center" role="img" aria-label="کەپسولی نیشتەجێبوون و مۆدێرنی کارگەی ئەنتیکا">
       {/* Decorative center badge / text that makes it lively on both mobile & desktop */}
       <div className="relative z-10 mx-auto max-w-4xl px-4 text-center">
         <Reveal>
@@ -1159,18 +1149,8 @@ function Capabilities() {
 
 /* ---------------------------------- Contact CTA Band ---------------------------------- */
 function ContactCTA() {
-  const { ref, bgRef } = useParallax(0.22);
-
   return (
-    <section ref={ref} className="contact-cta-parallax relative isolate overflow-hidden">
-      {/* Background layer with parallax image */}
-      <div className="absolute inset-0 z-0">
-        <div ref={bgRef} className="contact-parallax-inner" />
-        {/* Very subtle orange tint + dark overlay for maximum image clarity */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/25 to-black/40" />
-        <div className="absolute inset-0 bg-brand/10 mix-blend-overlay pointer-events-none" />
-      </div>
-
+    <section className="contact-cta-parallax relative isolate">
       <div className="relative z-10 mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8 py-20 sm:py-32">
         <Reveal>
           <span className="inline-flex items-center gap-2 rounded-full border border-brand/40 bg-brand/20 px-4 py-1.5 text-[13px] font-bold text-brand-light backdrop-blur-md mb-4">
@@ -1655,7 +1635,13 @@ function HomePage() {
 /* ----------------------------------- App ----------------------------------- */
 function AppContent() {
   const [active, setActive] = useState("home");
+  const { isContactModalOpen, closeContactModal } = useContactModal();
   const location = useLocation();
+
+  // Scroll to top when navigating to a new page
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
 
   useEffect(() => {
     if (location.pathname !== "/") return;
@@ -1680,7 +1666,10 @@ function AppContent() {
 
   return (
     <div dir="rtl" className="min-h-screen bg-white font-body text-gray-900">
-      <Header active={active} onNav={setActive} />
+      <Header
+        active={active}
+        onNav={setActive}
+      />
       <FooterReveal
         footerContent={<Footer onNav={setActive} />}
       >
@@ -1722,6 +1711,10 @@ function AppContent() {
       </FooterReveal>
       <SocialSidebar />
       <BackToTop />
+      <ContactModal
+        isOpen={isContactModalOpen}
+        onClose={closeContactModal}
+      />
     </div>
   );
 }
@@ -1729,7 +1722,9 @@ function AppContent() {
 export default function App() {
   return (
     <BrowserRouter>
-      <AppContent />
+      <ContactModalProvider>
+        <AppContent />
+      </ContactModalProvider>
     </BrowserRouter>
   );
 }

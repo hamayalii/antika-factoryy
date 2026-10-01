@@ -527,107 +527,159 @@ body {
 }
 
 /* ---------- Slanted Parallax Section 1 (Banner between Team & Process) ---------- */
-/* Uses vw-based offset so the slant angle stays visually consistent across all screen widths */
+/* Fixed-background parallax with parallel slanted top and bottom edges */
 .slanted-parallax-section {
   position: relative;
   width: 100%;
-  overflow: hidden;
-  clip-path: polygon(0 6vw, 100% 0, 100% 100%, 0 100%);
-  margin-top: -6vw;
-  padding-bottom: 0;
-  background-color: #111827;
+  overflow: visible;
   isolation: isolate;
+  --slant: 7vw;
+  --wedge-top: #111827;
+  --wedge-bottom: #111827;
+  background: linear-gradient(to bottom, var(--wedge-top) 50%, var(--wedge-bottom) 50%);
+  /* Padding ensures content doesn't touch the slanted edges */
+  padding-top: 7vw;
+  padding-bottom: 7vw;
   z-index: 5;
 }
 
-@media (max-width: 600px) {
-  .slanted-parallax-section {
-    clip-path: polygon(0 3vw, 100% 0, 100% 100%, 0 100%);
-    margin-top: -3vw;
-  }
-}
-
-.slanted-parallax-inner {
+.slanted-parallax-section::before {
+  content: "";
   position: absolute;
-  top: -25vh;
-  left: 0;
-  width: 100%;
-  height: calc(100% + 50vh);
+  inset: 0;
+  z-index: -1;
   background-image: url('/images/diognal-1-mobile.jpg');
   background-position: center center;
   background-repeat: no-repeat;
   background-size: cover;
-  will-change: transform;
+  background-attachment: fixed;
+  clip-path: polygon(0 var(--slant), 100% 0, 100% calc(100% - var(--slant)), 0 100%);
+}
+
+.slanted-parallax-section::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: rgba(0, 0, 0, 0.45) !important;
+  clip-path: polygon(0 var(--slant), 100% 0, 100% calc(100% - var(--slant)), 0 100%);
   pointer-events: none;
 }
 
 @media (min-width: 640px) {
-  .slanted-parallax-inner {
+  .slanted-parallax-section::before {
     background-image: url('/images/diognal-1.jpg');
+  }
+  .slanted-parallax-section::after {
+    clip-path: polygon(0 var(--slant), 100% 0, 100% calc(100% - var(--slant)), 0 100%);
+  }
+}
+
+@media (max-width: 1024px) {
+  .slanted-parallax-section {
+    --slant: 5vw;
+    padding-top: 5vw;
+    padding-bottom: 5vw;
+  }
+  .slanted-parallax-section::after {
+    clip-path: polygon(0 var(--slant), 100% 0, 100% calc(100% - var(--slant)), 0 100%);
+  }
+}
+
+/* Touch devices and small screens: iOS ignores fixed backgrounds, use scroll */
+@media (hover: none) and (pointer: coarse), (max-width: 1024px) {
+  .slanted-parallax-section::before {
+    background-attachment: scroll;
   }
 }
 
 /* ---------- Process Diagonal White/Light Section (Dividing the two images) ---------- */
-/* Both top and bottom are clipped with the same 6vw so all diagonal seams stay parallel */
+/* Both top and bottom are clipped with the same 7vw so all diagonal seams stay parallel */
 .process-diagonal-section {
   position: relative;
   background-color: #ffffff;
-  clip-path: polygon(0 6vw, 100% 0, 100% calc(100% - 6vw), 0 100%);
-  margin-top: -6vw;
-  margin-bottom: -6vw;
+  clip-path: polygon(0 7vw, 100% 0, 100% calc(100% - 7vw), 0 100%);
+  margin-top: -7vw;
+  margin-bottom: -7vw;
   z-index: 20;
-  padding-top: calc(6vw + 64px);
-  padding-bottom: calc(6vw + 64px);
+  padding-top: calc(7vw + 64px);
+  padding-bottom: calc(7vw + 64px);
 }
 
-@media (max-width: 600px) {
+@media (max-width: 1024px) {
   .process-diagonal-section {
-    clip-path: polygon(0 3vw, 100% 0, 100% calc(100% - 3vw), 0 100%);
-    margin-top: -3vw;
-    margin-bottom: -3vw;
-    padding-top: calc(3vw + 48px);
-    padding-bottom: calc(3vw + 48px);
+    clip-path: polygon(0 5vw, 100% 0, 100% calc(100% - 5vw), 0 100%);
+    margin-top: -5vw;
+    margin-bottom: -5vw;
+    padding-top: calc(5vw + 48px);
+    padding-bottom: calc(5vw + 48px);
   }
 }
 
 /* ---------- Contact CTA Slanted Parallax Section 2 (Unique Second Image) ---------- */
-/* Same 6vw offset keeps all diagonal seams parallel down the page */
+/* Fixed-background parallax with parallel slanted top and bottom edges */
 .contact-cta-parallax {
   position: relative;
   width: 100%;
-  overflow: hidden;
-  clip-path: polygon(0 6vw, 100% 0, 100% 100%, 0 100%);
-  margin-top: -6vw;
-  background-color: #111827;
+  overflow: visible;
   isolation: isolate;
+  --slant: 7vw;
+  --wedge-top: #111827;
+  --wedge-bottom: #111827;
+  background: linear-gradient(to bottom, var(--wedge-top) 50%, var(--wedge-bottom) 50%);
+  /* Padding ensures content doesn't touch the slanted edges */
+  padding-top: 7vw;
+  padding-bottom: 7vw;
   z-index: 10;
-  padding-top: 0;
 }
 
-@media (max-width: 600px) {
-  .contact-cta-parallax {
-    clip-path: polygon(0 3vw, 100% 0, 100% 100%, 0 100%);
-    margin-top: -3vw;
-  }
-}
-
-.contact-parallax-inner {
+.contact-cta-parallax::before {
+  content: "";
   position: absolute;
-  top: -25vh;
-  left: 0;
-  width: 100%;
-  height: calc(100% + 50vh);
+  inset: 0;
+  z-index: -1;
   background-image: url('/images/diognal-2-mobile.jpg');
   background-position: center center;
   background-repeat: no-repeat;
   background-size: cover;
-  will-change: transform;
+  background-attachment: fixed;
+  clip-path: polygon(0 var(--slant), 100% 0, 100% calc(100% - var(--slant)), 0 100%);
+}
+
+.contact-cta-parallax::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: rgba(0, 0, 0, 0.45) !important;
+  clip-path: polygon(0 var(--slant), 100% 0, 100% calc(100% - var(--slant)), 0 100%);
   pointer-events: none;
 }
 
 @media (min-width: 640px) {
-  .contact-parallax-inner {
+  .contact-cta-parallax::before {
     background-image: url('/images/diognal-2.jpg');
+  }
+  .contact-cta-parallax::after {
+    clip-path: polygon(0 var(--slant), 100% 0, 100% calc(100% - var(--slant)), 0 100%);
+  }
+}
+
+@media (max-width: 1024px) {
+  .contact-cta-parallax {
+    --slant: 5vw;
+    padding-top: 5vw;
+    padding-bottom: 5vw;
+  }
+  .contact-cta-parallax::after {
+    clip-path: polygon(0 var(--slant), 100% 0, 100% calc(100% - var(--slant)), 0 100%);
+  }
+}
+
+/* Touch devices and small screens: iOS ignores fixed backgrounds, use scroll */
+@media (hover: none) and (pointer: coarse), (max-width: 1024px) {
+  .contact-cta-parallax::before {
+    background-attachment: scroll;
   }
 }
 
@@ -682,4 +734,22 @@ body {
 [data-social-sidebar] {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+/* Contact Modal Animation */
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-modal-in {
+    animation: none !important;
+  }
 }

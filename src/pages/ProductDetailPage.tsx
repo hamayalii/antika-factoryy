@@ -23,11 +23,13 @@ import { ProductCard } from "../components/ProductCard";
 import { VerificationPlaceholder } from "../components/VerificationPlaceholder";
 import { Reveal } from "../components/Reveal";
 import { SEO } from "../components/SEO";
+import { useContactModal } from "../contexts/ContactModalContext";
 
 export function ProductDetailPage() {
   const { slug } = useParams<{ slug: string }>();
   const product = slug ? getProductBySlug(slug) : undefined;
   const category = product ? getCategoryBySlug(product.categoryId) : undefined;
+  const { openContactModal } = useContactModal();
 
   const sectionLink = product && isKoshkProduct(product)
     ? "/products/koshk"
@@ -216,13 +218,13 @@ export function ProductDetailPage() {
                     {product.cta.primaryKu}
                   </a>
 
-                  <a
-                    href="tel:+9647501234567"
+                  <button
+                    onClick={openContactModal}
                     className="inline-flex items-center justify-center gap-2 rounded-full border-2 border-gray-200 bg-white px-7 py-3.5 text-[14.5px] font-bold text-gray-800 transition hover:border-brand hover:text-brand"
                   >
                     <PhoneCall className="h-4 w-4" />
                     {product.cta.secondaryKu}
-                  </a>
+                  </button>
                 </div>
               </Reveal>
             </div>

@@ -101,8 +101,8 @@ function WhyAntikaProducts() {
   const features = [
     {
       icon: <Shield className="h-8 w-8 text-brand" />,
-      title: "کەرەستەی کوالێتی بەرز و ئەندازیاریی ورد",
-      description: "پشت بە باشترین کەرەستەی پیشەسازی دەبەستین کە بەرگەی سەختترین بارودۆخەکان دەگرن بە سەرپەرشتی لێهاتووترین ئەندازیاران و وەستاکانمان، بەرهەمێک پێشکەش دەکەین کە تەمەنێکی درێژ و پتەوییەکی بێهاوتای هەیە",
+      title: "متمانە و ڕاستگۆیی لە کوالێتیدا",
+      description: "ڕاستگۆیانە پشت بە باشترین کەرەستەی پیشەسازی دەبەستین تا بەرگەی سەختترین بارودۆخەکان بگرێت. لە ڕێگەی سەرپەرشتیی بەردەوامی ئەندازیارانمانەوە، کڕیارەکانمان دڵنیا دەکەینەوە لە وەرگرتنی بەرهەمێک کە تەمەنێکی درێژ و پتەوییەکی بێهاوتای هەیە",
     },
     {
       icon: <Zap className="h-8 w-8 text-brand" />,
@@ -122,12 +122,12 @@ function WhyAntikaProducts() {
         <Reveal className="mb-12 text-center">
           <span className="inline-flex items-center gap-2 text-[14px] font-bold text-brand">
             <span className="h-[2px] w-6 rounded bg-brand" />
-            بۆچی بەرهەمەکانی ئەنتیکا؟
+            بۆچی ئەنتیکا؟
             <span className="h-[2px] w-6 rounded bg-brand" />
           </span>
           <h2 className="mx-auto mt-4 max-w-2xl font-display font-black leading-[1.3] text-gray-900" style={{ fontSize: 'clamp(28px, 4vw, 42px)' }}>
-ئەو تایبەتمەندیانەی ئێمە لە ئەوانی تر جیائەکاتەوە  
-        </h2>
+هەڵسوکەوتی ئێمە لەگەڵ کڕیارەکانمان        
+          </h2>
         </Reveal>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">

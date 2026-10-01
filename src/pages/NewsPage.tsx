@@ -20,7 +20,7 @@ import {
 import { newsArticles } from "../data/newsData";
 import { Reveal } from "../components/Reveal";
 import { SEO } from "../components/SEO";
-import { useParallax } from "../hooks/useParallax";
+import { useContactModal } from "../contexts/ContactModalContext";
 
 function getHighlightIcon(iconName: string) {
   switch (iconName) {
@@ -37,81 +37,66 @@ function getHighlightIcon(iconName: string) {
 
 /* ---------------- Slanted Parallax Banner 1 (Before Info Section) ---------------- */
 function NewsSlantedBannerTop() {
-  const { ref, bgRef } = useParallax(0.15);
-
   return (
-    <section ref={ref} className="slanted-parallax-section relative isolate min-h-[340px] sm:min-h-[460px] lg:min-h-[520px] flex items-center justify-center overflow-hidden">
-      <div
-        ref={bgRef}
-        className="slanted-parallax-inner"
-        role="img"
-        aria-label="کەپسولی نیشتەجێبوون و مۆدێرنی کارگەی ئەنتیکا"
-      />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/20 to-black/30 pointer-events-none" />
-      <div className="absolute inset-0 bg-black/10 mix-blend-overlay pointer-events-none" />
-
-      <div className="relative z-10 mx-auto max-w-4xl px-4 text-center">
-        <Reveal>
-          <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/40 px-4 py-1.5 text-[12px] sm:text-[13.5px] font-bold text-white backdrop-blur-md mb-3 shadow-lg">
-            <Sparkles className="h-3.5 w-3.5 text-brand" />
-            داهێنان لە پیشەسازی و تەلارسازی مۆدیولار
-          </div>
-          <h3 className="font-display text-[24px] sm:text-[34px] md:text-[42px] font-black text-white drop-shadow-xl leading-[1.3]">
-            بەرزترین ئاستی کوالێتی و متمانە
-          </h3>
-          <p className="mt-2 text-[13px] sm:text-[16px] text-gray-200/90 max-w-xl mx-auto drop-shadow font-medium">
-            ئەنتیکا فاکتۆری، پێشەنگ لە بەرهەمهێنانی کەپسول و پێداویستییە ئەندازیارییەکان
-          </p>
-        </Reveal>
-      </div>
-    </section>
+    <div className="bg-[#111827]">
+      <section className="slanted-parallax-section relative isolate min-h-[340px] sm:min-h-[460px] lg:min-h-[520px] flex items-center justify-center -mt-px" style={{ '--wedge-top': '#f8f9fb' } as React.CSSProperties} role="img" aria-label="کەپسولی نیشتەجێبوون و مۆدێرنی کارگەی ئەنتیکا">
+        <div className="relative z-10 mx-auto max-w-4xl px-4 text-center">
+          <Reveal>
+            <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/40 px-4 py-1.5 text-[12px] sm:text-[13.5px] font-bold text-white backdrop-blur-md mb-3 shadow-lg">
+              <Sparkles className="h-3.5 w-3.5 text-brand" />
+              داهێنان لە پیشەسازی و تەلارسازی مۆدیولار
+            </div>
+            <h3 className="font-display text-[24px] sm:text-[34px] md:text-[42px] font-black text-white drop-shadow-xl leading-[1.3]">
+              بەرزترین ئاستی کوالێتی و متمانە
+            </h3>
+            <p className="mt-2 text-[13px] sm:text-[16px] text-gray-200/90 max-w-xl mx-auto drop-shadow font-medium">
+              ئەنتیکا فاکتۆری، پێشەنگ لە بەرهەمهێنانی کەپسول و پێداویستییە ئەندازیارییەکان
+            </p>
+          </Reveal>
+        </div>
+      </section>
+    </div>
   );
 }
 
 /* ---------------- Slanted Parallax Banner 2 (After Info Section) ---------------- */
 function NewsSlantedBannerBottom() {
-  const { ref, bgRef } = useParallax(0.22);
-
   return (
-    <section ref={ref} className="contact-cta-parallax relative isolate overflow-hidden">
-      <div className="absolute inset-0 z-0">
-        <div ref={bgRef} className="contact-parallax-inner" />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/25 to-black/40" />
-        <div className="absolute inset-0 bg-brand/10 mix-blend-overlay pointer-events-none" />
-      </div>
-
-      <div className="relative z-10 mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8 py-20 sm:py-28">
-        <Reveal>
-          <span className="inline-flex items-center gap-2 rounded-full border border-brand/40 bg-brand/20 px-4 py-1.5 text-[13px] font-bold text-brand-light backdrop-blur-md mb-4">
-            کارگەی ئەنتیکا
-          </span>
-          <h2 className="font-display text-[26px] sm:text-[34px] md:text-[44px] font-black leading-[1.3] text-white drop-shadow-lg">
-            پەیوەندیمان پێوە بکە بۆ زانیاری زیاتر و ڕاوێژکاری
-          </h2>
-          <p className="mx-auto mt-4 max-w-xl text-[14.5px] sm:text-[16px] font-medium text-white/90 drop-shadow-md">
-            ئامادەین بۆ دابینکردنی باشترین چارەسەری نیشتەجێبوون و بازرگانی بۆ پڕۆژەکەت
-          </p>
-        </Reveal>
-        <Reveal delay={150}>
-          <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
-            <a
-              href="tel:+9647501234567"
-              className="inline-flex items-center gap-2 rounded-full bg-brand px-8 py-4 text-[15px] font-bold text-white shadow-xl transition hover:bg-brand-dark hover:scale-105"
-            >
-              <PhoneCall className="h-5 w-5" />
-              <span dir="ltr">+964 750 123 4567</span>
-            </a>
-            <a
-              href="mailto:info@antika-factory.com"
-              className="inline-flex items-center gap-2 rounded-full border border-white/60 bg-white/10 px-8 py-4 text-[15px] font-bold text-white backdrop-blur-md transition hover:bg-white hover:text-gray-900"
-            >
-              <Mail className="h-5 w-5" />
-              info@antika-factory.com
-            </a>
-          </div>
-        </Reveal>
-      </div>
-    </section>
+    <div className="bg-[#111827]">
+      <section className="contact-cta-parallax relative isolate">
+        <div className="relative z-10 mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8 py-20 sm:py-28">
+          <Reveal>
+            <span className="inline-flex items-center gap-2 rounded-full border border-brand/40 bg-brand/20 px-4 py-1.5 text-[13px] font-bold text-brand-light backdrop-blur-md mb-4">
+              کارگەی ئەنتیکا
+            </span>
+            <h2 className="font-display text-[26px] sm:text-[34px] md:text-[44px] font-black leading-[1.3] text-white drop-shadow-lg">
+              پەیوەندیمان پێوە بکە بۆ زانیاری زیاتر و ڕاوێژکاری
+            </h2>
+            <p className="mx-auto mt-4 max-w-xl text-[14.5px] sm:text-[16px] font-medium text-white/90 drop-shadow-md">
+              ئامادەین بۆ دابینکردنی باشترین چارەسەری نیشتەجێبوون و بازرگانی بۆ پڕۆژەکەت
+            </p>
+          </Reveal>
+          <Reveal delay={150}>
+            <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
+              <a
+                href="tel:+9647501234567"
+                className="inline-flex items-center gap-2 rounded-full bg-brand px-8 py-4 text-[15px] font-bold text-white shadow-xl transition hover:bg-brand-dark hover:scale-105"
+              >
+                <PhoneCall className="h-5 w-5" />
+                <span dir="ltr">+964 750 123 4567</span>
+              </a>
+              <a
+                href="mailto:info@antika-factory.com"
+                className="inline-flex items-center gap-2 rounded-full border border-white/60 bg-white/10 px-8 py-4 text-[15px] font-bold text-white backdrop-blur-md transition hover:bg-white hover:text-gray-900"
+              >
+                <Mail className="h-5 w-5" />
+                info@antika-factory.com
+              </a>
+            </div>
+          </Reveal>
+        </div>
+      </section>
+    </div>
   );
 }
 
@@ -119,6 +104,7 @@ export function NewsPage() {
   const [lang, setLang] = useState<"ku" | "ar">("ku");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  const { openContactModal } = useContactModal();
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -414,12 +400,12 @@ export function NewsPage() {
                 : "فريق مصنع أنتیکا مستعد لتقديم الاستشارات الهندسية، تصميم الكبسولات والبيوت، وتلبية كافة متطلبات مشروعك."}
             </p>
             <div className="flex flex-wrap items-center justify-center gap-3">
-              <Link
-                to="/#contact"
+              <button
+                onClick={openContactModal}
                 className="rounded-full bg-brand px-6 sm:px-8 py-2.5 sm:py-3 text-[13.5px] sm:text-[14px] font-bold text-white shadow-lg transition hover:bg-brand-dark"
               >
                 {lang === "ku" ? "پەیوەندیمان پێوە بکە" : "تواصل معنا"}
-              </Link>
+              </button>
               <Link
                 to="/products"
                 className="rounded-full bg-white/10 border border-white/20 px-6 sm:px-8 py-2.5 sm:py-3 text-[13.5px] sm:text-[14px] font-bold text-white transition hover:bg-white hover:text-gray-900"
