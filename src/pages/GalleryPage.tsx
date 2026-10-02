@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { createPortal } from "react-dom";
 import {
   Home as HomeIcon,
   ChevronLeft,
@@ -12,7 +13,6 @@ import {
 import { galleryProjects, GalleryProject } from "../data/galleryData";
 import { Reveal } from "../components/Reveal";
 import { SEO } from "../components/SEO";
-import { MaterialCertificatesMarquee } from "../components/MaterialCertificatesMarquee";
 
 export function GalleryPage() {
   const [lang] = useState<"ku" | "ar">("ku");
@@ -86,11 +86,19 @@ export function GalleryPage() {
     };
 
     window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    
+    if (isLightboxOpen) {
+      document.body.style.overflow = "hidden";
+    }
+    
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = "";
+    };
   }, [isLightboxOpen, selectedProject]);
 
   return (
-    <div className="bg-white pt-24 min-h-screen text-right font-body">
+    <div className="pt-24 min-h-screen text-right font-body">
       <SEO
         title="وێنەی کارەکانمان | کارگەی ئەنتیکا"
         description="وێنەی پڕۆژە تەواوبووەکانی کارگەی ئەنتیکا - کەپسولەکان، خانووەکان، کۆشکەکان، و کارە هونەریەکان."
@@ -99,7 +107,7 @@ export function GalleryPage() {
       />
 
       {/* Simple Breadcrumb */}
-      <nav aria-label="ڕێڕەوی پەڕەکان" className="border-b border-gray-100 bg-white py-4">
+      <nav aria-label="ڕێڕەوی پەڕەکان" className="border-b border-gray-100 py-4">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <ol className="flex items-center gap-2 text-[13px] text-gray-500">
             <li className="flex items-center gap-2">
@@ -249,64 +257,63 @@ export function GalleryPage() {
       </section>
 
       {/* Lightbox */}
-      {isLightboxOpen && selectedProject && (
-        <div className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center p-4">
-          {/* Close Button */}
-          <button
-            onClick={closeLightbox}
-            className="absolute top-4 right-4 z-10 rounded-full bg-white/10 hover:bg-white/20 p-2 text-white transition"
-          >
-            <X className="h-6 w-6" />
-          </button>
+      {isLightboxOpen && selectedProject &&
+        createPortal(
+          <div className="fixed inset-0 z-[9999] bg-black/95 flex items-center justify-center p-4" onClick={closeLightbox}>
+            {/* Close Button */}
+            <button
+              onClick={closeLightbox}
+              className="absolute top-4 right-4 z-10 rounded-full bg-white/10 hover:bg-white/20 p-2 text-white transition"
+            >
+              <X className="h-6 w-6" />
+            </button>
 
-          {/* Navigation Buttons */}
-          {selectedProject.images.length > 1 && (
-            <>
-              <button
-                onClick={prevImage}
-                className="absolute right-4 z-10 rounded-full bg-white/10 hover:bg-white/20 p-3 text-white transition"
-              >
-                <ChevronRight className="h-6 w-6" />
-              </button>
-              <button
-                onClick={nextImage}
-                className="absolute left-4 z-10 rounded-full bg-white/10 hover:bg-white/20 p-3 text-white transition"
-              >
-                <ChevronLeft className="h-6 w-6" />
-              </button>
-            </>
-          )}
+            {/* Navigation Buttons */}
+            {selectedProject.images.length > 1 && (
+              <>
+                <button
+                  onClick={(e) => { e.stopPropagation(); prevImage(); }}
+                  className="absolute right-4 z-10 rounded-full bg-white/10 hover:bg-white/20 p-3 text-white transition"
+                >
+                  <ChevronRight className="h-6 w-6" />
+                </button>
+                <button
+                  onClick={(e) => { e.stopPropagation(); nextImage(); }}
+                  className="absolute left-4 z-10 rounded-full bg-white/10 hover:bg-white/20 p-3 text-white transition"
+                >
+                  <ChevronLeft className="h-6 w-6" />
+                </button>
+              </>
+            )}
 
-          {/* Main Image */}
-          <div className="max-w-6xl max-h-[85vh] w-full">
-            <img
-              src={selectedProject.images[currentImageIndex]}
-              alt={`${lang === "ku" ? selectedProject.titleKu : selectedProject.titleAr} ${currentImageIndex + 1}`}
-              className="w-full h-full object-contain"
-            />
-          </div>
-
-          {/* Image Counter */}
-          {selectedProject.images.length > 1 && (
-            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10 bg-black/50 backdrop-blur-md rounded-full px-4 py-2 text-white text-sm font-medium">
-              {currentImageIndex + 1} / {selectedProject.images.length}
+            {/* Main Image */}
+            <div className="max-w-6xl max-h-[85dvh] w-full" onClick={(e) => e.stopPropagation()}>
+              <img
+                src={selectedProject.images[currentImageIndex]}
+                alt={`${lang === "ku" ? selectedProject.titleKu : selectedProject.titleAr} ${currentImageIndex + 1}`}
+                className="w-full h-full object-contain"
+              />
             </div>
-          )}
 
-          {/* Project Info */}
-          <div className="absolute bottom-4 right-4 z-10 max-w-md bg-black/50 backdrop-blur-md rounded-xl p-4 text-white">
-            <h4 className="font-display font-bold text-lg mb-1">
-              {lang === "ku" ? selectedProject.titleKu : selectedProject.titleAr}
-            </h4>
+            {/* Image Counter */}
+            {selectedProject.images.length > 1 && (
+              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10 bg-black/50 backdrop-blur-md rounded-full px-4 py-2 text-white text-sm font-medium">
+                {currentImageIndex + 1} / {selectedProject.images.length}
+              </div>
+            )}
+
+            {/* Project Info */}
+            <div className="absolute bottom-4 right-4 z-10 max-w-md bg-black/50 backdrop-blur-md rounded-xl p-4 text-white">
+              <h4 className="font-display font-bold text-lg mb-1">
+                {lang === "ku" ? selectedProject.titleKu : selectedProject.titleAr}
+              </h4>
             <p className="text-sm text-gray-300">
               {lang === "ku" ? selectedProject.locationKu : selectedProject.locationAr}
             </p>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
-
-      {/* Material Certificates Marquee */}
-      <MaterialCertificatesMarquee variant="home" />
     </div>
   );
 }

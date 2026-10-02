@@ -6,91 +6,115 @@ interface TrustLogo {
 export const TRUST_LOGOS: TrustLogo[] = [
   {
     name: "Faruk Medical City",
-    src: "/whose-who-trust-us/photo_2026-09-23_10-45-24.jpg",
+    src: "/whose-who-trust-us/photo_2026-09-23_10-45-24.webp",
   },
   {
     name: "Asiacell",
-    src: "/whose-who-trust-us/photo_2026-09-23_10-45-28.jpg",
+    src: "/whose-who-trust-us/photo_2026-09-23_10-45-28.webp",
   },
   {
     name: "KIIB Bank",
-    src: "/whose-who-trust-us/photo_2026-09-23_11-17-43.jpg",
+    src: "/whose-who-trust-us/photo_2026-09-23_11-17-43.webp",
   },
   {
     name: "Rayhana Park",
-    src: "/whose-who-trust-us/photo_2026-09-23_11-17-38.jpg",
+    src: "/whose-who-trust-us/photo_2026-09-23_11-17-38.webp",
+  },
+  {
+    name: "Client Logo",
+    src: "/whose-who-trust-us/image.webp",
   },
   {
     name: "Pio",
-    src: "/whose-who-trust-us/photo_2026-09-23_10-45-33.jpg",
+    src: "/whose-who-trust-us/photo_2026-09-23_10-45-33.webp",
   },
   {
     name: "Italian Pasta",
-    src: "/whose-who-trust-us/photo_2026-09-23_10-45-42.jpg",
+    src: "/whose-who-trust-us/photo_2026-09-23_10-45-42.webp",
   },
   {
     name: "Faleh Abu Al-Amba",
-    src: "/whose-who-trust-us/photo_2026-09-23_11-17-46.jpg",
+    src: "/whose-who-trust-us/photo_2026-09-23_11-17-46.webp",
   },
   {
     name: "Italia Ice Cream",
-    src: "/whose-who-trust-us/photo_2026-09-23_10-45-46.jpg",
+    src: "/whose-who-trust-us/photo_2026-09-23_10-45-46.webp",
+  },
+  {
+    name: "Client Logo",
+    src: "/whose-who-trust-us/image (1).webp",
   },
   {
     name: "Millennium Hotels and Resorts",
-    src: "/whose-who-trust-us/photo_2026-09-23_10-45-51.jpg",
+    src: "/whose-who-trust-us/photo_2026-09-23_10-45-51.webp",
   },
   {
     name: "DIYALAND",
-    src: "/whose-who-trust-us/photo_2026-09-23_10-45-55.jpg",
+    src: "/whose-who-trust-us/photo_2026-09-23_10-45-55.webp",
   },
   {
     name: "Ashur Resort",
-    src: "/whose-who-trust-us/photo_2026-09-23_10-45-59.jpg",
+    src: "/whose-who-trust-us/photo_2026-09-23_10-45-59.webp",
+  },
+  {
+    name: "Client Logo",
+    src: "/whose-who-trust-us/image (2).webp",
   },
   {
     name: "Every Sunny Day",
-    src: "/whose-who-trust-us/photo_2026-09-24_11-14-53.jpg",
+    src: "/whose-who-trust-us/photo_2026-09-24_11-14-53.webp",
   },
   {
     name: "Copthorne Hotel Baranan",
-    src: "/whose-who-trust-us/photo_2026-09-24_11-02-41.jpg",
+    src: "/whose-who-trust-us/photo_2026-09-24_11-02-41.webp",
   },
   {
     name: "Millennium Kurdistan Hotel & Spa",
-    src: "/whose-who-trust-us/photo_2026-09-24_11-02-30.jpg",
+    src: "/whose-who-trust-us/photo_2026-09-24_11-02-30.webp",
   },
   {
     name: "Kurdish Restaurant Merwari",
-    src: "/whose-who-trust-us/photo_2026-09-25_21-52-51.jpg",
+    src: "/whose-who-trust-us/photo_2026-09-25_21-52-51.webp",
   },
   {
     name: "Road Runner",
-    src: "/whose-who-trust-us/photo_2026-09-25_21-51-46.jpg",
+    src: "/whose-who-trust-us/photo_2026-09-25_21-51-46.webp",
   },
   {
     name: "Fenk All Day Dining",
-    src: "/whose-who-trust-us/photo_2026-09-25_21-52-06.jpg",
+    src: "/whose-who-trust-us/photo_2026-09-25_21-52-06.webp",
   },
   {
     name: "Phoenicia Lebanese Restaurant",
-    src: "/whose-who-trust-us/photo_2026-09-25_21-52-28.jpg",
+    src: "/whose-who-trust-us/photo_2026-09-25_21-52-28.webp",
   },
   {
     name: "360 Revolving Restaurant",
-    src: "/whose-who-trust-us/photo_2026-09-25_21-52-35.jpg",
+    src: "/whose-who-trust-us/photo_2026-09-25_21-52-35.webp",
   },
   {
     name: "VVIP",
-    src: "/whose-who-trust-us/photo_2026-09-25_21-52-41.jpg",
+    src: "/whose-who-trust-us/photo_2026-09-25_21-52-41.webp",
   },
   {
     name: "Dubliner Slemani",
-    src: "/whose-who-trust-us/photo_2026-09-25_21-52-46.jpg",
+    src: "/whose-who-trust-us/photo_2026-09-25_21-52-46.webp",
   },
   {
     name: "Huawei",
-    src: "/whose-who-trust-us/photo_2026-09-25_21-54-41.jpg",
+    src: "/whose-who-trust-us/photo_2026-09-25_21-54-41.webp",
+  },
+  {
+    name: "Client Logo",
+    src: "/whose-who-trust-us/image (3).webp",
+  },
+  {
+    name: "Client Logo",
+    src: "/whose-who-trust-us/image (4).webp",
+  },
+  {
+    name: "Zhin",
+    src: "/whose-who-trust-us/zhin.webp",
   },
 ];
 

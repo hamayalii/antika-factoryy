@@ -132,7 +132,7 @@ export function NewsPage() {
   const featuredArticle = newsArticles[0];
 
   return (
-    <div className="bg-[#f8f9fb] pt-24 min-h-screen text-right font-body">
+    <div className="pt-24 min-h-screen text-right font-body">
       <SEO
         title="هەواڵ و چالاکییەکان | کارگەی ئەنتیکا"
         description="دوایین هەواڵ، پێشانگا نێودەوڵەتییەکان، داهێنان و چالاکییەکانی کارگەی ئەنتیکا بۆ کەرەستەی ئەندازیاری و خانووی مۆدیولار."
@@ -141,7 +141,7 @@ export function NewsPage() {
       />
 
       {/* 1. Breadcrumb Bar */}
-      <nav aria-label="ڕێڕەوی پەڕەکان" className="border-b border-gray-200/80 bg-white/80 backdrop-blur-md py-3.5 sticky top-20 z-20">
+      <nav aria-label="ڕێڕەوی پەڕەکان" className="border-b border-gray-200/80 backdrop-blur-md py-3.5 sticky top-20 z-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between">
             <ol className="flex items-center gap-2 text-[13px] text-gray-500">
@@ -183,7 +183,7 @@ export function NewsPage() {
       </nav>
 
       {/* 2. Hero Header */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-white via-white to-gray-50 py-12 sm:py-16 border-b border-gray-200/70">
+      <section className="relative overflow-hidden py-12 sm:py-16 border-b border-gray-200/70">
         <div className="pointer-events-none absolute -top-24 right-1/4 h-96 w-96 rounded-full bg-brand/5 blur-3xl" />
         <div className="pointer-events-none absolute -bottom-24 left-1/4 h-96 w-96 rounded-full bg-amber-500/5 blur-3xl" />
 

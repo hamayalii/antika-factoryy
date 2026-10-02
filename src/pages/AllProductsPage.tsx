@@ -55,7 +55,7 @@ export function AllProductsPage() {
   const currentProducts = getFilteredProducts();
 
   return (
-    <div className="bg-gray-50 pt-24 min-h-screen text-right">
+    <div className="pt-24 min-h-screen text-right">
       <SEO
         title="سەرجەم بەرهەمەکانمان | کارگەی ئەنتیکا"
         description="سەرجەم بەرهەمەکانی کارگەی ئەنتیکا: کەپسولە مۆدیولارەکان، خانووە سەربەخۆکان، کۆشکە بازرگانییەکان، لایتی ڕووناکی، و ڕەفەی ئەندازیاری."
@@ -63,7 +63,7 @@ export function AllProductsPage() {
       />
 
       {/* Breadcrumb */}
-      <nav aria-label="ڕێڕەوی پەڕەکان" className="border-b border-gray-200 bg-white py-3.5">
+      <nav aria-label="ڕێڕەوی پەڕەکان" className="border-b border-gray-200 py-3.5">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <ol className="flex items-center gap-2 text-[13px] text-gray-500">
             <li className="flex items-center gap-2">
@@ -81,7 +81,7 @@ export function AllProductsPage() {
       </nav>
 
       {/* Hero Header */}
-      <section className="relative overflow-hidden bg-white py-12 sm:py-16 border-b border-gray-100">
+      <section className="relative overflow-hidden py-12 sm:py-16 border-b border-gray-100">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <Reveal className="text-center max-w-3xl mx-auto">
             <span className="inline-flex items-center gap-2 rounded-full bg-brand-soft px-4 py-1.5 text-[13px] font-bold text-brand mb-4">

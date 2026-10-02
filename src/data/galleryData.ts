@@ -26,8 +26,12 @@ export const galleryProjects: GalleryProject[] = [
     categoryKu: "کۆشکەکان",
     categoryAr: "كشاك",
     images: [
-      "/images/karbala-1.jpg",
-      "/images/karbala-2.jpg"
+      "/images/karbala-4.webp",
+      "/images/karbala-5.webp",
+      "/images/karbala-6.webp",
+      "/images/karbala-7.webp",
+      "/images/karbala-1.webp",
+      "/images/karbala-2.webp",
     ],
     date: "2025-01-15"
   },
@@ -43,9 +47,9 @@ export const galleryProjects: GalleryProject[] = [
     categoryKu: "کەپسولەکان",
     categoryAr: "كبسولات",
     images: [
-      "/images/darman-1.jpg",
-      "/images/darman-2.jpg",
-      "/images/darman-3.jpg"
+      "/images/darman-1.webp",
+      "/images/darman-2.webp",
+      "/images/darman-3.webp"
     ],
     date: "2025-02-20"
   }

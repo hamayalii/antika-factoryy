@@ -1,5 +1,24 @@
 @import "tailwindcss";
 
+/* Page background colors for per-page theming - outside @theme for CSS custom property access */
+:root {
+  --page-bg: #FFFFFF;
+  --page-bg-1: #FFFDFE;
+  --page-bg-2: #F9F0EE;
+  --page-bg-3: #FAF0F2;
+  --page-bg-4: #FDE5EA;
+  --page-bg-5: #EDE6F2;
+  --page-bg-6: #FEEFE5;
+  --page-bg-7: #FBF2DE;
+  --page-bg-8: #FBF1D2;
+  --page-bg-9: #F0F3FD;
+  --page-bg-10: #EBF0FA;
+  --page-bg-11: #DBE9F6;
+  --page-bg-12: #E7DFF2;
+  --page-bg-13: #EDDDD3;
+  --page-bg-14: #BDDFFB;
+}
+
 @theme {
   /* Brand Colors - Keep existing orange accent */
   --color-brand: #ff5a00;
@@ -200,10 +219,11 @@ html {
 
 body {
   font-family: var(--font-body);
-  background: var(--color-white);
+  background-color: var(--color-white);
   color: var(--color-charcoal);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  transition: background-color 0.3s ease-out;
 }
 
 /* Ensure all elements use the correct font */
@@ -548,7 +568,7 @@ body {
   position: absolute;
   inset: 0;
   z-index: -1;
-  background-image: url('/images/diognal-1-mobile.jpg');
+  background-image: url('/images/diognal-1-mobile.webp');
   background-position: center center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -568,7 +588,7 @@ body {
 
 @media (min-width: 640px) {
   .slanted-parallax-section::before {
-    background-image: url('/images/diognal-1.jpg');
+    background-image: url('/images/diognal-1.webp');
   }
   .slanted-parallax-section::after {
     clip-path: polygon(0 var(--slant), 100% 0, 100% calc(100% - var(--slant)), 0 100%);
@@ -638,7 +658,7 @@ body {
   position: absolute;
   inset: 0;
   z-index: -1;
-  background-image: url('/images/diognal-2-mobile.jpg');
+  background-image: url('/images/diognal-2-mobile.webp');
   background-position: center center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -658,7 +678,7 @@ body {
 
 @media (min-width: 640px) {
   .contact-cta-parallax::before {
-    background-image: url('/images/diognal-2.jpg');
+    background-image: url('/images/diognal-2.webp');
   }
   .contact-cta-parallax::after {
     clip-path: polygon(0 var(--slant), 100% 0, 100% calc(100% - var(--slant)), 0 100%);
@@ -753,3 +773,19 @@ body {
     animation: none !important;
   }
 }
+
+/* Per-page background colors - direct rules */
+body.page-about { background-color: #EDE6F2; --page-bg: #EDE6F2; }
+body.page-capsules { background-color: #FEEFE5; --page-bg: #FEEFE5; }
+body.page-cabins { background-color: #DBE9F6; --page-bg: #DBE9F6; }
+body.page-gallery { background-color: #FFFDFE; --page-bg: #FFFDFE; }
+body.page-news { background-color: #F9F0EE; --page-bg: #F9F0EE; }
+body.page-news-detail { background-color: #FAF0F2; --page-bg: #FAF0F2; }
+body.page-solution { background-color: #FDE5EA; --page-bg: #FDE5EA; }
+body.page-koshk { background-color: #FBF2DE; --page-bg: #FBF2DE; }
+body.page-lighting { background-color: #F0F3FD; --page-bg: #F0F3FD; }
+body.page-shelves { background-color: #EBF0FA; --page-bg: #EBF0FA; }
+body.page-all-products { background-color: #BDDFFB; --page-bg: #BDDFFB; }
+body.page-category-overview { background-color: #E7DFF2; --page-bg: #E7DFF2; }
+body.page-product-detail { background-color: #EDDDD3; --page-bg: #EDDDD3; }
+html { background-color: transparent; }

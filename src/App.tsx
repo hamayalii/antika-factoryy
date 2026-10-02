@@ -167,6 +167,33 @@ const NAV = [
   { id: "about", label: "دەربارەی ئێمە", path: "/about" },
 ];
 
+// Navbar gradient color mapping (RTL order: right to left)
+const NAV_GRADIENT_COLORS = [
+  { id: 'home', color: '#FFFFFF' },
+  { id: 'capsules', color: '#FEEFE5' },
+  { id: 'houses', color: '#FEEFE5' },
+  { id: 'cabins', color: '#DBE9F6' },
+  { id: 'koshk', color: '#FBF2DE' },
+  { id: 'artworks', color: '#F0F3FD' },
+  { id: 'workImages', color: '#FFFDFE' },
+  { id: 'news', color: '#F9F0EE' },
+  { id: 'about', color: '#EDE6F2' },
+];
+
+// Generate gradient stops for horizontal navbar (to left for RTL)
+const generateNavbarGradient = () => {
+  const colors = NAV_GRADIENT_COLORS;
+  const stops: string[] = [];
+  const step = 100 / (colors.length - 1);
+
+  colors.forEach((item, index) => {
+    const position = index * step;
+    stops.push(`${item.color} ${position}%`);
+  });
+
+  return `linear-gradient(to left, ${stops.join(', ')})`;
+};
+
 const CAPSULE_ITEMS = [
   { id: "al", label: "کەپسولەکانی نیشتەجێبوون", path: "/products/al", isComingSoon: false },
   { id: "am", label: "کەپسولەکانی ئیش و کار", path: "/products/am", isComingSoon: false },
@@ -327,11 +354,14 @@ function Header({
   return (
     <>
       <header
-        className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${isOverlay
+        className={`fixed inset-x-0 top-0 z-50 ${isOverlay
           ? "bg-black/25 text-white backdrop-blur-[2px]"
-          : "bg-white text-gray-900 shadow-md"
+          : "text-gray-900"
           }`}
-        style={{ paddingTop: 'max(5px, env(safe-area-inset-top))' }}
+        style={{
+          paddingTop: 'max(5px, env(safe-area-inset-top))',
+          background: isOverlay ? undefined : generateNavbarGradient()
+        }}
       >
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
           {/* Logo RIGHT (first in RTL) */}
@@ -356,7 +386,8 @@ function Header({
                     onClick={() => setOpenDropdown(openDropdown === n.id ? null : n.id)}
                     className={`nav-link flex items-center gap-1 text-[14px] font-medium transition-colors ${(n.id === 'solutions' && location.pathname.includes('/solutions')) ||
                       (n.id === 'capsules' && (location.pathname.includes('/products/al') || location.pathname.includes('/products/am') || location.pathname.includes('/products/as'))) ||
-                      (n.id === 'houses' && (location.pathname.includes('/products/standard-house') || location.pathname.includes('/products/concrete-house') || location.pathname.includes('/products/container-house') || location.pathname.includes('/products/garden-house') || location.pathname.includes('/products/cabin-house'))) ||
+                      (n.id === 'houses' && (location.pathname.includes('/products/cl') || location.pathname.includes('/products/kl') || location.pathname.includes('/products/container-house'))) ||
+                      (n.id === 'cabins' && (location.pathname.includes('/products/zl') || location.pathname.includes('/products/pl') || location.pathname.includes('/products/concrete-house-model') || location.pathname.includes('/products/standard-house') || location.pathname.includes('/products/garden-house') || location.pathname.includes('/products/cabin-house') || location.pathname.includes('/products/concrete-house'))) ||
                       (n.id === 'artworks' && (location.pathname.includes('/products/lighting') || location.pathname.includes('/products/shelves')))
                       ? "active"
                       : isOverlay ? "text-white/90 hover:text-white" : "text-gray-600 hover:text-gray-900"
@@ -368,7 +399,7 @@ function Header({
 
                   {/* Dropdown Menu */}
                   <div className={`absolute top-full right-0 pt-2 w-52 transition-all duration-200 ${openDropdown === n.id ? 'opacity-100 visible translate-y-0 pointer-events-auto' : 'opacity-0 invisible -translate-y-2 pointer-events-none'}`}>
-                    <div className="rounded-xl bg-white shadow-xl ring-1 ring-black/5 py-2">
+                    <div className="rounded-xl shadow-xl ring-1 ring-black/5 py-2" style={{ backgroundColor: NAV_GRADIENT_COLORS.find(c => c.id === n.id)?.color || '#FFFFFF' }}>
                       {n.id === 'solutions' && solutions.map((s) => (
                         <Link
                           key={s.id}
@@ -487,8 +518,9 @@ function Header({
           role="dialog"
           aria-modal="true"
           aria-label="مێنیوی سەرەکی"
-          className={`mx-auto max-w-7xl overflow-hidden bg-white shadow-lg transition-all duration-300 lg:hidden ${open ? "max-h-[800px] opacity-100" : "max-h-0 opacity-0"
+          className={`mx-auto max-w-7xl overflow-hidden shadow-lg transition-all duration-300 lg:hidden ${open ? "max-h-[800px] opacity-100" : "max-h-0 opacity-0"
             }`}
+          style={{ backgroundColor: '#FFFFFF' }}
         >
           <nav className="flex flex-col p-4">
             {NAV.map((n, i) => (
@@ -615,8 +647,8 @@ const HERO_SLIDES = [
         لەگەڵ سیستەمێکی بەهێز و بەردەوامی بیناسازی
       </>
     ),
-    img: "/images/hero-antika.png",
-    mobileImg: "/images/hero-mobile-1.png",
+    img: "/images/hero-antika.webp",
+    mobileImg: "/images/hero-mobile-1.webp",
     cta1: "بینینی کارەکانمان",
     cta2: "دەربارەی ئێمە",
   },
@@ -632,8 +664,8 @@ const HERO_SLIDES = [
         یەکەی گواستراوەی بازرگانی بە بەرزترین کوالێتی و نرخ
       </>
     ),
-    img: "/images/hero-2.jpg",
-    mobileImg: "/images/hero-mobile-2.png",
+    img: "/images/hero-2.webp",
+    mobileImg: "/images/hero-mobile-2.webp",
     cta1: "خزمەتگوزارییەکان",
     cta2: "پەیوەندی",
   },
@@ -669,7 +701,7 @@ function Hero() {
   useEffect(() => {
     const interval = setInterval(() => {
       goTo((current + 1) % HERO_SLIDES.length);
-    }, 5000);
+    }, 6000);
     return () => clearInterval(interval);
   }, [current]);
 
@@ -883,7 +915,7 @@ function Hero() {
 /* ---------------------------------- Use Cases Grid ---------------------------------- */
 const USE_CASES = [
   {
-    img: "/images/Commercial-Kiosks.jpg",
+    img: "/images/Commercial-Kiosks.webp",
     title: "کۆشکی بازرگانی",
     desc: "کۆشکی مۆدێرن بۆ خاڵەکانی فرۆشتن، شوێنی بلیت بڕین، دوکانی بچووک، یان دوکانی گەڕۆک(گواستراوە) دیزاین کراوە تا بزنسەکەت لە بازاڕدا دەستبەجێ دیار و جیاواز بێت",
     features: [
@@ -897,7 +929,7 @@ const USE_CASES = [
     ]
   },
   {
-    img: "/images/Office-seating.jpg",
+    img: "/images/Office-seating.webp",
     title: "ئۆفیس و شوێنی دانیشتنی تایبەت",
     desc: "کەپسولی فرە-مەبەست بۆ دروستکردنی شوێنێکی کاری سەربەخۆ لە حەوشەی ماڵەکەت، یان وەک ژوورێکی کۆڕ و کۆبوونەوەی مۆدێرن بۆ کۆمپانیا و شوێنە بازرگانییەکان",
     features: [
@@ -911,7 +943,7 @@ const USE_CASES = [
     ]
   },
   {
-    img: "/images/Resort Housing.jpg",
+    img: "/images/Resort Housing.webp",
     title: "خانوو و شوێنی مانەوەی گەشتیاری",
     desc: "چارەسەرێکی تەلارسازیی هاوچەرخ بۆ گوندە گەشتیارییەکان، هاوینە هەوارەکان، و ناوچە شاخاوییەکان. ئەم کەپسولانە بە تایبەت دیزاین کراون بۆ ئەوەی ببنە شوێنێکی ئاسوودەی مانەوەی گەشتیاران لەسەختترین دۆخەکانی کەش و هەوادا",
     features: [
@@ -925,7 +957,7 @@ const USE_CASES = [
     ]
   },
   {
-    img: "/images/Site-Accommodation.jpg",
+    img: "/images/Site-Accommodation.webp",
     title: "کەمپی کار و پڕۆژەکان",
     desc: "یەکەی کاری خێرا و ئامادەکراو بۆ کۆمپانیاکانی بیناسازی، نەوت، و بەڵێندەرایەتی. چارەسەرێکی خێرا دەبەخشێت بۆ نیشتەجێکردنی کارمەند و ئەندازیاران لە شوێنی کارکردندا",
     features: [
@@ -938,7 +970,7 @@ const USE_CASES = [
     ]
   },
   {
-    img: "/images/Food-Trucks.jpg",
+    img: "/images/Food-Trucks.webp",
     title: "عارەبانە و کۆشکی خواردەمەنی",
     desc: "عەرەبانە و کۆشکی ئامادەکردنی خواردن و خواردنەوە بە قەبارەی جیاواز، دیزاینکراوە بۆ دەستپێکردنی پڕۆژەی خواردەمەنی بە شێوازێکی زۆر سەرنجڕاکێش و مۆدێرن",
     features: [
@@ -952,7 +984,7 @@ const USE_CASES = [
     ]
   },
   {
-    img: "/images/Tiny-House.jpg",
+    img: "/images/Tiny-House.webp",
     title: "یەکەی نیشتەجێبوونی بچووک",
     desc: "یەکەیەکی نیشتەجێبوونی تەواو گونجاو بە قەبارەیەکی بچووک بۆ ئەوانەی دەیانەوێت ماڵێکی بچووک و سەربەخۆ لەسەر زەوی خۆیان یان لەناو سروشت، باخ، مەزرەعە بەپێی بەرزترین ستانداردەکانی ژیان دروست بکەن",
     features: [
@@ -1249,7 +1281,7 @@ function FooterReveal({ children, footerContent }: { children: React.ReactNode; 
           marginBottom: useStaticFooter ? 0 : footerHeight,
           position: 'relative',
           zIndex: 1,
-          background: '#fff'
+          background: 'var(--page-bg, #FFFFFF)'
         }}
       >
         {children}
@@ -1656,6 +1688,84 @@ function AppContent() {
     window.scrollTo(0, 0);
   }, [location.pathname]);
 
+  // Set body class based on current route for page theming
+  useEffect(() => {
+    const pathname = location.pathname;
+    const body = document.body;
+
+    // Remove all page classes
+    body.classList.remove(
+      'page-home',
+      'page-about',
+      'page-gallery',
+      'page-news',
+      'page-news-detail',
+      'page-solution',
+      'page-capsules',
+      'page-cabins',
+      'page-koshk',
+      'page-lighting',
+      'page-shelves',
+      'page-all-products',
+      'page-category-overview',
+      'page-product-detail'
+    );
+
+    // Add appropriate class based on route
+    if (pathname === '/') {
+      body.classList.add('page-home');
+    } else if (pathname === '/about') {
+      body.classList.add('page-about');
+    } else if (pathname === '/gallery') {
+      body.classList.add('page-gallery');
+    } else if (pathname === '/news') {
+      body.classList.add('page-news');
+    } else if (pathname.startsWith('/news/')) {
+      body.classList.add('page-news-detail');
+    } else if (pathname.startsWith('/solutions/')) {
+      body.classList.add('page-solution');
+    } else if (
+      pathname === '/products/capsules' ||
+      pathname === '/products/houses' ||
+      pathname.startsWith('/products/al') ||
+      pathname.startsWith('/products/am') ||
+      pathname.startsWith('/products/as') ||
+      pathname.startsWith('/products/cl') ||
+      pathname.startsWith('/products/kl') ||
+      pathname === '/products/container-house'
+    ) {
+      // Shared color group: Capsules and Houses
+      body.classList.add('page-capsules');
+    } else if (
+      pathname.startsWith('/products/zl') ||
+      pathname.startsWith('/products/pl') ||
+      pathname.startsWith('/products/concrete-house-model') ||
+      pathname === '/products/standard-house' ||
+      pathname === '/products/garden-house' ||
+      pathname === '/products/cabin-house' ||
+      pathname === '/products/concrete-house'
+    ) {
+      // Cabins group
+      body.classList.add('page-cabins');
+    } else if (pathname === '/products/koshk') {
+      body.classList.add('page-koshk');
+    } else if (pathname === '/products/lighting') {
+      body.classList.add('page-lighting');
+    } else if (pathname === '/products/shelves') {
+      body.classList.add('page-shelves');
+    } else if (pathname === '/what-we-do' || pathname === '/products') {
+      body.classList.add('page-all-products');
+    } else if (pathname.startsWith('/products/category/')) {
+      body.classList.add('page-category-overview');
+    } else if (pathname.startsWith('/products/ka-')) {
+      body.classList.add('page-koshk');
+    } else if (pathname.startsWith('/products/') && pathname !== '/products') {
+      body.classList.add('page-product-detail');
+    } else {
+      body.classList.add('page-all-products');
+    }
+  }, [location.pathname]);
+
   useEffect(() => {
     if (location.pathname !== "/") return;
 
@@ -1678,7 +1788,7 @@ function AppContent() {
   }, [location.pathname]);
 
   return (
-    <div dir="rtl" className="min-h-screen bg-white font-body text-gray-900">
+    <div dir="rtl" className="min-h-screen font-body text-gray-900">
       <Header
         active={active}
         onNav={setActive}

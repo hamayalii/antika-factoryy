@@ -98,7 +98,7 @@ export function NewsDetailPage() {
   };
 
   return (
-    <div className="bg-[#f8f9fb] pt-24 min-h-screen text-right font-body">
+    <div className="pt-24 min-h-screen text-right font-body">
       <SEO
         title={`${title} | کارگەی ئەنتیکا`}
         description={excerpt}
@@ -107,7 +107,7 @@ export function NewsDetailPage() {
       />
 
       {/* 1. Breadcrumb Bar */}
-      <nav aria-label="ڕێڕەوی پەڕەکان" className="border-b border-gray-200/80 bg-white/80 backdrop-blur-md py-3.5 sticky top-20 z-20">
+      <nav aria-label="ڕێڕەوی پەڕەکان" className="border-b border-gray-200/80 backdrop-blur-md py-3.5 sticky top-20 z-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between">
             <ol className="flex items-center gap-2 text-[13px] text-gray-500 overflow-hidden">

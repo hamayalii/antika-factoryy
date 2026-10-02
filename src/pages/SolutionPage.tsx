@@ -42,14 +42,14 @@ export function SolutionPage() {
     .filter((c): c is ProductCategory => !!c);
 
   return (
-    <div className="bg-gray-50 pt-24 min-h-screen text-right">
+    <div className="pt-24 min-h-screen text-right">
       <SEO
         title={`${solution.title} (${solution.kurdishTitle}) | ئەنتیکا فاکتۆری`}
         description={solution.description}
       />
 
       {/* Breadcrumb Navigation */}
-      <nav aria-label="ڕێڕەوی پەڕەکان" className="border-b border-gray-200 bg-white py-3.5">
+      <nav aria-label="ڕێڕەوی پەڕەکان" className="border-b border-gray-200 py-3.5">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <ol className="flex items-center gap-2 text-[13px] text-gray-500">
             <li className="flex items-center gap-2">
@@ -71,7 +71,7 @@ export function SolutionPage() {
       </nav>
 
       {/* Hero Section */}
-      <section className="relative overflow-hidden py-14 sm:py-20 bg-white border-b border-gray-100">
+      <section className="relative overflow-hidden py-14 sm:py-20 border-b border-gray-100">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
             <div className="text-center lg:text-right">
@@ -205,7 +205,7 @@ export function SolutionPage() {
 
       {/* Recommended Capsule Types & Models / جۆری کەپسولەکان بۆ ئەم چارەسەرە */}
       {(recommendedCategories.length > 0 || recommendedProducts.length > 0) && (
-        <section className="bg-white py-16 sm:py-24 border-y border-gray-100">
+        <section className="py-16 sm:py-24 border-y border-gray-100">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <Reveal className="mb-10 text-center">
               <span className="inline-flex items-center gap-2 text-[13.5px] font-bold text-brand">
@@ -285,7 +285,7 @@ export function SolutionPage() {
       </section>
 
       {/* Gallery Section */}
-      <section className="bg-white py-16 sm:py-24 border-t border-gray-100">
+      <section className="py-16 sm:py-24 border-t border-gray-100">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <Reveal className="mb-12 text-center">
             <span className="inline-flex items-center gap-2 text-[13.5px] font-bold text-brand">
@@ -314,7 +314,7 @@ export function SolutionPage() {
       </section>
 
       {/* Custom Idea Banner / ئایا بیرۆکەیەکی جیاوازت هەیە؟ */}
-      <section className="py-12 sm:py-16 bg-white border-t border-gray-100">
+      <section className="py-12 sm:py-16 border-t border-gray-100">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <Reveal>
             <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 p-8 sm:p-12 text-white shadow-2xl">

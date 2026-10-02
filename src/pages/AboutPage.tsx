@@ -3,6 +3,7 @@ import { ArrowLeft, Check, Sparkles, DraftingCompass, Factory, Truck } from "luc
 import { Reveal } from "../components/Reveal";
 import { SEO } from "../components/SEO";
 import { CertificatesMarquee } from "../components/CertificatesMarquee";
+import { MaterialCertificatesMarquee } from "../components/MaterialCertificatesMarquee";
 import { TeamMemberCard } from "../components/TeamMemberCard";
 import { useContactModal } from "../contexts/ContactModalContext";
 
@@ -205,7 +206,7 @@ export function AboutPage() {
 
   // Preload images
   useEffect(() => {
-    const images = ['/images/about-bg.jpg', '/images/studio-about.jpg', '/images/factory-preview2.jpg'];
+    const images = ['/images/about-bg.webp', '/images/studio-about.jpg', '/images/factory-preview2.webp'];
     images.forEach((src) => {
       const img = new Image();
       img.src = src;
@@ -213,7 +214,7 @@ export function AboutPage() {
   }, []);
 
   return (
-    <div className="bg-white min-h-screen text-right font-body">
+    <div className="min-h-screen text-right font-body">
       <SEO
         title="دەربارەی ئێمە | کارگەی ئەنتیکا"
         description="دەربارەی کارگەی ئەنتیکا - کارگەیەک کە هونەر دەکاتە ژیان. تیمی ئەندازیار و دیزاینەری نێودەوڵەتی بە ئەزموونی زیاتر لە 20 ساڵ."
@@ -232,7 +233,7 @@ export function AboutPage() {
         }}
       >
         {/* Slides */}
-        {['/images/diognal-1.jpg', '/images/hero-antika.png', '/images/hero-2.jpg'].map((image, index) => (
+        {['/images/diognal-1.webp', '/images/hero-antika.webp', '/images/hero-2.webp'].map((image, index) => (
           <div
             key={index}
             className={`slide absolute inset-0 w-full h-full ${index === activeSlideIndex ? 'is-active' : ''}`}
@@ -439,7 +440,7 @@ export function AboutPage() {
       </section>
 
       {/* About Section */}
-      <section className="bg-white py-16 sm:py-24 overflow-x-hidden" style={{ scrollMarginTop: '80px' }}>
+      <section className="py-16 sm:py-24 overflow-x-hidden" style={{ scrollMarginTop: '80px' }}>
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
 
@@ -526,7 +527,7 @@ export function AboutPage() {
                   className="zoom-img overflow-hidden rounded-2xl shadow-lg will-change-transform"
                 >
                   <img
-                    src="/images/factory-preview2.jpg"
+                    src="/images/factory-preview2.webp"
                     alt="ستۆدیۆی ANTIKA FACTORY"
                     className="h-[400px] w-full object-cover sm:h-[500px]"
                     loading="lazy"
@@ -569,17 +570,17 @@ export function AboutPage() {
       </section>
 
       {/* Team Member Section */}
-      <section className="bg-white py-16 sm:py-24">
+      <section className="py-16 sm:py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
             <div dir="rtl" className="text-right">
-              <p className="text-[17px] sm:text-[16px] md:text-[17px] font-normal leading-relaxed text-gray-700">
+              <p className="text-[20px] sm:text-[16px] md:text-[20px] font-normal leading-relaxed text-gray-700">
                 کارگەی ئەنتیکا لە تێبینییەکی سادەوە سەری هەڵدا: شێوازی نەریتیی بیناسازی زۆر خاو، تێچووی زۆر و زۆر نەگونجاو بوو بۆ پێداویستییە سەردەمییەکان و وەک کەسێک کە بە قووڵی لە بواری ئەندازیاری و بیناسازیدا کارم کردووە، بە چاوی خۆم دەمبینی کە چۆن کڕیاران لە عێراقدا کێشەی دۆزینەوەی خانووی پێشوەختە دروستکراوی باوەڕپێکراویان هەیە. بازاڕ پڕ بوو لە بژاردە، کەچی هیچ ڕێگەیەکی ڕوون نەبوو بۆ بەراوردکردنی کوالێتی، پتەوی، یان بەهای کارەکان
               </p>
-              <p className="mt-6 text-[17px] sm:text-[16px] md:text-[17px] font-normal leading-relaxed text-gray-700">
+              <p className="mt-6 text-[20px] sm:text-[16px] md:text-[20px] font-normal leading-relaxed text-gray-700">
                 مەرجە شاراوەکان، ڕوون نەبوونی تایبەتمەندییەکان و نەبوونی ڕێنمایی پیشەگەرانە، پرۆسەی بڕیاردانیان زۆر ماندووکەر کردبوو ئەو کاتەی کە دەبوو بۆ دروستکردنی شوێنی جوان تەرخان بکرێت، لە گەڕان و دوودڵیدا بەفیڕۆ دەچوو
               </p>
-              <p className="mt-6 text-[17px] sm:text-[16px] md:text-[17px] font-normal leading-relaxed text-gray-700">
+              <p className="mt-6 text-[20px] sm:text-[16px] md:text-[20px] font-normal leading-relaxed text-gray-700">
                 دەرکم بەوە کرد کە دەبێت ڕێگەیەکی باشتر هەبێت — کارگەیەک کە نەک تەنها بەرهەم، بەڵکو شەفافییەتی تەواو، ئامۆژگاریی شارەزایان و چارەسەری گشتگیر (Turnkey) پێشکەش بکات. بە پشتبەستن بە ٢٠ ساڵ ئەزموونی ئەندازیاری و بە پاڵپشتیی تیمێکی نێودەوڵەتی لە پسپۆڕان، کارگەی ئەنتیکام دامەزراند بۆ ئەوەی ببێتە ئەو هاوبەشە جێمتمانەیە و ئێمە تەنها کەپسوول و پێکهاتەی پێشوەختە دروستکراو بەرهەم ناهێنین؛ بەڵکو شارەزایی، کەرەستەی کوالێتی بەرز و پاڵپشتییەکی پیشەگەرانە پێشکەش دەکەین کە دڵنیایی دەدات لە سەرکەوتنی هەر پڕۆژەیەک، لە دیزاینی سەرەتاییەوە تا قۆناغی کۆتایی جێگیرکردن لە سەرتاسەری عێراقدا
               </p>
             </div>
@@ -587,7 +588,7 @@ export function AboutPage() {
               <TeamMemberCard
                 name="Karzan"
                 description="An expert in Capsules, Prefab Houses, Apple Cabins & Container Homes"
-                imageSrc="/images/factory-preview2.jpg"
+                imageSrc="/images/factory-preview2.webp"
                 style={{ marginLeft: '76px' }}
               />
             </div>
@@ -597,6 +598,9 @@ export function AboutPage() {
 
       {/* Certificates Marquee */}
       <CertificatesMarquee />
+
+      {/* Material Certificates Marquee */}
+      <MaterialCertificatesMarquee variant="about" />
     </div>
   );
 }

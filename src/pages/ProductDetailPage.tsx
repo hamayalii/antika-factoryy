@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
+import { createPortal } from "react-dom";
 import {
   ArrowLeft,
   ChevronLeft,
@@ -59,7 +60,7 @@ export function ProductDetailPage() {
     setLightboxOpen(false);
   }, [slug]);
 
-  // Handle lightbox keyboard navigation
+  // Handle lightbox keyboard navigation and body scroll lock
   useEffect(() => {
     if (!lightboxOpen || !product || product.images.length <= 1) return;
 
@@ -74,7 +75,12 @@ export function ProductDetailPage() {
     };
 
     document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
+    document.body.style.overflow = "hidden";
+    
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = "";
+    };
   }, [lightboxOpen, product]);
 
   // 404 state if product slug is invalid
@@ -111,7 +117,7 @@ export function ProductDetailPage() {
   const currentImage = product.images[activeImageIndex] || "/images/capsule-1.jpg";
 
   return (
-    <div className="bg-gray-50 pt-24 min-h-screen text-right">
+    <div className="pt-24 min-h-screen text-right">
       <SEO
         title={`${product.titleKu} | ئەنتیکا فاکتۆری`}
         description={`${product.titleKu} لە پۆلێنی ${product.categoryTitleKu}ی کارگەی ئەنتیکا فاکتۆرییە. بۆ زانیاریی پێوانە و داوای نرخ، سەیری پەڕەی بەرهەم بکە.`}
@@ -120,7 +126,7 @@ export function ProductDetailPage() {
       />
 
       {/* 1. Breadcrumb Navigation */}
-      <nav aria-label="ڕێڕەوی پەڕەکان" className="border-b border-gray-200 bg-white py-3.5">
+      <nav aria-label="ڕێڕەوی پەڕەکان" className="border-b border-gray-200 py-3.5">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <ol className="flex items-center gap-2 text-[13px] text-gray-500 flex-wrap">
             <li className="flex items-center gap-2">
@@ -294,7 +300,7 @@ export function ProductDetailPage() {
       </section>
 
       {/* 3. Verified Specifications Grid */}
-      <section className="bg-white py-14 sm:py-20 border-t border-gray-100">
+      <section className="py-14 sm:py-20 border-t border-gray-100">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <Reveal className="mb-10 text-center">
             <span className="inline-flex items-center gap-2 text-[13.5px] font-bold text-brand">
@@ -526,7 +532,7 @@ export function ProductDetailPage() {
 
       {/* 6. Related Products */}
       {relatedProducts.length > 0 && (
-        <section className="bg-white py-16 sm:py-24 border-t border-gray-100">
+        <section className="py-16 sm:py-24 border-t border-gray-100">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <Reveal className="mb-10 text-center">
               <span className="inline-flex items-center gap-2 text-[13.5px] font-bold text-brand">
@@ -559,60 +565,62 @@ export function ProductDetailPage() {
       )}
 
       {/* Lightbox Modal */}
-      {lightboxOpen && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          aria-label="پێشانگای وێنە"
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4 backdrop-blur-sm"
-          onClick={() => setLightboxOpen(false)}
-        >
+      {lightboxOpen &&
+        createPortal(
           <div
-            className="relative max-w-5xl w-full max-h-[90vh] flex flex-col items-center"
-            onClick={(e) => e.stopPropagation()}
+            role="dialog"
+            aria-modal="true"
+            aria-label="پێشانگای وێنە"
+            className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/90 p-4 backdrop-blur-sm"
+            onClick={() => setLightboxOpen(false)}
           >
-            <button
-              onClick={() => setLightboxOpen(false)}
-              className="absolute -top-12 left-0 grid h-10 w-10 place-items-center rounded-full bg-white/20 text-white hover:bg-white/40 transition"
-              aria-label="داخستن"
+            <div
+              className="relative max-w-5xl w-full max-h-[90vh] flex flex-col items-center"
+              onClick={(e) => e.stopPropagation()}
             >
-              <X className="h-5 w-5" />
-            </button>
+              <button
+                onClick={() => setLightboxOpen(false)}
+                className="absolute top-4 left-4 grid h-11 w-11 place-items-center rounded-full bg-black/50 text-white hover:bg-black/70 transition"
+                aria-label="داخستن"
+              >
+                <X className="h-6 w-6" />
+              </button>
 
-            <img
-              src={currentImage}
-              alt={product.titleKu}
-              className="max-h-[75vh] w-auto max-w-full rounded-xl object-contain shadow-2xl"
-            />
+              <img
+                src={currentImage}
+                alt={product.titleKu}
+                className="max-h-[85dvh] w-auto max-w-full rounded-xl object-contain shadow-2xl"
+              />
 
-            {product.images.length > 1 && (
-              <div className="mt-4 flex items-center gap-4">
-                <button
-                  onClick={() =>
-                    setActiveImageIndex((prev) => (prev - 1 + product.images.length) % product.images.length)
-                  }
-                  className="grid h-10 w-10 place-items-center rounded-full bg-white/20 text-white hover:bg-white/40 transition"
-                  aria-label="وێنەی پێشوو"
-                >
-                  <ChevronRight className="h-5 w-5" />
-                </button>
-                <span className="text-sm font-medium text-white/80">
-                  {activeImageIndex + 1} / {product.images.length}
-                </span>
-                <button
-                  onClick={() =>
-                    setActiveImageIndex((prev) => (prev + 1) % product.images.length)
-                  }
-                  className="grid h-10 w-10 place-items-center rounded-full bg-white/20 text-white hover:bg-white/40 transition"
-                  aria-label="وێنەی دواتر"
-                >
-                  <ChevronLeft className="h-5 w-5" />
-                </button>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
+              {product.images.length > 1 && (
+                <div className="mt-4 flex items-center gap-4">
+                  <button
+                    onClick={() =>
+                      setActiveImageIndex((prev) => (prev - 1 + product.images.length) % product.images.length)
+                    }
+                    className="grid h-11 w-11 place-items-center rounded-full bg-black/50 text-white hover:bg-black/70 transition"
+                    aria-label="وێنەی پێشوو"
+                  >
+                    <ChevronRight className="h-6 w-6" />
+                  </button>
+                  <span className="text-sm font-medium text-white/90">
+                    {activeImageIndex + 1} / {product.images.length}
+                  </span>
+                  <button
+                    onClick={() =>
+                      setActiveImageIndex((prev) => (prev + 1) % product.images.length)
+                    }
+                    className="grid h-11 w-11 place-items-center rounded-full bg-black/50 text-white hover:bg-black/70 transition"
+                    aria-label="وێنەی دواتر"
+                  >
+                    <ChevronLeft className="h-6 w-6" />
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>,
+          document.body
+        )}
     </div>
   );
 }

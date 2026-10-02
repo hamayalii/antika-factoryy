@@ -67,7 +67,7 @@ export function CategoryOverviewPage() {
   }
 
   return (
-    <div className="bg-gray-50 pt-24 min-h-screen text-right">
+    <div className="pt-24 min-h-screen text-right">
       <SEO
         title={`${category.titleKu} | ئەنتیکا فاکتۆری`}
         description={category.shortDescriptionKu}
@@ -75,7 +75,7 @@ export function CategoryOverviewPage() {
       />
 
       {/* Breadcrumb Navigation */}
-      <nav aria-label="ڕێڕەوی پەڕەکان" className="border-b border-gray-200 bg-white py-3.5">
+      <nav aria-label="ڕێڕەوی پەڕەکان" className="border-b border-gray-200 py-3.5">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <ol className="flex items-center gap-2 text-[13px] text-gray-500">
             <li className="flex items-center gap-2">
@@ -102,7 +102,7 @@ export function CategoryOverviewPage() {
       </nav>
 
       {/* Category Hero */}
-      <section className="relative overflow-hidden bg-white py-14 sm:py-20 border-b border-gray-100">
+      <section className="relative overflow-hidden py-14 sm:py-20 border-b border-gray-100">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid items-center gap-10 lg:grid-cols-12">
             <div className="lg:col-span-7">

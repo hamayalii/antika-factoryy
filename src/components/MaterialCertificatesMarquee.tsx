@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ShieldCheck, X, ZoomIn } from "lucide-react";
+import { createPortal } from "react-dom";
 
 export interface MaterialCertificate {
   id: string;
@@ -15,35 +16,35 @@ export const MATERIAL_CERTIFICATES: MaterialCertificate[] = [
     id: "mat-cert-1",
     title: "NSW Fair Trading - Wall Switch Approval",
     issuer: "NSW Government Fair Trading - Standard Electrical Certification",
-    image: "/certificates/media_1790354178434.png",
+    image: "/certificates/media_1790354178434.webp",
     category: "کەرەستەی کارەبایی",
   },
   {
     id: "mat-cert-2",
     title: "RoHS Directives Compliance - Container & Materials",
     issuer: "UDEM International Certification - 2011/65/EU Safety Standard",
-    image: "/certificates/media_1790354272934.png",
+    image: "/certificates/media_1790354272934.webp",
     category: "ستانداردی ژینگەیی و کەرەستە",
   },
   {
     id: "mat-cert-3",
     title: "Authorization to Mark (ETL Listed Intertek)",
     issuer: "Intertek Testing Services NA - High Standard Safety & Quality",
-    image: "/certificates/media_1790354285336.png",
+    image: "/certificates/media_1790354285336.webp",
     category: "کوالێتی و سەلامەتی کەرەستە",
   },
   {
     id: "mat-cert-4",
     title: "WaterMark Certificate of Conformity",
     issuer: "SAI Global - AS/NZS 1260 Drainage & Plumbing Standards",
-    image: "/certificates/media_1790354309721.png",
+    image: "/certificates/media_1790354309721.webp",
     category: "کەرەستەی ئاوەڕۆ و بۆری",
   },
   {
     id: "mat-cert-5",
     title: "Certificate of Approval - NSW Fair Trading",
     issuer: "NSW Government Electrical Safety Standard Approvals",
-    image: "/certificates/media_1790354324032.png",
+    image: "/certificates/media_1790354324032.webp",
     category: "ستانداردی نێودەوڵەتی",
   },
 ];
@@ -68,19 +69,19 @@ function MaterialCertCard({
     <div
       key={`${prefix}-${idx}`}
       onClick={() => onSelect(cert)}
-      className={`group relative mx-3 flex-shrink-0 cursor-pointer overflow-hidden rounded-2xl border border-gray-200/80 bg-white transition-all duration-300 hover:-translate-y-1 hover:border-brand/60 hover:shadow-xl ${
-        compact ? "p-3 shadow-sm sm:mx-4" : "p-3.5 shadow-md sm:mx-5 sm:p-4"
+      className={`group relative mx-3 flex-shrink-0 cursor-pointer overflow-hidden rounded-2xl transition-all duration-300 hover:-translate-y-1 ${
+        compact ? "sm:mx-4" : "sm:mx-5"
       }`}
-      style={{ width: compact ? "210px" : "240px" }}
+      style={{ width: compact ? "210px" : "240px", border: "1.5px solid #ff5a00" }}
     >
-      <div className="relative aspect-[3/4] w-full overflow-hidden rounded-xl bg-gray-50 flex items-center justify-center border border-gray-100">
+      <div className="relative aspect-[3/4] w-full overflow-hidden rounded-xl flex items-center justify-center">
         <img
           src={cert.image}
           alt={cert.title}
           loading="lazy"
           decoding="async"
           draggable={false}
-          className="h-full w-full object-contain p-1.5 transition-transform duration-500 group-hover:scale-105 select-none pointer-events-none"
+          className="h-full w-full object-contain transition-transform duration-500 group-hover:scale-105 select-none pointer-events-none"
         />
         {/* Hover zoom overlay */}
         <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 backdrop-blur-[2px] transition-opacity duration-300 group-hover:opacity-100">
@@ -90,8 +91,8 @@ function MaterialCertCard({
           </span>
         </div>
       </div>
-      
-      <div className="mt-3 text-right">
+
+      <div className="mt-2 px-2 pb-2 text-right">
         {cert.category && (
           <span className="inline-block rounded-md bg-brand/10 px-2 py-0.5 text-[10.5px] font-bold text-brand mb-1">
             {cert.category}
@@ -109,7 +110,7 @@ function MaterialCertCard({
 }
 
 interface MaterialCertificatesMarqueeProps {
-  variant?: "home" | "products";
+  variant?: "home" | "products" | "about";
   showTitle?: boolean;
 }
 
@@ -119,7 +120,18 @@ export function MaterialCertificatesMarquee({
 }: MaterialCertificatesMarqueeProps) {
   const [selectedCert, setSelectedCert] = useState<MaterialCertificate | null>(null);
 
+  // Lock body scroll when modal is open
+  useEffect(() => {
+    if (selectedCert) {
+      document.body.style.overflow = "hidden";
+      return () => {
+        document.body.style.overflow = "";
+      };
+    }
+  }, [selectedCert]);
+
   const isProductsPage = variant === "products";
+  const isAboutPage = variant === "about";
 
   return (
     <section
@@ -127,7 +139,9 @@ export function MaterialCertificatesMarquee({
       className={`relative overflow-hidden ${
         isProductsPage
           ? "py-4 sm:py-6"
-          : "relative overflow-hidden bg-gradient-to-b from-gray-50/80 via-white to-gray-50/80 py-14 sm:py-20 border-t border-b border-gray-200/60"
+          : isAboutPage
+            ? "py-14 sm:py-20"
+            : "relative overflow-hidden bg-gradient-to-b from-gray-50/80 via-white to-gray-50/80 py-14 sm:py-20 border-t border-b border-gray-200/60"
       }`}
     >
       {isProductsPage ? (
@@ -170,9 +184,17 @@ export function MaterialCertificatesMarquee({
         className="relative w-full overflow-hidden select-none py-2"
       >
         {/* Left fade gradient */}
-        <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-20 sm:w-36 bg-gradient-to-r from-gray-50/90 via-gray-50/60 to-transparent" />
+        <div className={`pointer-events-none absolute inset-y-0 left-0 z-10 w-20 sm:w-36 ${
+          isAboutPage
+            ? "bg-gradient-to-r from-transparent via-transparent/80 to-transparent"
+            : "bg-gradient-to-r from-gray-50/90 via-gray-50/60 to-transparent"
+        }`} />
         {/* Right fade gradient */}
-        <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-20 sm:w-36 bg-gradient-to-l from-gray-50/90 via-gray-50/60 to-transparent" />
+        <div className={`pointer-events-none absolute inset-y-0 right-0 z-10 w-20 sm:w-36 ${
+          isAboutPage
+            ? "bg-gradient-to-l from-transparent via-transparent/80 to-transparent"
+            : "bg-gradient-to-l from-gray-50/90 via-gray-50/60 to-transparent"
+        }`} />
 
         {/* Animated strip */}
         <div className="animate-marquee-ltr flex w-max items-center">
@@ -206,48 +228,50 @@ export function MaterialCertificatesMarquee({
       </div>
 
       {/* Modal for full certificate preview */}
-      {selectedCert && (
-        <div
-          dir="rtl"
-          role="dialog"
-          aria-modal="true"
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm animate-fadeIn"
-          onClick={() => setSelectedCert(null)}
-        >
+      {selectedCert &&
+        createPortal(
           <div
-            className="relative max-h-[90vh] max-w-2xl w-full overflow-hidden rounded-2xl bg-white p-6 shadow-2xl"
-            onClick={(e) => e.stopPropagation()}
+            dir="rtl"
+            role="dialog"
+            aria-modal="true"
+            className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm animate-fadeIn"
+            onClick={() => setSelectedCert(null)}
           >
-            <div className="flex items-center justify-between border-b border-gray-100 pb-4 mb-4">
-              <div>
-                {selectedCert.category && (
-                  <span className="inline-block rounded-md bg-brand/10 px-2.5 py-0.5 text-xs font-bold text-brand mb-1">
-                    {selectedCert.category}
-                  </span>
-                )}
-                <h3 className="text-lg font-bold text-gray-900 font-display">
-                  {selectedCert.title}
-                </h3>
-                <p className="text-xs text-gray-500 mt-0.5">{selectedCert.issuer}</p>
+            <div
+              className="relative max-h-[90vh] max-w-2xl w-full overflow-hidden rounded-2xl bg-white p-6 shadow-2xl"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between border-b border-gray-100 pb-4 mb-4">
+                <div>
+                  {selectedCert.category && (
+                    <span className="inline-block rounded-md bg-brand/10 px-2.5 py-0.5 text-xs font-bold text-brand mb-1">
+                      {selectedCert.category}
+                    </span>
+                  )}
+                  <h3 className="text-lg font-bold text-gray-900 font-display">
+                    {selectedCert.title}
+                  </h3>
+                  <p className="text-xs text-gray-500 mt-0.5">{selectedCert.issuer}</p>
+                </div>
+                <button
+                  onClick={() => setSelectedCert(null)}
+                  aria-label="داخستن"
+                  className="grid h-11 w-11 place-items-center rounded-full bg-gray-100 text-gray-700 transition hover:bg-gray-200"
+                >
+                  <X className="h-6 w-6" />
+                </button>
               </div>
-              <button
-                onClick={() => setSelectedCert(null)}
-                aria-label="داخستن"
-                className="grid h-10 w-10 place-items-center rounded-full bg-gray-100 text-gray-700 transition hover:bg-gray-200"
-              >
-                <X className="h-5 w-5" />
-              </button>
+              <div className="max-h-[70vh] overflow-auto flex items-center justify-center rounded-xl bg-gray-50 p-2">
+                <img
+                  src={selectedCert.image}
+                  alt={selectedCert.title}
+                  className="h-auto max-h-[65vh] w-auto max-w-full rounded-lg object-contain shadow-sm"
+                />
+              </div>
             </div>
-            <div className="max-h-[70vh] overflow-auto flex items-center justify-center rounded-xl bg-gray-50 p-2">
-              <img
-                src={selectedCert.image}
-                alt={selectedCert.title}
-                className="h-auto max-h-[65vh] w-auto max-w-full rounded-lg object-contain shadow-sm"
-              />
-            </div>
-          </div>
-        </div>
-      )}
+          </div>,
+          document.body
+        )}
     </section>
   );
 }

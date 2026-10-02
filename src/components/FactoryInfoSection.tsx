@@ -82,7 +82,7 @@ function AboutAntikaFactory() {
           <Reveal animation="slide-left" delay={200} className="order-1 lg:order-2">
             <div className="relative aspect-[4/3] overflow-hidden rounded-2xl shadow-xl">
               <img
-                src="/images/factory-preview.jpg"
+                src="/images/factory-preview.webp"
                 alt="کارگەی ئەنتیکە"
                 className="h-full w-full object-cover"
                 loading="lazy"
