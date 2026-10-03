@@ -216,6 +216,12 @@ const KOSHK_ITEMS = [
   { id: "ka-p", label: "کۆشکی KA · P", path: "/products/ka-p", isComingSoon: false },
   { id: "ka-g", label: "کۆشکی KA · G", path: "/products/ka-g", isComingSoon: false },
   { id: "ka-a", label: "کۆشکی KA · A", path: "/products/ka-a", isComingSoon: false },
+  { id: "am-a2", label: "کۆشکی AM • A2", path: "/products/am-a2", isComingSoon: false },
+  { id: "am-m", label: "کۆشکی AM • M", path: "/products/am-m", isComingSoon: false },
+  { id: "am-h", label: "کۆشکی AM • H", path: "/products/am-h", isComingSoon: false },
+  { id: "am-s", label: "کۆشکی AM • S", path: "/products/am-s", isComingSoon: false },
+  { id: "am-k", label: "کۆشکی AM • K", path: "/products/am-k", isComingSoon: false },
+  { id: "am-r", label: "کۆشکی AM • R", path: "/products/am-r", isComingSoon: false },
 ];
 
 const ARTWORK_ITEMS = [

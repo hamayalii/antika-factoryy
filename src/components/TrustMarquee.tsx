@@ -116,6 +116,26 @@ export const TRUST_LOGOS: TrustLogo[] = [
     name: "Zhin",
     src: "/whose-who-trust-us/zhin.webp",
   },
+  {
+    name: "Haji Salamrs",
+    src: "/whose-who-trust-us/hajisalamrs.webp",
+  },
+  {
+    name: "Level 19",
+    src: "/whose-who-trust-us/level19.webp",
+  },
+  {
+    name: "Qaiwan",
+    src: "/whose-who-trust-us/qaiwan.webp",
+  },
+  {
+    name: "Salute",
+    src: "/whose-who-trust-us/salute.webp",
+  },
+  {
+    name: "Shari Jwan",
+    src: "/whose-who-trust-us/shari-jwan.webp",
+  },
 ];
 
 // Split logos into 2 different rows
