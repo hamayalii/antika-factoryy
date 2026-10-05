@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft, Shield, Zap, Truck, Calendar } from "lucide-react";
 import { newsArticles } from "../data/newsData";
+import AwardBadge from "./AwardBadge";
 
 /* ---------------------------------- Reveal ---------------------------------- */
 function Reveal({
@@ -53,6 +54,9 @@ function AboutAntikaFactory() {
   return (
     <section className="bg-gray-50 py-16 sm:py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-center mb-8">
+          <AwardBadge title="بۆ خانووی ئامادەکراو و کەپسول" subtitle="هەڵبژاردەی ژمارە #1 لە تەواوی عێراق" />
+        </div>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           {/* Text Column - slides from right in RTL */}
           <Reveal animation="slide-right" className="order-2 lg:order-1">

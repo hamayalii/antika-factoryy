@@ -1,0 +1,79 @@
+.award-badge {
+  --brown: #8a5a00;
+  --rx: 0deg; --ry: 0deg; --bx: 50%; --fx: 0%; --hue: 0deg; --lift: 0;
+  display: inline-block;
+  perspective: 700px;
+  cursor: pointer;
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.award-badge:not(a) {
+  cursor: default;
+}
+.award-badge__card {
+  position: relative;
+  display: flex; align-items: center; gap: 16px;
+  padding: 14px 40px 14px 18px;
+  border-radius: 14px;
+  background: linear-gradient(180deg, #ffec3d 0%, #ffe41f 100%);
+  box-shadow: 0 0 0 1px rgba(214,170,0,.55), 0 calc(6px + var(--lift)*14px) calc(18px + var(--lift)*18px) rgba(255,214,0,calc(.10 + var(--lift)*.22));
+  transform: rotateX(var(--rx)) rotateY(var(--ry)) scale(calc(1 + var(--lift)*.03));
+  transform-style: preserve-3d;
+  will-change: transform;
+  overflow: hidden;
+  isolation: isolate;
+}
+/* inner border line */
+.award-badge__card::before {
+  content: ""; position: absolute; inset: 4px; border-radius: 10px;
+  border: 1.5px solid rgba(190,140,0,.35); pointer-events: none; z-index: 3;
+}
+/* moving foil shine */
+.award-badge__shine {
+  position: absolute; inset: 0; z-index: 2; pointer-events: none;
+  background:
+    linear-gradient(105deg, transparent 32%, rgba(255,255,255,.55) 44%, rgba(255,246,0,.95) 50%, rgba(255,150,0,.35) 55%, transparent 66%),
+    linear-gradient(80deg, transparent 20%, rgba(255,255,255,.28) 36%, transparent 48%);
+  background-size: 260% 100%, 260% 100%;
+  background-position: var(--bx) 50%, calc(100% - var(--bx)) 50%;
+  mix-blend-mode: soft-light; opacity: .95;
+  filter: hue-rotate(calc(var(--hue) * .4));
+}
+.award-badge__foil {
+  background-image: linear-gradient(105deg,
+    var(--brown) 0%, var(--brown) 30%, #c2410c 42%, #e11d00 48%, #d97706 54%, #8a8a00 62%, var(--brown) 72%, var(--brown) 100%);
+  background-size: 320% 100%;
+  background-position: var(--fx) 50%;
+  filter: hue-rotate(var(--hue));
+}
+.award-badge__icon {
+  position: relative; z-index: 1; width: 50px; height: 50px; flex: none;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20100%20100%22%20fill%3D%22%23000%22%3E%3Cellipse%20cx%3D%2244.3%22%20cy%3D%2282.5%22%20rx%3D%2212.0%22%20ry%3D%225.2%22%20transform%3D%22rotate%28224.0%2044.3%2082.5%29%22/%3E%3Cellipse%20cx%3D%2231.4%22%20cy%3D%2277.2%22%20rx%3D%2211.6%22%20ry%3D%225.0%22%20transform%3D%22rotate%28248.4%2031.4%2077.2%29%22/%3E%3Cellipse%20cx%3D%2221.8%22%20cy%3D%2267.1%22%20rx%3D%2211.3%22%20ry%3D%224.9%22%20transform%3D%22rotate%28272.8%2021.8%2067.1%29%22/%3E%3Cellipse%20cx%3D%2217.2%22%20cy%3D%2253.9%22%20rx%3D%2210.9%22%20ry%3D%224.7%22%20transform%3D%22rotate%28297.2%2017.2%2053.9%29%22/%3E%3Cellipse%20cx%3D%2218.5%22%20cy%3D%2240.0%22%20rx%3D%2210.6%22%20ry%3D%224.6%22%20transform%3D%22rotate%28321.6%2018.5%2040.0%29%22/%3E%3Cellipse%20cx%3D%2225.5%22%20cy%3D%2227.9%22%20rx%3D%2210.2%22%20ry%3D%224.4%22%20transform%3D%22rotate%28346.0%2025.5%2027.9%29%22/%3E%3Cellipse%20cx%3D%2255.7%22%20cy%3D%2282.5%22%20rx%3D%2212.0%22%20ry%3D%225.2%22%20transform%3D%22rotate%28-44.0%2055.7%2082.5%29%22/%3E%3Cellipse%20cx%3D%2268.6%22%20cy%3D%2277.2%22%20rx%3D%2211.6%22%20ry%3D%225.0%22%20transform%3D%22rotate%28-68.4%2068.6%2077.2%29%22/%3E%3Cellipse%20cx%3D%2278.2%22%20cy%3D%2267.1%22%20rx%3D%2211.3%22%20ry%3D%224.9%22%20transform%3D%22rotate%28-92.8%2078.2%2067.1%29%22/%3E%3Cellipse%20cx%3D%2282.8%22%20cy%3D%2253.9%22%20rx%3D%2210.9%22%20ry%3D%224.7%22%20transform%3D%22rotate%28-117.2%2082.8%2053.9%29%22/%3E%3Cellipse%20cx%3D%2281.5%22%20cy%3D%2240.0%22%20rx%3D%2210.6%22%20ry%3D%224.6%22%20transform%3D%22rotate%28-141.6%2081.5%2040.0%29%22/%3E%3Cellipse%20cx%3D%2274.5%22%20cy%3D%2227.9%22%20rx%3D%2210.2%22%20ry%3D%224.4%22%20transform%3D%22rotate%28-166.0%2074.5%2027.9%29%22/%3E%3Cpath%20d%3D%22M36%2086%20Q50%2078%2064%2086%20L60%2093%20Q50%2086%2040%2093Z%22/%3E%3C/svg%3E") center/contain no-repeat;
+          mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20100%20100%22%20fill%3D%22%23000%22%3E%3Cellipse%20cx%3D%2244.3%22%20cy%3D%2282.5%22%20rx%3D%2212.0%22%20ry%3D%225.2%22%20transform%3D%22rotate%28224.0%2044.3%2082.5%29%22/%3E%3Cellipse%20cx%3D%2231.4%22%20cy%3D%2277.2%22%20rx%3D%2211.6%22%20ry%3D%225.0%22%20transform%3D%22rotate%28248.4%2031.4%2077.2%29%22/%3E%3Cellipse%20cx%3D%2221.8%22%20cy%3D%2267.1%22%20rx%3D%2211.3%22%20ry%3D%224.9%22%20transform%3D%22rotate%28272.8%2021.8%2067.1%29%22/%3E%3Cellipse%20cx%3D%2217.2%22%20cy%3D%2253.9%22%20rx%3D%2210.9%22%20ry%3D%224.7%22%20transform%3D%22rotate%28297.2%2017.2%2053.9%29%22/%3E%3Cellipse%20cx%3D%2218.5%22%20cy%3D%2240.0%22%20rx%3D%2210.6%22%20ry%3D%224.6%22%20transform%3D%22rotate%28321.6%2018.5%2040.0%29%22/%3E%3Cellipse%20cx%3D%2225.5%22%20cy%3D%2227.9%22%20rx%3D%2210.2%22%20ry%3D%224.4%22%20transform%3D%22rotate%28346.0%2025.5%2027.9%29%22/%3E%3Cellipse%20cx%3D%2255.7%22%20cy%3D%2282.5%22%20rx%3D%2212.0%22%20ry%3D%225.2%22%20transform%3D%22rotate%28-44.0%2055.7%2082.5%29%22/%3E%3Cellipse%20cx%3D%2268.6%22%20cy%3D%2277.2%22%20rx%3D%2211.6%22%20ry%3D%225.0%22%20transform%3D%22rotate%28-68.4%2068.6%2077.2%29%22/%3E%3Cellipse%20cx%3D%2278.2%22%20cy%3D%2267.1%22%20rx%3D%2211.3%22%20ry%3D%224.9%22%20transform%3D%22rotate%28-92.8%2078.2%2067.1%29%22/%3E%3Cellipse%20cx%3D%2282.8%22%20cy%3D%2253.9%22%20rx%3D%2210.9%22%20ry%3D%224.7%22%20transform%3D%22rotate%28-117.2%2082.8%2053.9%29%22/%3E%3Cellipse%20cx%3D%2281.5%22%20cy%3D%2240.0%22%20rx%3D%2210.6%22%20ry%3D%224.6%22%20transform%3D%22rotate%28-141.6%2081.5%2040.0%29%22/%3E%3Cellipse%20cx%3D%2274.5%22%20cy%3D%2227.9%22%20rx%3D%2210.2%22%20ry%3D%224.4%22%20transform%3D%22rotate%28-166.0%2074.5%2027.9%29%22/%3E%3Cpath%20d%3D%22M36%2086%20Q50%2078%2064%2086%20L60%2093%20Q50%2086%2040%2093Z%22/%3E%3C/svg%3E") center/contain no-repeat;
+}
+.award-badge__text { position: relative; z-index: 1; display: flex; flex-direction: column; gap: 2px; font-family: "Arkan ABC Favorit", "Vazirmatn", "Noto Sans Arabic", system-ui, sans-serif; }
+.award-badge__title, .award-badge__subtitle {
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent;
+  white-space: nowrap; letter-spacing: -.01em;
+}
+.award-badge__title { font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: .02em; }
+.award-badge__subtitle { font-size: 21px; font-weight: 800; line-height: 1.1; }
+@media (max-width: 768px) {
+  .award-badge__card { padding: 12px 32px 12px 14px; gap: 12px; }
+  .award-badge__icon { width: 40px; height: 40px; }
+  .award-badge__title { font-size: 10px; }
+  .award-badge__subtitle { font-size: 16px; }
+}
+@media (max-width: 480px) {
+  .award-badge__card { padding: 10px 24px 10px 12px; gap: 10px; }
+  .award-badge__icon { width: 36px; height: 36px; }
+  .award-badge__title { font-size: 9px; }
+  .award-badge__subtitle { font-size: 14px; }
+}
+@media (max-width: 375px) {
+  .award-badge__card { padding: 8px 20px 8px 10px; gap: 8px; }
+  .award-badge__icon { width: 32px; height: 32px; }
+  .award-badge__title { font-size: 8px; }
+  .award-badge__subtitle { font-size: 12px; }
+}
+@media (prefers-reduced-motion: reduce) { .award-badge__card { transform: none !important; } }

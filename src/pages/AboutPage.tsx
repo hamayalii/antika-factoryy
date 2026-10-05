@@ -1,61 +1,15 @@
 import { useEffect, useRef, useState } from "react";
-import { ArrowLeft, Check, Sparkles, DraftingCompass, Factory, Truck, Shield, Award, Layout } from "lucide-react";
+import { Link } from "react-router-dom";
+import { DraftingCompass, Factory, Truck, Shield, Award, Layout } from "lucide-react";
 import { Reveal } from "../components/Reveal";
 import { SEO } from "../components/SEO";
 import { CertificatesMarquee } from "../components/CertificatesMarquee";
 import { MaterialCertificatesMarquee } from "../components/MaterialCertificatesMarquee";
 import { TeamMemberCard } from "../components/TeamMemberCard";
-import { useContactModal } from "../contexts/ContactModalContext";
 
-function useParallax(speed = 0.16) {
-  const ref = useRef<HTMLDivElement>(null);
-  const bgRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    // Check for reduced motion preference
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    // Disable on mobile (screens smaller than 1024px)
-    const isMobile = window.innerWidth < 1024;
-    if (prefersReducedMotion || isMobile) return;
-
-    const handleScroll = () => {
-      if (!ref.current || !bgRef.current) return;
-      const rect = ref.current.getBoundingClientRect();
-      const windowHeight = window.innerHeight;
-
-      // Only calculate if visible on screen
-      if (rect.top <= windowHeight && rect.bottom >= 0) {
-        const offset = (rect.top - windowHeight / 2) * speed;
-        bgRef.current.style.transform = `translate3d(0, ${offset}px, 0) scale(1.04)`;
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    window.addEventListener("resize", handleScroll, { passive: true });
-    handleScroll();
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-      window.removeEventListener("resize", handleScroll);
-    };
-  }, [speed]);
-
-  return { ref, bgRef };
-}
-
-function useScrollAnimation() {
+function usePromoScrollAnimation() {
   const [isVisible, setIsVisible] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
-  const imageRef = useRef<HTMLDivElement>(null);
-  const textRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    // Check if mobile
-    const checkMobile = () => setIsMobile(window.innerWidth < 1024);
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
+  const sectionRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     // Check for reduced motion preference
@@ -72,16 +26,15 @@ function useScrollAnimation() {
           observer.disconnect();
         }
       },
-      { threshold: 0.25, rootMargin: "0px 0px -100px 0px" }
+      { threshold: 0.2, rootMargin: "0px 0px -50px 0px" }
     );
 
-    if (imageRef.current) observer.observe(imageRef.current);
-    if (textRef.current) observer.observe(textRef.current);
+    if (sectionRef.current) observer.observe(sectionRef.current);
 
     return () => observer.disconnect();
   }, []);
 
-  return { isVisible, imageRef, textRef, isMobile };
+  return { isVisible, sectionRef };
 }
 
 function AnimatedCounter({
@@ -195,9 +148,7 @@ function useImageSlider(interval: number = 5000) {
 }
 
 export function AboutPage() {
-  const parallaxSection = useParallax(0.2);
-  const { isVisible, imageRef, textRef, isMobile } = useScrollAnimation();
-  const { openContactModal } = useContactModal();
+  const { isVisible: promoVisible, sectionRef: promoSectionRef } = usePromoScrollAnimation();
   const activeSlideIndex = useImageSlider(5000);
 
   useEffect(() => {
@@ -309,7 +260,7 @@ export function AboutPage() {
       <section
         className="relative w-full"
         style={{
-          backgroundColor: '#f8f9fe',
+          backgroundColor: '#EDE6F2',
           paddingBlock: '48px',
         }}
       >
@@ -439,104 +390,115 @@ export function AboutPage() {
         </div>
       </section>
 
-      {/* About Section */}
-      <section className="py-16 sm:py-24 overflow-x-hidden" style={{ scrollMarginTop: '80px' }}>
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
-
-            {/* Text RIGHT - RTL content */}
-            <div className="order-1 lg:order-2 w-full">
-              <div 
-                ref={textRef}
+      {/* Split-Screen Promo Section */}
+      <section ref={promoSectionRef} className="relative w-full overflow-hidden" style={{ minHeight: '600px' }}>
+        <div className="flex flex-col lg:flex-row w-full" style={{ minHeight: '600px' }}>
+          {/* RIGHT half - Orange background with text (first in RTL = appears on right) */}
+          <div
+            className="relative w-full lg:w-1/2 flex items-center"
+            style={{
+              backgroundColor: '#ff5a00',
+              minHeight: '320px',
+              padding: '40px 24px',
+            }}
+          >
+            <style>{`
+              @media (min-width: 1024px) {
+                [data-promo-orange="true"] {
+                  min-height: 600px;
+                  padding: 80px 40px 80px 40px;
+                }
+              }
+            `}</style>
+            <div data-promo-orange="true" className="w-full">
+              <div
                 dir="rtl"
-                className="text-right inline-block w-full"
+                className="w-full"
                 style={{
-                  transition: 'opacity 0.8s ease-out, transform 0.8s ease-out',
-                  opacity: isVisible ? 1 : 0,
-                  transform: isVisible 
-                    ? 'translateY(0)' 
-                    : isMobile 
-                      ? 'translateY(40px)' 
-                      : 'translateX(80px)'
+                  maxWidth: '460px',
+                  transition: 'opacity 0.6s ease-out, transform 0.6s ease-out',
+                  opacity: promoVisible ? 1 : 0,
+                  transform: promoVisible ? 'translateY(0)' : 'translateY(30px)',
                 }}
               >
-                <Reveal>
-                  <span className="inline-flex items-center gap-2 rounded-full bg-brand-soft px-4 py-2 text-[13px] font-bold text-brand">
-                    <Sparkles className="h-4 w-4" />
-                    دەربارەی ئێمە
-                  </span>
-                  <h2 className="mt-5 font-display text-[22px] sm:text-[28px] md:text-[36px] lg:text-[42px] font-black leading-[1.3] text-gray-900 text-right">
-                    کارگەیەک کە هونەر
-                    <br />
-                    دەکاتە <span className="text-brand">ژیان</span>
-                  </h2>
-                  <p className="mt-5 text-[14px] sm:text-[16px] md:text-[18px] lg:text-[24px] font-light leading-5 sm:leading-6 md:leading-7 lg:leading-9 text-gray-600 text-right">
-                    ئێمە لە کارگەی ئەنتیکا ژینگەیەک بونیاد دەنێین کە شایەنی متمانەی ئێوەبێت
-                    تیمەکەمان لە کۆمەڵێک ئەندازیار و تەکنیککاری خاوەن ئەزموون پێکهاتووە کە ساڵانێکی درێژە لە بواری بیناسازی
-                    و خانوی کەپسولیدا کار دەکەن...<br></br>
-                    ئامانجی ئێمە دابینکردنی شوێنێکی مۆدێرن و ئارامە بۆ ئەوەی داهاتوویەکی گەش بۆ خۆت و خێزانەکەت مسۆگەر بکەیت
-                  </p>
-                </Reveal>
-                <Reveal delay={150}>
-                  <ul className="mt-6 space-y-3.5">
-                    {[
-                      "تیمی ئەندازیار و دیزاینەری نێودەوڵەتی",
-                      "کارگەی تایبەتی خۆمان بۆ بەرهەمهێنان",
-                      "مەوادی کوالێتی بەرز و ئۆرجیناڵ",
-                    ].map((t) => (
-                      <li key={t} className="flex items-center gap-3 text-[14.5px] font-semibold text-gray-700">
-                        <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-brand text-white">
-                          <Check className="h-4 w-4" strokeWidth={3} />
-                        </span>
-                        {t}
-                      </li>
-                    ))}
-                  </ul>
-                </Reveal>
-                <Reveal delay={250}>
-                  <div className="mt-8">
-                    <button
-                      onClick={openContactModal}
-                      className="inline-flex items-center gap-2 rounded-full bg-brand px-8 py-4 text-[14.5px] font-bold text-white transition hover:bg-brand-dark"
-                    >
-                      پەیوەندیمان پێوە بکە
-                      <ArrowLeft className="h-4 w-4" />
-                    </button>
-                  </div>
-                </Reveal>
+                <h2
+                  className="font-display font-black text-white leading-tight"
+                  style={{
+                    fontSize: 'clamp(28px, 4vw, 42px)',
+                    marginBottom: '24px',
+                    opacity: promoVisible ? 1 : 0,
+                    transition: 'opacity 0.6s ease-out 0.1s, transform 0.6s ease-out 0.1s',
+                    transform: promoVisible ? 'translateY(0)' : 'translateY(30px)',
+                  }}
+                >
+                  کار و دیزاینەکانمان ببینە
+                </h2>
+                <p
+                  className="text-white font-body"
+                  style={{
+                    fontSize: 'clamp(16px, 2vw, 20px)',
+                    lineHeight: '1.8',
+                    marginBottom: '32px',
+                    opacity: promoVisible ? 0.9 : 0,
+                    transition: 'opacity 0.6s ease-out 0.2s, transform 0.6s ease-out 0.2s',
+                    transform: promoVisible ? 'translateY(0)' : 'translateY(30px)',
+                  }}
+                >
+                  گەر بەدوای کەپسول (Apple Cabin)، کۆشک، یان خانووی ئامادەکراوی قەبارە جیاوازدا دەگەڕێیت، ئێمە هەموو جۆرەکانمان بۆ ئامادەکردوون بە باشترین کوالێتی
+                </p>
+                <Link
+                  to="/products"
+                  className="inline-block font-bold text-white"
+                  style={{
+                    fontSize: '16px',
+                    borderWidth: '3px',
+                    borderStyle: 'solid',
+                    borderColor: 'white',
+                    padding: '14px 40px',
+                    opacity: promoVisible ? 1 : 0,
+                    transition: 'opacity 0.6s ease-out 0.3s, transform 0.6s ease-out 0.3s, background-color 0.25s ease-out, color 0.25s ease-out',
+                    transform: promoVisible ? 'translateY(0)' : 'translateY(30px)',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = 'white';
+                    e.currentTarget.style.color = '#ff5a00';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = 'transparent';
+                    e.currentTarget.style.color = 'white';
+                  }}
+                >
+                  بینینی دیزاینەکان
+                </Link>
               </div>
             </div>
-            
-            {/* Images LEFT with parallax and scroll animation */}
-            <div 
-              ref={imageRef}
-              className="order-2 lg:order-2"
-              style={{
-                transition: 'opacity 0.8s ease-out, transform 0.8s ease-out',
-                opacity: isVisible ? 1 : 0,
-                transform: isVisible 
-                  ? 'translateY(0)' 
-                  : isMobile 
-                    ? 'translateY(40px)' 
-                    : 'translateX(-80px)'
-              }}
-            >
-              <div className="relative" ref={parallaxSection.ref}>
-                <div
-                  ref={parallaxSection.bgRef}
-                  className="zoom-img overflow-hidden rounded-2xl shadow-lg will-change-transform"
-                >
-                  <img
-                    src="/images/factory-preview2.webp"
-                    alt="ستۆدیۆی ANTIKA FACTORY"
-                    className="h-[400px] w-full object-cover sm:h-[500px]"
-                    loading="lazy"
-                    decoding="async"
-                    width="600"
-                    height="500"
-                  />
-                </div>
-              </div>
+          </div>
+
+          {/* LEFT half - Image (second in RTL = appears on left) */}
+          <div className="relative w-full lg:w-1/2" style={{ minHeight: '280px' }}>
+            <style>{`
+              @media (min-width: 1024px) {
+                [data-promo-image="true"] {
+                  min-height: 600px;
+                }
+              }
+            `}</style>
+            <div data-promo-image="true" className="relative w-full h-full">
+              <img
+                src="/images/factory-preview.webp"
+                alt="Factory Preview"
+                className="absolute inset-0 w-full h-full object-cover"
+                style={{
+                  transform: promoVisible ? 'scale(1)' : 'scale(1.06)',
+                  transition: 'transform 1s ease-out',
+                  userSelect: 'none',
+                  WebkitUserSelect: 'none',
+                  pointerEvents: 'none',
+                }}
+                loading="lazy"
+                decoding="async"
+                draggable={false}
+              />
             </div>
           </div>
         </div>

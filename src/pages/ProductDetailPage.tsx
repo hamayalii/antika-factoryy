@@ -214,15 +214,14 @@ export function ProductDetailPage() {
               {/* CTAs */}
               <Reveal delay={260}>
                 <div className="mt-8 flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5">
-                  <a
-                    href={`https://wa.me/9647501234567?text=${encodeURIComponent(`سڵاو، دەربارەی ${product.titleKu} لە ئەنتیکا فاکتۆری دەپرسم:`)}`}
-                    target="_blank"
+                  <button
+                    onClick={openContactModal}
                     rel="noopener noreferrer"
                     className="inline-flex items-center justify-center gap-2 rounded-full bg-brand px-7 py-3.5 text-[14.5px] font-bold text-white shadow-md transition hover:bg-brand-dark hover:shadow-lg"
                   >
                     <MessageCircle className="h-4 w-4" />
                     {product.cta.primaryKu}
-                  </a>
+                  </button>
 
                   <button
                     onClick={openContactModal}
