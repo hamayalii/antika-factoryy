@@ -1008,6 +1008,17 @@ const USE_CASES = [
 function UseCases() {
   const [activeCase, setActiveCase] = useState(USE_CASES[0]);
 
+  const handleKeyDown = (e: React.KeyboardEvent, useCase: typeof USE_CASES[0]) => {
+    const currentIndex = USE_CASES.findIndex(c => c.img === useCase.img);
+    
+    if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+      e.preventDefault();
+      const direction = e.key === 'ArrowRight' ? 1 : -1;
+      const newIndex = (currentIndex + direction + USE_CASES.length) % USE_CASES.length;
+      setActiveCase(USE_CASES[newIndex]);
+    }
+  };
+
   return (
     <section className="bg-white py-16 sm:py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -1022,58 +1033,80 @@ function UseCases() {
           </h2>
         </Reveal>
 
-        {/* Main Image Display - Significantly smaller and further back */}
-        <div className="relative mb-12 mx-auto max-w-5xl">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center" dir="ltr">
-            {/* Image - Left side */}
-            <div className="relative aspect-[4/3] overflow-hidden">
-              <img
-                key={activeCase.img}
-                src={activeCase.img}
-                alt={activeCase.title}
-                className="h-full w-full object-contain transition-all duration-700 ease-in-out"
-                loading="eager"
-              />
-            </div>
+        {/* Main Image Display - Grid stacking for constant height */}
+        <div className="mb-12 mx-auto max-w-5xl">
+          <div className="grid grid-cols-1 grid-rows-1" dir="ltr">
+            {USE_CASES.map((useCase) => (
+              <div
+                key={useCase.img}
+                className={`
+                  col-start-1 row-start-1 grid grid-cols-1 md:grid-cols-2 gap-8 items-center transition-all duration-300 ease-in-out
+                  ${activeCase.img === useCase.img
+                    ? 'opacity-100 visible pointer-events-auto'
+                    : 'opacity-0 invisible pointer-events-none'
+                  }
+                `}
+                role="tabpanel"
+                aria-hidden={activeCase.img !== useCase.img}
+              >
+                {/* Image - Left side */}
+                <div className="relative aspect-[4/3] overflow-hidden">
+                  <img
+                    src={useCase.img}
+                    alt={useCase.title}
+                    className="h-full w-full object-contain"
+                    loading="eager"
+                  />
+                </div>
 
-            {/* Text - Right side, black color */}
-            <div className="text-right" dir="rtl">
-              <h3 className="font-display text-2xl font-bold sm:text-3xl text-gray-900">
-                {activeCase.title}
-              </h3>
-              <p className="mt-3 text-sm sm:text-base text-gray-600 leading-relaxed">
-                {activeCase.desc}
-              </p>
-              {activeCase.features && (
-                <div className="mt-4">
-                  <h4 className="font-bold text-gray-900 mb-2">تایبەتمەندییەکان:</h4>
-                  <ul className="list-disc list-inside text-sm sm:text-base text-gray-600 space-y-1">
-                    {activeCase.features.map((feature, index) => (
-                      <li key={index}>{feature}</li>
-                    ))}
-                  </ul>
+                {/* Text - Right side, black color */}
+                <div className="text-right" dir="rtl">
+                  <h3 className="font-display text-2xl font-bold sm:text-3xl text-gray-900">
+                    {useCase.title}
+                  </h3>
+                  <p className="mt-3 text-sm sm:text-base text-gray-600 leading-relaxed">
+                    {useCase.desc}
+                  </p>
+                  {useCase.features && (
+                    <div className="mt-4">
+                      <h4 className="font-bold text-gray-900 mb-2">تایبەتمەندییەکان:</h4>
+                      <ul className="list-disc list-inside text-sm sm:text-base text-gray-600 space-y-1">
+                        {useCase.features.map((feature, index) => (
+                          <li key={index}>{feature}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                  {useCase.benefits && (
+                    <div className="mt-4">
+                      <h4 className="font-bold text-gray-900 mb-2">سوودەکان:</h4>
+                      <ul className="list-disc list-inside text-sm sm:text-base text-gray-600 space-y-1">
+                        {useCase.benefits.map((benefit, index) => (
+                          <li key={index}>{benefit}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
                 </div>
-              )}
-              {activeCase.benefits && (
-                <div className="mt-4">
-                  <h4 className="font-bold text-gray-900 mb-2">سوودەکان:</h4>
-                  <ul className="list-disc list-inside text-sm sm:text-base text-gray-600 space-y-1">
-                    {activeCase.benefits.map((benefit, index) => (
-                      <li key={index}>{benefit}</li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-            </div>
+              </div>
+            ))}
           </div>
         </div>
 
         {/* Glassmorphism Buttons */}
-        <div className="flex flex-wrap items-center justify-center gap-3 mb-10">
+        <div
+          className="flex flex-wrap items-center justify-center gap-3 mb-10"
+          role="tablist"
+        >
           {USE_CASES.map((useCase) => (
             <button
               key={useCase.title}
+              onClick={() => setActiveCase(useCase)}
               onMouseEnter={() => setActiveCase(useCase)}
+              onKeyDown={(e) => handleKeyDown(e, useCase)}
+              role="tab"
+              aria-selected={activeCase.img === useCase.img}
+              tabIndex={activeCase.img === useCase.img ? 0 : -1}
               className={`
                 relative overflow-hidden rounded-xl px-5 py-3 text-sm font-bold transition-all duration-300
                 backdrop-blur-md border

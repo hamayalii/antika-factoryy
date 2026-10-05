@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { ArrowLeft, Check, Sparkles, DraftingCompass, Factory, Truck } from "lucide-react";
+import { ArrowLeft, Check, Sparkles, DraftingCompass, Factory, Truck, Shield, Award, Layout } from "lucide-react";
 import { Reveal } from "../components/Reveal";
 import { SEO } from "../components/SEO";
 import { CertificatesMarquee } from "../components/CertificatesMarquee";
@@ -566,6 +566,53 @@ export function AboutPage() {
               ))}
             </div>
           </Reveal>
+        </div>
+      </section>
+
+      {/* Leadership Section */}
+      <section className="py-16 sm:py-24" style={{ background: 'var(--page-bg-5, #EDE6F2)' }}>
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <Reveal className="mb-12 text-center">
+            <h2 className="mx-auto mt-4 max-w-2xl font-display font-black leading-[1.3] text-gray-900" style={{ fontSize: 'clamp(28px, 4vw, 42px)' }}>
+              پێشەنگ لە پیشەسازی خانوو و کابینەی ئامادەکراودا
+            </h2>
+          </Reveal>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {[
+              {
+                icon: <Shield className="h-8 w-8 text-brand" />,
+                title: "پێشەنگ لە پیشەسازی خانووی ئامادەکراو",
+                description: "گەشەی بەردەوامی تۆڕی کڕیارانی ئەنتیکا هاوشان لەگەڵ کوالێتیی بەرز و متمانەی بەردەوام وایکردووە کارگەی ئەنتیکا ببێتە یەکێک لە گەورەترین و متمانەپێکراوترین ناوەندەکانی دروستکردنی خانوو و کابینەی مۆدێرن لە تەواوی عێراقدا",
+              },
+              {
+                icon: <Award className="h-8 w-8 text-brand" />,
+                title: "سەدان پڕۆژەی جێبەجێکراو",
+                description: "کارگەی ئەنتیکا سەدان خانووی ئامادەکراو و کابینەی لە سەرانسەری عێراقدا دروستکردووە و ڕادەستی کڕیارانی کردووە، هاوکات بەرهەمەکانمان بۆ چەندین کەرتی جیاوازی گشتی و تایبەت دابینکراون",
+              },
+              {
+                icon: <Layout className="h-8 w-8 text-brand" />,
+                title: "هەمەجۆریی لە دیزاین و ڕووبەردا",
+                description: "کارگەی ئەنتیکا نەخشە و دیزاینی جۆراوجۆری نیشتەجێبوون پێشکەشی کڕیاران دەکات کە ڕووبەرەکانیان لە ٥٠ مەترەوە بۆ ٥٠٠ مەتر دووجا دەستپێدەکات، ئەمە جگە لە جێبەجێکردنی چەندین پڕۆژەی بازرگانی، کارگێڕی و یەکەی نیشتەجێبوونی تایبەت",
+              },
+            ].map((feature, index) => (
+              <Reveal key={index} delay={index * 150}>
+                <div className="group h-full rounded-2xl border border-gray-200 bg-white p-8 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 flex flex-col">
+                  <div className="flex items-center gap-4 mb-4">
+                    <div className="inline-flex rounded-xl bg-brand-soft p-3 shrink-0">
+                      {feature.icon}
+                    </div>
+                    <h3 className="font-display text-xl font-bold text-gray-900">
+                      {feature.title}
+                    </h3>
+                  </div>
+                  <p className="text-base text-gray-600 leading-relaxed flex-grow">
+                    {feature.description}
+                  </p>
+                </div>
+              </Reveal>
+            ))}
+          </div>
         </div>
       </section>
 

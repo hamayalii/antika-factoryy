@@ -26,8 +26,8 @@ export const galleryProjects: GalleryProject[] = [
     categoryKu: "کۆشکەکان",
     categoryAr: "كشاك",
     images: [
-      "/images/karbala-4.webp",
       "/images/karbala-5.webp",
+      "/images/karbala-4.webp",
       "/images/karbala-6.webp",
       "/images/karbala-7.webp",
       "/images/karbala-1.webp",
