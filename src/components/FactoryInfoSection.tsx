@@ -54,9 +54,6 @@ function AboutAntikaFactory() {
   return (
     <section className="bg-gray-50 py-16 sm:py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-center mb-8">
-          <AwardBadge title="بۆ خانووی ئامادەکراو و کەپسول" subtitle="هەڵبژاردەی ژمارە #1 لە تەواوی عێراق" />
-        </div>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           {/* Text Column - slides from right in RTL */}
           <Reveal animation="slide-right" className="order-2 lg:order-1">
@@ -84,14 +81,19 @@ function AboutAntikaFactory() {
 
           {/* Image Column - slides from left in RTL */}
           <Reveal animation="slide-left" delay={200} className="order-1 lg:order-2">
-            <div className="relative aspect-[4/3] overflow-hidden rounded-2xl shadow-xl">
-              <img
-                src="/images/factory-preview.webp"
-                alt="کارگەی ئەنتیکە"
-                className="h-full w-full object-cover"
-                loading="lazy"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+            <div className="relative">
+              <div className="aspect-[4/3] overflow-hidden rounded">
+                <img
+                  src="/images/factory-preview.webp"
+                  alt="کارگەی ئەنتیکە"
+                  className="h-full w-full object-cover"
+                  loading="lazy"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+              </div>
+              <div className="absolute bottom-8 right-12 z-10 lg:bottom-8 lg:right-18 max-md:bottom-3 max-md:right-0 max-md:scale-75 badge-float">
+                <AwardBadge title="بۆ خانووی ئامادەکراو و کەپسول" subtitle="هەڵبژاردەی ژمارە #1 لە تەواوی عێراق" />
+              </div>
             </div>
           </Reveal>
         </div>

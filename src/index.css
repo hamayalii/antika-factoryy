@@ -349,6 +349,23 @@ h4,
     transform: none;
     transition: none;
   }
+  .badge-float {
+    animation: none;
+  }
+}
+
+/* ---------- Badge floating animation ---------- */
+.badge-float {
+  animation: badge-float 4s ease-in-out infinite;
+}
+
+@keyframes badge-float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
 }
 
 /* ---------- Subtle hover effects ---------- */
