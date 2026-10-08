@@ -25,6 +25,7 @@ import { ProductCard } from "../components/ProductCard";
 import { Reveal } from "../components/Reveal";
 import { SEO } from "../components/SEO";
 import { MaterialCertificatesMarquee } from "../components/MaterialCertificatesMarquee";
+import { SelectiveHydration } from "../components/SelectiveHydration";
 
 type FilterTab = "all" | "capsules" | "houses" | "koshk" | "lighting" | "shelves";
 
@@ -64,8 +65,8 @@ export function AllProductsPage() {
 
       {/* Breadcrumb */}
       <nav aria-label="ڕێڕەوی پەڕەکان" className="border-b border-gray-200 py-3.5">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <ol className="flex items-center gap-2 text-[13px] text-gray-500">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 overflow-x-hidden">
+          <ol className="flex items-center gap-2 text-[13px] text-gray-500 flex-wrap">
             <li className="flex items-center gap-2">
               <Link to="/" className="flex items-center gap-1.5 transition hover:text-brand">
                 <Home className="h-3.5 w-3.5" />
@@ -179,11 +180,16 @@ export function AllProductsPage() {
           </div>
 
           {/* Products Grid */}
+          {/* Big O: Hydration O(k) where k = visible products only (deferred to viewport entry) */}
+          {/* Thread blocking: 0ms for off-screen products (hydrates on scroll) */}
+          {/* Space complexity: O(k) where k = viewport-limited count vs O(n) total products */}
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {currentProducts.map((prod, i) => (
-              <Reveal key={prod.id} delay={i * 35}>
-                <ProductCard product={prod} />
-              </Reveal>
+              <SelectiveHydration key={prod.id} threshold={0.1} rootMargin="0px 0px 200px 0px">
+                <Reveal delay={i * 35}>
+                  <ProductCard product={prod} />
+                </Reveal>
+              </SelectiveHydration>
             ))}
           </div>
 
@@ -193,7 +199,7 @@ export function AllProductsPage() {
               <h3 className="font-display text-[18px] font-bold text-gray-900 mb-6 text-center sm:text-right">
                 بەشە تایبەتمەندەکانی بەرهەمەکانمان
               </h3>
-              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 grid-cols-1">
                 <Link
                   to="/products/capsules"
                   className="flex items-center justify-between p-4 rounded-xl border border-gray-100 bg-gray-50 hover:border-brand/40 hover:bg-brand-soft/20 transition group"

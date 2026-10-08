@@ -166,6 +166,15 @@ export function AboutPage() {
 
   return (
     <div className="min-h-screen text-right font-body">
+      <style>{`
+        html, body {
+          overflow-x: hidden !important;
+          max-width: 100% !important;
+        }
+        * {
+          box-sizing: border-box;
+        }
+      `}</style>
       <SEO
         title="دەربارەی ئێمە | کارگەی ئەنتیکا"
         description="دەربارەی کارگەی ئەنتیکا - کارگەیەک کە هونەر دەکاتە ژیان. تیمی ئەندازیار و دیزاینەری نێودەوڵەتی بە ئەزموونی زیاتر لە 20 ساڵ."
@@ -258,61 +267,84 @@ export function AboutPage() {
 
       {/* 3-Icon Steps Strip */}
       <section
-        className="relative w-full"
+        className="relative w-full overflow-x-hidden steps-section"
         style={{
           backgroundColor: '#EDE6F2',
-          paddingBlock: '48px',
+          paddingBlock: 'clamp(16px, 3vw, 48px)',
         }}
       >
+        <style>{`
+          @media (max-width: 767px) {
+            .steps-section {
+              width: 100% !important;
+              max-width: 100% !important;
+              min-width: 0 !important;
+              overflow-x: hidden !important;
+            }
+          }
+        `}</style>
         <div
           className="mx-auto"
           style={{
-            width: '88%',
+            width: 'clamp(92%, 96%, 88%)',
             maxWidth: '1400px',
           }}
         >
           <div
-            className="grid gap-6 md:gap-8 lg:gap-10"
+            className="grid gap-6 md:gap-8 lg:gap-10 steps-grid-container"
             style={{
               gridTemplateColumns: 'repeat(3, 1fr)',
             }}
           >
             <style>{`
-              @media (max-width: 768px) {
-                [data-stack-mobile="true"] {
+              @media (max-width: 767px) {
+                .steps-grid-container {
+                  display: flex !important;
+                  flex-direction: column !important;
                   grid-template-columns: 1fr !important;
-                  gap: 28px !important;
+                  gap: 20px !important;
+                  width: 100% !important;
+                  max-width: 100% !important;
+                  min-width: 0 !important;
+                }
+                .steps-grid-mobile {
+                  width: 100% !important;
+                  min-width: 0 !important;
+                  flex: none !important;
+                  flex-basis: auto !important;
                 }
               }
             `}</style>
             {/* Step 1 */}
             <div
               dir="rtl"
-              className="flex items-start gap-[18px]"
+              className="flex items-start gap-[18px] steps-grid-mobile"
             >
               <Truck
                 className="shrink-0"
                 style={{
-                  width: '44px',
-                  height: '44px',
+                  width: 'clamp(36px, 5vw, 44px)',
+                  height: 'clamp(36px, 5vw, 44px)',
                   color: '#4a4a4a',
                 }}
               />
-              <div className="flex flex-col">
+              <div className="flex flex-col" style={{ minWidth: 0 }}>
                 <span
                   style={{
-                    fontSize: '20px',
+                    fontSize: 'clamp(16px, 2.5vw, 20px)',
                     fontWeight: 300,
                     color: '#555',
+                    lineHeight: '1.4',
                   }}
                 >
 گواستنەوە و ڕادەستکردن (Turnkey)                                  </span>
                 <span
                   className="mt-3"
                   style={{
-                    fontSize: '17px',
+                    fontSize: 'clamp(14px, 2.2vw, 17px)',
                     fontWeight: 400,
                     color: '#999',
+                    lineHeight: '1.6',
                   }}
                 >
 جێبەجێکردنی خێرا و دانانی تەواوەتی پڕۆژەکە لە هەر شوێنێکی عێراق بێت               </span>
@@ -322,31 +354,33 @@ export function AboutPage() {
             {/* Step 2 */}
             <div
               dir="rtl"
-              className="flex items-start gap-[18px]"
+              className="flex items-start gap-[18px] steps-grid-mobile"
             >
               <DraftingCompass
                 className="shrink-0"
                 style={{
-                  width: '44px',
-                  height: '44px',
+                  width: 'clamp(36px, 5vw, 44px)',
+                  height: 'clamp(36px, 5vw, 44px)',
                   color: '#4a4a4a',
                 }}
               />
-              <div className="flex flex-col">
+              <div className="flex flex-col" style={{ minWidth: 0 }}>
                 <span
                   style={{
-                    fontSize: '20px',
+                    fontSize: 'clamp(16px, 2.5vw, 20px)',
                     fontWeight: 300,
                     color: '#555',
+                    lineHeight: '1.4',
                   }}
                 >
 دیزاین و نەخشەسازیی ورد                </span>
                 <span
                   className="mt-3"
                   style={{
-                    fontSize: '17px',
+                    fontSize: 'clamp(14px, 2.2vw, 17px)',
                     fontWeight: 400,
                     color: '#999',
+                    lineHeight: '1.6',
                   }}
                 >
 گۆڕینی خەیاڵ و پێداویستییەکانی کڕیار بۆ دیزاینی 3D و ئەندازیاریی سەرنجڕاکێش                </span>
@@ -356,31 +390,33 @@ export function AboutPage() {
             {/* Step 3 */}
             <div
               dir="rtl"
-              className="flex items-start gap-[18px]"
+              className="flex items-start gap-[18px] steps-grid-mobile"
             >
               <Factory
                 className="shrink-0"
                 style={{
-                  width: '44px',
-                  height: '44px',
+                  width: 'clamp(36px, 5vw, 44px)',
+                  height: 'clamp(36px, 5vw, 44px)',
                   color: '#4a4a4a',
                 }}
               />
-              <div className="flex flex-col">
+              <div className="flex flex-col" style={{ minWidth: 0 }}>
                 <span
                   style={{
-                    fontSize: '20px',
+                    fontSize: 'clamp(16px, 2.5vw, 20px)',
                     fontWeight: 300,
                     color: '#555',
+                    lineHeight: '1.4',
                   }}
                 >
 دروستکردن بە کوالێتیی بەرز                </span>
                 <span
                   className="mt-3"
                   style={{
-                    fontSize: '17px',
+                    fontSize: 'clamp(14px, 2.2vw, 17px)',
                     fontWeight: 400,
                     color: '#999',
+                    lineHeight: '1.6',
                   }}
                 >
 پشت بەستن بە کەرەستەی بڕوانامەدار و تەکنەلۆجیای مۆدێرن لە کارگەی تایبەتی خۆماندا                </span>
@@ -391,15 +427,15 @@ export function AboutPage() {
       </section>
 
       {/* Split-Screen Promo Section */}
-      <section ref={promoSectionRef} className="relative w-full overflow-hidden" style={{ minHeight: '600px' }}>
-        <div className="flex flex-col lg:flex-row w-full" style={{ minHeight: '600px' }}>
+      <section ref={promoSectionRef} className="relative w-full overflow-hidden" style={{ minHeight: 'auto' }}>
+        <div className="flex flex-col lg:flex-row w-full" style={{ minHeight: 'auto' }}>
           {/* RIGHT half - Orange background with text (first in RTL = appears on right) */}
           <div
             className="relative w-full lg:w-1/2 flex items-center"
             style={{
               backgroundColor: '#ff5a00',
-              minHeight: '320px',
-              padding: '40px 24px',
+              minHeight: 'clamp(140px, 20vh, 320px)',
+              padding: 'clamp(16px, 3vw, 40px)',
             }}
           >
             <style>{`
@@ -415,7 +451,7 @@ export function AboutPage() {
                 dir="rtl"
                 className="w-full"
                 style={{
-                  maxWidth: '460px',
+                  maxWidth: 'clamp(100%, 90%, 460px)',
                   transition: 'opacity 0.6s ease-out, transform 0.6s ease-out',
                   opacity: promoVisible ? 1 : 0,
                   transform: promoVisible ? 'translateY(0)' : 'translateY(30px)',
@@ -424,8 +460,8 @@ export function AboutPage() {
                 <h2
                   className="font-display font-black text-white leading-tight"
                   style={{
-                    fontSize: 'clamp(28px, 4vw, 42px)',
-                    marginBottom: '24px',
+                    fontSize: 'clamp(24px, 4vw, 42px)',
+                    marginBottom: 'clamp(16px, 3vw, 24px)',
                     opacity: promoVisible ? 1 : 0,
                     transition: 'opacity 0.6s ease-out 0.1s, transform 0.6s ease-out 0.1s',
                     transform: promoVisible ? 'translateY(0)' : 'translateY(30px)',
@@ -436,9 +472,9 @@ export function AboutPage() {
                 <p
                   className="text-white font-body"
                   style={{
-                    fontSize: 'clamp(16px, 2vw, 20px)',
+                    fontSize: 'clamp(14px, 2vw, 20px)',
                     lineHeight: '1.8',
-                    marginBottom: '32px',
+                    marginBottom: 'clamp(20px, 4vw, 32px)',
                     opacity: promoVisible ? 0.9 : 0,
                     transition: 'opacity 0.6s ease-out 0.2s, transform 0.6s ease-out 0.2s',
                     transform: promoVisible ? 'translateY(0)' : 'translateY(30px)',
@@ -450,14 +486,15 @@ export function AboutPage() {
                   to="/products"
                   className="inline-block font-bold text-white"
                   style={{
-                    fontSize: '16px',
+                    fontSize: 'clamp(14px, 2vw, 16px)',
                     borderWidth: '3px',
                     borderStyle: 'solid',
                     borderColor: 'white',
-                    padding: '14px 40px',
+                    padding: 'clamp(12px, 3vw, 14px) clamp(24px, 5vw, 40px)',
                     opacity: promoVisible ? 1 : 0,
                     transition: 'opacity 0.6s ease-out 0.3s, transform 0.6s ease-out 0.3s, background-color 0.25s ease-out, color 0.25s ease-out',
                     transform: promoVisible ? 'translateY(0)' : 'translateY(30px)',
+                    minWidth: 'max-content',
                   }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.backgroundColor = 'white';
@@ -475,7 +512,7 @@ export function AboutPage() {
           </div>
 
           {/* LEFT half - Image (second in RTL = appears on left) */}
-          <div className="relative w-full lg:w-1/2" style={{ minHeight: '280px' }}>
+          <div className="relative w-full lg:w-1/2" style={{ minHeight: 'clamp(180px, 25vh, 280px)' }}>
             <style>{`
               @media (min-width: 1024px) {
                 [data-promo-image="true"] {
@@ -505,7 +542,7 @@ export function AboutPage() {
       </section>
 
       {/* Statistics Section */}
-      <section className="bg-gray-900 py-16 sm:py-24 lg:py-32">
+      <section className="bg-gray-900 py-8 sm:py-12 md:py-20 lg:py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <Reveal>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 lg:gap-10">
@@ -516,12 +553,12 @@ export function AboutPage() {
               ].map((s) => (
                 <div
                   key={s.l}
-                  className="bg-transparent border border-gray-600 p-8 sm:p-12 lg:p-16 text-center h-full flex flex-col justify-center"
+                  className="bg-transparent border border-gray-600 p-6 sm:p-8 md:p-12 lg:p-16 text-center h-full flex flex-col justify-center"
                 >
-                  <div className="font-display text-[48px] font-light text-white sm:text-[64px] md:text-[72px] lg:text-[88px] pt-8 sm:pt-12 lg:pt-16">
+                  <div className="font-display text-[36px] sm:text-[48px] md:text-[64px] lg:text-[88px] font-light text-white pt-4 sm:pt-8 md:pt-12 lg:pt-16">
                     <AnimatedCounter target={s.target} suffix={s.suffix} duration={s.d} />
                   </div>
-                  <div className="mt-4 sm:mt-6 lg:mt-8 text-[14px] sm:text-[16px] md:text-[18px] lg:text-[20px] font-normal text-gray-400">
+                  <div className="mt-3 sm:mt-4 md:mt-6 lg:mt-8 text-[12px] sm:text-[14px] md:text-[16px] lg:text-[20px] font-normal text-gray-400">
                     {s.l}
                   </div>
                 </div>
@@ -532,43 +569,43 @@ export function AboutPage() {
       </section>
 
       {/* Leadership Section */}
-      <section className="py-16 sm:py-24" style={{ background: 'var(--page-bg-5, #EDE6F2)' }}>
+      <section className="py-8 sm:py-12 md:py-24" style={{ background: 'var(--page-bg-5, #EDE6F2)' }}>
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <Reveal className="mb-12 text-center">
-            <h2 className="mx-auto mt-4 max-w-2xl font-display font-black leading-[1.3] text-gray-900" style={{ fontSize: 'clamp(28px, 4vw, 42px)' }}>
+          <Reveal className="mb-8 sm:mb-12 text-center">
+            <h2 className="mx-auto mt-4 max-w-2xl font-display font-black leading-[1.3] text-gray-900" style={{ fontSize: 'clamp(24px, 4vw, 42px)' }}>
               پێشەنگ لە پیشەسازی خانوو و کابینەی ئامادەکراودا
             </h2>
           </Reveal>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
             {[
               {
-                icon: <Shield className="h-8 w-8 text-brand" />,
+                icon: <Shield className="h-6 w-6 sm:h-8 sm:w-8 text-brand" />,
                 title: "پێشەنگ لە پیشەسازی خانووی ئامادەکراو",
                 description: "گەشەی بەردەوامی تۆڕی کڕیارانی ئەنتیکا هاوشان لەگەڵ کوالێتیی بەرز و متمانەی بەردەوام وایکردووە کارگەی ئەنتیکا ببێتە یەکێک لە گەورەترین و متمانەپێکراوترین ناوەندەکانی دروستکردنی خانوو و کابینەی مۆدێرن لە تەواوی عێراقدا",
               },
               {
-                icon: <Award className="h-8 w-8 text-brand" />,
+                icon: <Award className="h-6 w-6 sm:h-8 sm:w-8 text-brand" />,
                 title: "سەدان پڕۆژەی جێبەجێکراو",
                 description: "کارگەی ئەنتیکا سەدان خانووی ئامادەکراو و کابینەی لە سەرانسەری عێراقدا دروستکردووە و ڕادەستی کڕیارانی کردووە، هاوکات بەرهەمەکانمان بۆ چەندین کەرتی جیاوازی گشتی و تایبەت دابینکراون",
               },
               {
-                icon: <Layout className="h-8 w-8 text-brand" />,
+                icon: <Layout className="h-6 w-6 sm:h-8 sm:w-8 text-brand" />,
                 title: "هەمەجۆریی لە دیزاین و ڕووبەردا",
                 description: "کارگەی ئەنتیکا نەخشە و دیزاینی جۆراوجۆری نیشتەجێبوون پێشکەشی کڕیاران دەکات کە ڕووبەرەکانیان لە ٥٠ مەترەوە بۆ ٥٠٠ مەتر دووجا دەستپێدەکات، ئەمە جگە لە جێبەجێکردنی چەندین پڕۆژەی بازرگانی، کارگێڕی و یەکەی نیشتەجێبوونی تایبەت",
               },
             ].map((feature, index) => (
               <Reveal key={index} delay={index * 150}>
-                <div className="group h-full rounded-2xl border border-gray-200 bg-white p-8 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 flex flex-col">
-                  <div className="flex items-center gap-4 mb-4">
-                    <div className="inline-flex rounded-xl bg-brand-soft p-3 shrink-0">
+                <div className="group h-full rounded-2xl border border-gray-200 bg-white p-5 sm:p-6 md:p-8 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 flex flex-col">
+                  <div className="flex items-center gap-3 sm:gap-4 mb-3 sm:mb-4">
+                    <div className="inline-flex rounded-xl bg-brand-soft p-2 sm:p-3 shrink-0">
                       {feature.icon}
                     </div>
-                    <h3 className="font-display text-xl font-bold text-gray-900">
+                    <h3 className="font-display text-lg sm:text-xl font-bold text-gray-900">
                       {feature.title}
                     </h3>
                   </div>
-                  <p className="text-base text-gray-600 leading-relaxed flex-grow">
+                  <p className="text-sm sm:text-base text-gray-600 leading-relaxed flex-grow">
                     {feature.description}
                   </p>
                 </div>
@@ -579,17 +616,17 @@ export function AboutPage() {
       </section>
 
       {/* Team Member Section */}
-      <section className="py-16 sm:py-24">
+      <section className="py-8 sm:py-12 md:py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
             <div dir="rtl" className="text-right">
-              <p className="text-[20px] sm:text-[16px] md:text-[20px] font-normal leading-relaxed text-gray-700">
+              <p className="text-[16px] sm:text-[18px] md:text-[20px] font-normal leading-relaxed text-gray-700">
                 کارگەی ئەنتیکا لە تێبینییەکی سادەوە سەری هەڵدا: شێوازی نەریتیی بیناسازی زۆر خاو، تێچووی زۆر و زۆر نەگونجاو بوو بۆ پێداویستییە سەردەمییەکان و وەک کەسێک کە بە قووڵی لە بواری ئەندازیاری و بیناسازیدا کارم کردووە، بە چاوی خۆم دەمبینی کە چۆن کڕیاران لە عێراقدا کێشەی دۆزینەوەی خانووی پێشوەختە دروستکراوی باوەڕپێکراویان هەیە. بازاڕ پڕ بوو لە بژاردە، کەچی هیچ ڕێگەیەکی ڕوون نەبوو بۆ بەراوردکردنی کوالێتی، پتەوی، یان بەهای کارەکان
               </p>
-              <p className="mt-6 text-[20px] sm:text-[16px] md:text-[20px] font-normal leading-relaxed text-gray-700">
+              <p className="mt-6 text-[16px] sm:text-[18px] md:text-[20px] font-normal leading-relaxed text-gray-700">
                 مەرجە شاراوەکان، ڕوون نەبوونی تایبەتمەندییەکان و نەبوونی ڕێنمایی پیشەگەرانە، پرۆسەی بڕیاردانیان زۆر ماندووکەر کردبوو ئەو کاتەی کە دەبوو بۆ دروستکردنی شوێنی جوان تەرخان بکرێت، لە گەڕان و دوودڵیدا بەفیڕۆ دەچوو
               </p>
-              <p className="mt-6 text-[20px] sm:text-[16px] md:text-[20px] font-normal leading-relaxed text-gray-700">
+              <p className="mt-6 text-[16px] sm:text-[18px] md:text-[20px] font-normal leading-relaxed text-gray-700">
                 دەرکم بەوە کرد کە دەبێت ڕێگەیەکی باشتر هەبێت — کارگەیەک کە نەک تەنها بەرهەم، بەڵکو شەفافییەتی تەواو، ئامۆژگاریی شارەزایان و چارەسەری گشتگیر (Turnkey) پێشکەش بکات. بە پشتبەستن بە ٢٠ ساڵ ئەزموونی ئەندازیاری و بە پاڵپشتیی تیمێکی نێودەوڵەتی لە پسپۆڕان، کارگەی ئەنتیکام دامەزراند بۆ ئەوەی ببێتە ئەو هاوبەشە جێمتمانەیە و ئێمە تەنها کەپسوول و پێکهاتەی پێشوەختە دروستکراو بەرهەم ناهێنین؛ بەڵکو شارەزایی، کەرەستەی کوالێتی بەرز و پاڵپشتییەکی پیشەگەرانە پێشکەش دەکەین کە دڵنیایی دەدات لە سەرکەوتنی هەر پڕۆژەیەک، لە دیزاینی سەرەتاییەوە تا قۆناغی کۆتایی جێگیرکردن لە سەرتاسەری عێراقدا
               </p>
             </div>
@@ -598,7 +635,7 @@ export function AboutPage() {
                 name="Karzan"
                 description="An expert in Capsules, Prefab Houses, Apple Cabins & Container Homes"
                 imageSrc="/images/factory-preview2.webp"
-                style={{ marginLeft: '76px' }}
+                style={{ marginLeft: '0' }}
               />
             </div>
           </div>

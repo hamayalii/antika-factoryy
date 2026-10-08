@@ -5,6 +5,7 @@ import { getCategoryBySlug, getProductsByCategory, isHouseCategory, isKoshkCateg
 import { ProductCard } from "../components/ProductCard";
 import { Reveal } from "../components/Reveal";
 import { SEO } from "../components/SEO";
+import { SelectiveHydration } from "../components/SelectiveHydration";
 
 export function CategoryOverviewPage() {
   // Support /products/category/:categorySlug (dynamic) and hardcoded /products/:slug category routes
@@ -76,8 +77,8 @@ export function CategoryOverviewPage() {
 
       {/* Breadcrumb Navigation */}
       <nav aria-label="ڕێڕەوی پەڕەکان" className="border-b border-gray-200 py-3.5">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <ol className="flex items-center gap-2 text-[13px] text-gray-500">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 overflow-x-hidden">
+          <ol className="flex items-center gap-2 text-[13px] text-gray-500 flex-wrap">
             <li className="flex items-center gap-2">
               <Link to="/" className="flex items-center gap-1.5 transition hover:text-brand">
                 <Home className="h-3.5 w-3.5" />
@@ -104,8 +105,8 @@ export function CategoryOverviewPage() {
       {/* Category Hero */}
       <section className="relative overflow-hidden py-14 sm:py-20 border-b border-gray-100">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid items-center gap-10 lg:grid-cols-12">
-            <div className="lg:col-span-7">
+          <div className="grid items-center gap-10 lg:grid-cols-12 grid-cols-1">
+            <div className="lg:col-span-7 col-span-1">
               <Reveal>
                 <div className="flex items-center gap-2 mb-4">
                   <span className="inline-flex items-center gap-1.5 rounded-full bg-brand-soft px-3.5 py-1.5 text-[12.5px] font-bold text-brand">
@@ -126,19 +127,19 @@ export function CategoryOverviewPage() {
                   {category.descriptionKu}
                 </p>
 
-                <div className="mt-8 flex items-center gap-4">
+                <div className="mt-8 flex flex-col sm:flex-row items-center gap-4">
                   <a
                     href="https://wa.me/9647501234567"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 rounded-full bg-brand px-7 py-3.5 text-[14px] font-bold text-white shadow-md transition hover:bg-brand-dark"
+                    className="inline-flex items-center justify-center gap-2 rounded-full bg-brand px-7 py-3.5 text-[14px] font-bold text-white shadow-md transition hover:bg-brand-dark w-full sm:w-auto"
                   >
                     <MessageCircle className="h-4 w-4" />
                     داوای نرخ بکە
                   </a>
                   <Link
                     to={parentLink}
-                    className="inline-flex items-center gap-2 rounded-full border-2 border-gray-200 bg-white px-6 py-3.5 text-[14px] font-bold text-gray-800 transition hover:border-brand hover:text-brand"
+                    className="inline-flex items-center justify-center gap-2 rounded-full border-2 border-gray-200 bg-white px-6 py-3.5 text-[14px] font-bold text-gray-800 transition hover:border-brand hover:text-brand w-full sm:w-auto"
                   >
                     {parentAllTitle}
                   </Link>
@@ -153,7 +154,7 @@ export function CategoryOverviewPage() {
                     <img
                       src={category.image}
                       alt={category.titleKu}
-                      className="h-[320px] sm:h-[380px] w-full object-cover"
+                      className="w-full h-auto min-h-[250px] sm:min-h-[320px] lg:min-h-[380px] object-cover"
                       loading="lazy"
                     />
                   </div>
@@ -178,11 +179,16 @@ export function CategoryOverviewPage() {
             </h2>
           </Reveal>
 
+          {/* Big O: Hydration O(k) where k = visible products only (deferred to viewport entry) */}
+          {/* Thread blocking: 0ms for off-screen products (hydrates on scroll) */}
+          {/* Space complexity: O(k) where k = viewport-limited count vs O(n) total products */}
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {products.map((product, idx) => (
-              <Reveal key={product.id} delay={idx * 80}>
-                <ProductCard product={product} />
-              </Reveal>
+              <SelectiveHydration key={product.id} threshold={0.1} rootMargin="0px 0px 200px 0px">
+                <Reveal delay={idx * 80}>
+                  <ProductCard product={product} />
+                </Reveal>
+              </SelectiveHydration>
             ))}
           </div>
         </div>

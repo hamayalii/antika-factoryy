@@ -18,8 +18,8 @@ export function LightingPage() {
 
       {/* Breadcrumb */}
       <nav aria-label="ڕێڕەوی پەڕەکان" className="border-b border-gray-200 py-3.5">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <ol className="flex items-center gap-2 text-[13px] text-gray-500">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 overflow-x-hidden">
+          <ol className="flex items-center gap-2 text-[13px] text-gray-500 flex-wrap">
             <li className="flex items-center gap-2">
               <Link to="/" className="flex items-center gap-1.5 transition hover:text-brand">
                 <Home className="h-3.5 w-3.5" />
@@ -43,7 +43,7 @@ export function LightingPage() {
       {/* Hero */}
       <section className="relative overflow-hidden py-14 sm:py-20 border-b border-gray-100">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid items-center gap-12 lg:grid-cols-2">
+          <div className="grid items-center gap-12 lg:grid-cols-2 grid-cols-1">
             <div>
               <Reveal>
                 <span className="inline-flex items-center gap-2 rounded-full bg-brand-soft px-4 py-2 text-[13px] font-bold text-brand">
@@ -59,19 +59,19 @@ export function LightingPage() {
                 <p className="mt-5 text-[16px] sm:text-[17px] font-light leading-relaxed text-gray-600">
                   تێکەڵەیەک لە جوانیی سروشت و دیزاینی مۆدێرن بە شێوەیەکی بێهاوتا. لایتەکانی ئەنتیکا فاکتۆری بە دیزاینی تایبەت و کەرەستەی سروشتی و هاوچەرخ بۆ بەخشینی کەشێکی ئارام و پڕ شکۆ بە ناوماڵ، ئۆفیس و شوێنە گشتییەکان دروست دەکرێن.
                 </p>
-                <div className="mt-8 flex flex-wrap gap-4">
+                <div className="mt-8 flex flex-col sm:flex-wrap gap-4">
                   <a
                     href="https://wa.me/9647501234567"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 rounded-full bg-brand px-7 py-3.5 text-[14.5px] font-bold text-white shadow hover:bg-brand-dark transition"
+                    className="inline-flex items-center justify-center gap-2 rounded-full bg-brand px-7 py-3.5 text-[14.5px] font-bold text-white shadow hover:bg-brand-dark transition w-full sm:w-auto"
                   >
                     داواکردن یان پرسیار لە واتسئاپ
                     <ArrowLeft className="h-4 w-4" />
                   </a>
                   <Link
                     to="/products/capsules"
-                    className="inline-flex items-center gap-2 rounded-full border-2 border-gray-200 px-7 py-3.5 text-[14.5px] font-bold text-gray-800 hover:border-brand hover:text-brand transition"
+                    className="inline-flex items-center justify-center gap-2 rounded-full border-2 border-gray-200 px-7 py-3.5 text-[14.5px] font-bold text-gray-800 hover:border-brand hover:text-brand transition w-full sm:w-auto"
                   >
                     بینینی کەپسولەکان
                   </Link>
@@ -84,7 +84,7 @@ export function LightingPage() {
                 <img
                   src="/images/work-lighting.webp"
                   alt="لایتی ڕووناکی ئەنتیکا فاکتۆری"
-                  className="w-full h-[400px] object-cover"
+                  className="w-full h-auto min-h-[300px] sm:min-h-[400px] object-cover"
                 />
               </div>
             </Reveal>
@@ -101,7 +101,7 @@ export function LightingPage() {
             </h2>
           </Reveal>
 
-          <div className="grid gap-6 sm:grid-cols-3">
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {[
               {
                 title: "دیزاینی دەستکردی داهێنەرانە",
@@ -140,19 +140,19 @@ export function LightingPage() {
             <p className="mx-auto mt-4 max-w-xl text-[15.5px] text-white/90 font-light">
               پەیوەندیمان پێوە بکە بۆ داواکردنی قەبارە و شێوازی تایبەت بە پرۆژەکەت.
             </p>
-            <div className="mt-8 flex flex-wrap justify-center gap-4">
+            <div className="mt-8 flex flex-col sm:flex-wrap justify-center gap-4">
               <a
                 href="https://wa.me/9647501234567"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-[14.5px] font-bold text-brand shadow hover:bg-gray-100 transition"
+                className="inline-flex items-center justify-center gap-2 rounded-full bg-white px-7 py-3.5 text-[14.5px] font-bold text-brand shadow hover:bg-gray-100 transition w-full sm:w-auto"
               >
                 <MessageCircle className="h-4 w-4" />
                 واتسئاپ: <span dir="ltr">+964 750 123 4567</span>
               </a>
               <a
                 href="tel:+9647501234567"
-                className="inline-flex items-center gap-2 rounded-full border-2 border-white px-7 py-3.5 text-[14.5px] font-bold text-white hover:bg-white/10 transition"
+                className="inline-flex items-center justify-center gap-2 rounded-full border-2 border-white px-7 py-3.5 text-[14.5px] font-bold text-white hover:bg-white/10 transition w-full sm:w-auto"
               >
                 <PhoneCall className="h-4 w-4" />
                 پەیوەندی تەلەفۆنی

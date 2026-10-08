@@ -127,7 +127,7 @@ export function ProductDetailPage() {
 
       {/* 1. Breadcrumb Navigation */}
       <nav aria-label="ڕێڕەوی پەڕەکان" className="border-b border-gray-200 py-3.5">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 overflow-x-hidden">
           <ol className="flex items-center gap-2 text-[13px] text-gray-500 flex-wrap">
             <li className="flex items-center gap-2">
               <Link to="/" className="flex items-center gap-1.5 transition hover:text-brand">
@@ -275,7 +275,7 @@ export function ProductDetailPage() {
                         <button
                           key={idx}
                           onClick={() => setActiveImageIndex(idx)}
-                          className={`relative h-16 w-20 shrink-0 overflow-hidden rounded-lg border-2 transition ${activeImageIndex === idx
+                          className={`relative h-14 w-16 sm:h-16 sm:w-20 shrink-0 overflow-hidden rounded-lg border-2 transition ${activeImageIndex === idx
                             ? "border-brand ring-2 ring-brand/30"
                             : "border-transparent opacity-70 hover:opacity-100"
                             }`}

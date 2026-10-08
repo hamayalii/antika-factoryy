@@ -40,8 +40,8 @@ export function HousesPage() {
 
       {/* Breadcrumb */}
       <nav aria-label="ڕێڕەوی پەڕەکان" className="border-b border-gray-200 py-3.5">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <ol className="flex items-center gap-2 text-[13px] text-gray-500">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 overflow-x-hidden">
+          <ol className="flex items-center gap-2 text-[13px] text-gray-500 flex-wrap">
             <li className="flex items-center gap-2">
               <Link to="/" className="flex items-center gap-1.5 transition hover:text-brand">
                 <Home className="h-3.5 w-3.5" />

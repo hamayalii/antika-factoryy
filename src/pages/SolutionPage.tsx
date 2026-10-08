@@ -50,8 +50,8 @@ export function SolutionPage() {
 
       {/* Breadcrumb Navigation */}
       <nav aria-label="ڕێڕەوی پەڕەکان" className="border-b border-gray-200 py-3.5">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <ol className="flex items-center gap-2 text-[13px] text-gray-500">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 overflow-x-hidden">
+          <ol className="flex items-center gap-2 text-[13px] text-gray-500 flex-wrap">
             <li className="flex items-center gap-2">
               <Link to="/" className="flex items-center gap-1.5 transition hover:text-brand">
                 <Home className="h-3.5 w-3.5" />
@@ -120,7 +120,7 @@ export function SolutionPage() {
                 <img
                   src={solution.heroImage}
                   alt={solution.kurdishTitle}
-                  className="h-[380px] w-full object-cover sm:h-[480px]"
+                  className="w-full h-auto object-cover min-h-[250px] sm:min-h-[380px] lg:min-h-[480px]"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
                 <span className="absolute bottom-4 right-4 rounded-full bg-white/95 px-4 py-1.5 text-xs font-bold text-gray-900 backdrop-blur shadow">
@@ -304,7 +304,7 @@ export function SolutionPage() {
                   <img
                     src={img}
                     alt={`${solution.kurdishTitle} ${i + 1}`}
-                    className="w-full h-[320px] object-cover transition-transform hover:scale-105 duration-500"
+                    className="w-full h-auto min-h-[250px] sm:min-h-[320px] object-cover transition-transform hover:scale-105 duration-500"
                   />
                 </div>
               </Reveal>

@@ -140,7 +140,7 @@ export function MaterialCertificatesMarquee({
         isProductsPage
           ? "py-4 sm:py-6"
           : isAboutPage
-            ? "py-14 sm:py-20"
+            ? "py-8 sm:py-14 md:py-20"
             : "relative overflow-hidden bg-gradient-to-b from-gray-50/80 via-white to-gray-50/80 py-14 sm:py-20 border-t border-b border-gray-200/60"
       }`}
     >

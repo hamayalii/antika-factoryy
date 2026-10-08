@@ -91,7 +91,7 @@ function AboutAntikaFactory() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
               </div>
-              <div className="absolute bottom-8 right-12 z-10 lg:bottom-8 lg:right-18 max-md:bottom-3 max-md:right-0 max-md:scale-75 badge-float">
+              <div className="absolute bottom-4 right-4 sm:bottom-6 sm:right-8 lg:bottom-8 lg:right-18 z-10 badge-float" style={{ transform: 'scale(clamp(0.6, 8vw, 1))' }}>
                 <AwardBadge title="بۆ خانووی ئامادەکراو و کەپسول" subtitle="هەڵبژاردەی ژمارە #1 لە تەواوی عێراق" />
               </div>
             </div>
@@ -136,19 +136,19 @@ function WhyAntikaProducts() {
           </h2>
         </Reveal>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
           {features.map((feature, index) => (
             <Reveal key={index} delay={index * 150}>
-              <div className="group h-full rounded-2xl border border-gray-200 bg-white p-8 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 flex flex-col">
-                <div className="flex items-center gap-4 mb-4">
-                  <div className="inline-flex rounded-xl bg-brand-soft p-3 shrink-0">
+              <div className="group h-full rounded-2xl border border-gray-200 bg-white p-5 sm:p-6 md:p-8 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 flex flex-col">
+                <div className="flex items-center gap-3 sm:gap-4 mb-3 sm:mb-4">
+                  <div className="inline-flex rounded-xl bg-brand-soft p-2 sm:p-3 shrink-0">
                     {feature.icon}
                   </div>
-                  <h3 className="font-display text-xl font-bold text-gray-900">
+                  <h3 className="font-display text-lg sm:text-xl font-bold text-gray-900">
                     {feature.title}
                   </h3>
                 </div>
-                <p className="text-base text-gray-600 leading-relaxed flex-grow">
+                <p className="text-sm sm:text-base text-gray-600 leading-relaxed flex-grow">
                   {feature.description}
                 </p>
               </div>

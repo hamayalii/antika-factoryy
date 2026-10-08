@@ -131,6 +131,12 @@
 html {
   scroll-behavior: smooth;
   direction: rtl;
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
+* {
+  box-sizing: border-box;
 }
 
 /* Support for dynamic viewport height */

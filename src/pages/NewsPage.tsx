@@ -21,6 +21,7 @@ import { newsArticles } from "../data/newsData";
 import { Reveal } from "../components/Reveal";
 import { SEO } from "../components/SEO";
 import { useContactModal } from "../contexts/ContactModalContext";
+import { SelectiveHydration } from "../components/SelectiveHydration";
 
 function getHighlightIcon(iconName: string) {
   switch (iconName) {
@@ -142,9 +143,9 @@ export function NewsPage() {
 
       {/* 1. Breadcrumb Bar */}
       <nav aria-label="ڕێڕەوی پەڕەکان" className="border-b border-gray-200/80 backdrop-blur-md py-3.5 sticky top-20 z-20">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between">
-            <ol className="flex items-center gap-2 text-[13px] text-gray-500">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 overflow-x-hidden">
+          <div className="flex items-center justify-between flex-wrap gap-2">
+            <ol className="flex items-center gap-2 text-[13px] text-gray-500 flex-wrap">
               <li className="flex items-center gap-2">
                 <Link to="/" className="flex items-center gap-1.5 transition hover:text-brand">
                   <HomeIcon className="h-3.5 w-3.5" />
@@ -209,7 +210,7 @@ export function NewsPage() {
           {/* Search and Filter Row */}
           <div className="mt-10 flex flex-col sm:flex-row items-center justify-between gap-4 max-w-4xl mx-auto">
             {/* Categories */}
-            <div className="flex flex-wrap items-center justify-center gap-2">
+            <div className="flex flex-wrap items-center justify-center gap-2 w-full sm:w-auto">
               <button
                 onClick={() => setSelectedCategory("all")}
                 className={`rounded-full px-4 py-2 text-[13px] font-bold transition-all ${selectedCategory === "all"
@@ -234,7 +235,7 @@ export function NewsPage() {
             </div>
 
             {/* Search Input */}
-            <div className="relative w-full sm:w-72">
+            <div className="relative w-full sm:w-72 shrink-0">
               <input
                 type="text"
                 placeholder={lang === "ku" ? "گەڕان لە هەواڵەکان..." : "بحث في الأخبار..."}
@@ -267,7 +268,8 @@ export function NewsPage() {
                 const highlights = lang === "ku" ? article.highlightItemsKu : article.highlightItemsAr;
 
                 return (
-                  <Reveal key={article.id} delay={idx * 100}>
+                  <SelectiveHydration key={article.id} threshold={0.1} rootMargin="0px 0px 400px 0px">
+                    <Reveal delay={idx * 100}>
                     <div className="overflow-hidden rounded-3xl border border-gray-200/80 bg-white shadow-sm transition-all duration-300 hover:shadow-xl hover:border-brand/30">
                       <div className="grid grid-cols-1 lg:grid-cols-12 gap-0">
                         {/* Image Column */}
@@ -373,6 +375,7 @@ export function NewsPage() {
                       </div>
                     </div>
                   </Reveal>
+                </SelectiveHydration>
                 );
               })}
             </div>

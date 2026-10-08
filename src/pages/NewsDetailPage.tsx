@@ -108,9 +108,9 @@ export function NewsDetailPage() {
 
       {/* 1. Breadcrumb Bar */}
       <nav aria-label="ڕێڕەوی پەڕەکان" className="border-b border-gray-200/80 backdrop-blur-md py-3.5 sticky top-20 z-20">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between">
-            <ol className="flex items-center gap-2 text-[13px] text-gray-500 overflow-hidden">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 overflow-x-hidden">
+          <div className="flex items-center justify-between flex-wrap gap-2">
+            <ol className="flex items-center gap-2 text-[13px] text-gray-500 overflow-hidden flex-wrap">
               <li className="flex items-center gap-2 shrink-0">
                 <Link to="/" className="flex items-center gap-1.5 transition hover:text-brand">
                   <HomeIcon className="h-3.5 w-3.5" />
@@ -196,7 +196,7 @@ export function NewsDetailPage() {
               <img
                 src={article.image}
                 alt={title}
-                className="w-full h-auto max-h-[550px] object-cover object-center"
+                className="w-full h-auto min-h-[250px] sm:min-h-[350px] md:min-h-[450px] max-h-[550px] object-cover object-center"
               />
               {(article.overlayCaptionKu || article.overlayCaptionAr) && (
                 <div className="absolute bottom-4 right-4 bg-black/70 backdrop-blur-md rounded-xl px-4 py-2 text-xs text-white">
@@ -250,7 +250,7 @@ export function NewsDetailPage() {
 
             {/* Video Integration Link */}
             {article.videoUrl && (
-              <div className="rounded-2xl bg-gradient-to-r from-blue-900 to-indigo-950 p-6 sm:p-8 text-white flex flex-col sm:flex-row items-center justify-between gap-6 shadow-md">
+              <div className="rounded-2xl bg-gradient-to-r from-blue-900 to-indigo-950 p-6 sm:p-8 text-white flex flex-col sm:flex-row items-center justify-between gap-6 shadow-md text-center sm:text-right">
                 <div className="flex items-center gap-4 text-right">
                   <div className="grid h-14 w-14 shrink-0 place-items-center rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 text-white">
                     <Video className="h-7 w-7 text-white" />
@@ -304,10 +304,10 @@ export function NewsDetailPage() {
           </div>
 
           {/* Navigation Back */}
-          <div className="mt-8 flex items-center justify-between">
+          <div className="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
             <Link
               to="/news"
-              className="inline-flex items-center gap-2 text-[14px] font-bold text-gray-700 hover:text-brand transition"
+              className="inline-flex items-center justify-center gap-2 text-[14px] font-bold text-gray-700 hover:text-brand transition w-full sm:w-auto"
             >
               <ArrowRight className="h-4 w-4" />
               <span>{lang === "ku" ? "گەڕانەوە بۆ هەموو هەواڵەکان" : "العودة لجميع الأخبار"}</span>
@@ -315,7 +315,7 @@ export function NewsDetailPage() {
 
             <Link
               to="/products"
-              className="inline-flex items-center gap-2 text-[14px] font-bold text-brand hover:text-brand-dark transition"
+              className="inline-flex items-center justify-center gap-2 text-[14px] font-bold text-brand hover:text-brand-dark transition w-full sm:w-auto"
             >
               <span>{lang === "ku" ? "بینینی بەرهەمەکانمان" : "استعراض منتجاتنا"}</span>
               <ArrowLeft className="h-4 w-4" />

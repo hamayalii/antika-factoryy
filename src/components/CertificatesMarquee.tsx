@@ -108,7 +108,7 @@ export function CertificatesMarquee() {
   return (
     <section
       id="certificates"
-      className="relative overflow-hidden py-16 sm:py-24 border-b border-gray-200/70"
+      className="relative overflow-hidden py-8 sm:py-16 md:py-24 border-b border-gray-200/70"
     >
       
 

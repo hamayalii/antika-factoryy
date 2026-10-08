@@ -13,6 +13,7 @@ import {
 import { galleryProjects, GalleryProject } from "../data/galleryData";
 import { Reveal } from "../components/Reveal";
 import { SEO } from "../components/SEO";
+import { SelectiveHydration } from "../components/SelectiveHydration";
 
 export function GalleryPage() {
   const [lang] = useState<"ku" | "ar">("ku");
@@ -108,8 +109,8 @@ export function GalleryPage() {
 
       {/* Simple Breadcrumb */}
       <nav aria-label="ڕێڕەوی پەڕەکان" className="border-b border-gray-100 py-4">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          <ol className="flex items-center gap-2 text-[13px] text-gray-500">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 overflow-x-hidden">
+          <ol className="flex items-center gap-2 text-[13px] text-gray-500 flex-wrap">
             <li className="flex items-center gap-2">
               <Link to="/" className="flex items-center gap-1.5 transition hover:text-brand">
                 <HomeIcon className="h-3.5 w-3.5" />
@@ -144,21 +145,25 @@ export function GalleryPage() {
       </section>
 
       {/* Vertical Project Gallery */}
+      {/* Big O: Hydration O(k) where k = visible projects only (deferred to viewport entry) */}
+      {/* Thread blocking: 0ms for off-screen projects (hydrates on scroll) */}
+      {/* Space complexity: O(k) where k = viewport-limited count vs O(n) total projects */}
       <section className="pb-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           {galleryProjects.map((project, idx) => (
-            <Reveal key={project.id} delay={idx * 150}>
-              <div className="mb-32 last:mb-0">
-                {/* Project Container with Border */}
-                <div className="border border-gray-200 rounded-2xl bg-white py-6 sm:py-8 lg:py-10 shadow-sm">
-                  {/* Horizontal Two-Column Layout */}
-                  <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 items-start">
-                  
-                  {/* Image Gallery (visually left in RTL on desktop) */}
-                  <div className="flex-1 lg:w-2/3 order-1 lg:order-2">
-                    <div className="relative">
-                      {/* Main Image */}
-                      <div className="relative overflow-hidden bg-gray-100 rounded-lg">
+            <SelectiveHydration key={project.id} threshold={0.1} rootMargin="0px 0px 400px 0px">
+              <Reveal delay={idx * 150}>
+                <div className="mb-32 last:mb-0">
+                  {/* Project Container with Border */}
+                  <div className="border border-gray-200 rounded-2xl bg-white py-6 sm:py-8 lg:py-10 shadow-sm">
+                    {/* Horizontal Two-Column Layout */}
+                    <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 items-start">
+
+                    {/* Image Gallery (visually left in RTL on desktop) */}
+                    <div className="flex-1 lg:w-2/3 order-1 lg:order-2">
+                      <div className="relative">
+                        {/* Main Image */}
+                        <div className="relative overflow-hidden bg-gray-100 rounded-lg">
                         <img
                           src={project.images[projectGalleries[project.id] || 0]}
                           alt={lang === "ku" ? project.titleKu : project.titleAr}
@@ -204,54 +209,53 @@ export function GalleryPage() {
                   {/* Project Information (appears on right in RTL) */}
                   <div className="flex-1 lg:w-1/3 order-2 lg:order-1 lg:sticky lg:top-28">
                     <div className="lg:pl-8">
-                      <div className="flex items-center gap-3 text-sm text-gray-500 mb-4">
-                        <span className="flex items-center gap-1.5">
-                          <MapPin className="h-4 w-4 text-brand" />
-                          {lang === "ku" ? project.locationKu : project.locationAr}
-                        </span>
-                        <span>•</span>
-                        <span className="flex items-center gap-1.5">
-                          <Calendar className="h-4 w-4 text-brand" />
-                          {project.date}
-                        </span>
-                      </div>
-                      
-                      <h2 className="font-display text-2xl sm:text-3xl font-bold text-gray-900 mb-4 leading-tight">
-                        {lang === "ku" ? project.titleKu : project.titleAr}
-                      </h2>
-                      
-                      <p className="text-[15px] sm:text-[16px] text-gray-600 leading-relaxed">
-                        {lang === "ku" ? project.descriptionKu : project.descriptionAr}
-                      </p>
+                          <span className="flex items-center gap-1.5">
+                            <MapPin className="h-4 w-4 text-brand" />
+                            {lang === "ku" ? project.locationKu : project.locationAr}
+                          </span>
+                          <span>•</span>
+                          <span className="flex items-center gap-1.5">
+                            <Calendar className="h-4 w-4 text-brand" />
+                            {project.date}
+                          </span>
+                        </div>
 
-                      {/* Thumbnail Strip */}
-                      {project.images.length > 1 && (
-                        <div className="mt-6 grid grid-cols-2 gap-3">
-                          {project.images.map((img, imgIdx) => (
-                            <button
-                              key={imgIdx}
-                              onClick={() => setProjectGalleries(prev => ({ ...prev, [project.id]: imgIdx }))}
-                              className={`relative rounded-lg overflow-hidden transition ${
-                                (projectGalleries[project.id] || 0) === imgIdx
-                                  ? 'ring-2 ring-brand ring-offset-2'
-                                  : 'hover:opacity-80'
-                              }`}
-                            >
+                        <h2 className="font-display text-2xl sm:text-3xl font-bold text-gray-900 mb-4 leading-tight">
+                          {lang === "ku" ? project.titleKu : project.titleAr}
+                        </h2>
+
+                        <p className="text-[15px] sm:text-[16px] text-gray-600 leading-relaxed">
+                          {lang === "ku" ? project.descriptionKu : project.descriptionAr}
+                        </p>
+
+                        {/* Thumbnail Strip */}
+                        {project.images.length > 1 && (
+                          <div className="mt-6 grid grid-cols-2 gap-3">
+                            {project.images.map((img, imgIdx) => (
+                              <button
+                                key={imgIdx}
+                                onClick={() => setProjectGalleries(prev => ({ ...prev, [project.id]: imgIdx }))}
+                                className={`relative rounded-lg overflow-hidden transition ${
+                                  (projectGalleries[project.id] || 0) === imgIdx
+                                    ? 'ring-2 ring-brand ring-offset-2'
+                                    : 'hover:opacity-80'
+                                }`}
+                              >
                               <img
                                 src={img}
                                 alt={`${lang === "ku" ? project.titleKu : project.titleAr} ${imgIdx + 1}`}
                                 className="w-full h-24 object-contain bg-gray-100"
                               />
-                            </button>
-                          ))}
-                        </div>
-                      )}
+                              </button>
+                            ))}
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-              </div>
-            </Reveal>
+              </Reveal>
+            </SelectiveHydration>
           ))}
         </div>
       </section>

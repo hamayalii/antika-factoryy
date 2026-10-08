@@ -9,7 +9,6 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@studio-freight/lenis": "^1.0.42",
     "clsx": "2.1.1",
     "lucide-react": "^1.47.0",
     "react": "19.2.6",
@@ -19,13 +18,16 @@
   },
   "devDependencies": {
     "@tailwindcss/vite": "4.1.17",
+    "@tanstack/react-virtual": "^3.14.13",
     "@types/node": "22.19.17",
     "@types/react": "19.2.7",
     "@types/react-dom": "19.2.3",
     "@vitejs/plugin-react": "5.1.1",
+    "babel-plugin-react-remove-properties": "^0.3.1",
     "tailwindcss": "4.1.17",
+    "terser": "^5.51.2",
     "typescript": "5.9.3",
     "vite": "^7.3.6",
-    "vite-plugin-singlefile": "2.3.0"
+    "vite-plugin-compression": "^0.5.1"
   }
 }

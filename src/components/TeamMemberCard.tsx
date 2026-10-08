@@ -45,7 +45,7 @@ export function TeamMemberCard({
         position: 'relative',
         direction: 'ltr',
         width: '100%',
-        maxWidth: '380px',
+        maxWidth: 'clamp(280px, 90vw, 380px)',
         aspectRatio: '530 / 548',
         overflow: 'hidden',
         borderRadius: '4px',
