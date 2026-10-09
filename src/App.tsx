@@ -33,7 +33,6 @@ import {
   Menu,
   Phone,
   Send,
-  Sparkles,
   X,
 } from "lucide-react";
 
@@ -1147,13 +1146,8 @@ function UseCases() {
 function SlantedBanner() {
   return (
     <section className="slanted-parallax-section relative isolate min-h-[360px] sm:min-h-[480px] lg:min-h-[560px] flex items-center justify-center" role="img" aria-label="کەپسولی نیشتەجێبوون و مۆدێرنی کارگەی ئەنتیکا">
-      {/* Decorative center badge / text that makes it lively on both mobile & desktop */}
       <div className="relative z-10 mx-auto max-w-4xl px-4 text-center">
         <Reveal>
-          <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/40 px-4 py-1.5 text-[12px] sm:text-[13.5px] font-bold text-white backdrop-blur-md mb-3 shadow-lg">
-            <Sparkles className="h-3.5 w-3.5 text-brand" />
-            تەلارسازی و دیزاینی سەردەمیانە
-          </div>
           <h3 className="font-display text-[24px] sm:text-[36px] md:text-[44px] font-black text-white drop-shadow-xl leading-[1.3]">
             کوالیتی بەرز و پێکهاتەی بەهێز
           </h3>
@@ -1539,7 +1533,7 @@ function SocialSidebar() {
       <button
         onClick={toggleSidebar}
         aria-label="Show sidebar"
-        className={`fixed left-0 z-50 grid h-12 w-8 place-items-center rounded-r-full bg-gray-800 text-white shadow-lg transition-all duration-300 hover:bg-gray-700 ${isVisible ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
+        className={`fixed left-0 z-[9999] grid h-12 w-8 place-items-center rounded-r-full bg-gray-800 text-white shadow-lg transition-all duration-300 hover:bg-gray-700 ${isVisible ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
         style={{
           top: '50%',
           transform: 'translateY(-50%)',
@@ -1551,7 +1545,7 @@ function SocialSidebar() {
 
       {/* Sidebar */}
       <div
-        className="fixed left-0 z-50 flex flex-col items-center rounded-[14px] bg-white transition-all duration-300"
+        className="fixed left-0 z-[9999] flex flex-col items-center rounded-[14px] bg-white transition-all duration-300"
         style={{
           top: 'calc(50% + 6px)',
           transform: `translateY(-50%) ${isVisible ? 'translateX(0)' : 'translateX(calc(-100% - 12px))'}`,
@@ -1910,12 +1904,7 @@ function AppContent() {
           </Routes>
         </main>
       </FooterReveal>
-      {/* Big O: Hydration O(k) where k = sidebar components only (deferred to viewport entry) */}
-      {/* Thread blocking: 0ms during initial load (hydrates on scroll) */}
-      {/* Space complexity: O(k) where k = sidebar (1 component) vs O(n) total page components */}
-      <SelectiveHydration threshold={0.1} rootMargin="0px 0px 200px 0px">
-        <SocialSidebar />
-      </SelectiveHydration>
+      <SocialSidebar />
       <BackToTop />
       <ContactModal
         isOpen={isContactModalOpen}

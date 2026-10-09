@@ -280,6 +280,7 @@ export function AboutPage() {
               max-width: 100% !important;
               min-width: 0 !important;
               overflow-x: hidden !important;
+              padding-bottom: 24px !important;
             }
           }
         `}</style>
@@ -427,11 +428,11 @@ export function AboutPage() {
       </section>
 
       {/* Split-Screen Promo Section */}
-      <section ref={promoSectionRef} className="relative w-full overflow-hidden" style={{ minHeight: 'auto' }}>
+      <section ref={promoSectionRef} className="relative w-full overflow-hidden hidden lg:block" style={{ minHeight: 'auto' }}>
         <div className="flex flex-col lg:flex-row w-full" style={{ minHeight: 'auto' }}>
           {/* RIGHT half - Orange background with text (first in RTL = appears on right) */}
           <div
-            className="relative w-full lg:w-1/2 flex items-center"
+            className="relative w-full lg:w-1/2 flex items-center hidden lg:flex"
             style={{
               backgroundColor: '#ff5a00',
               minHeight: 'clamp(140px, 20vh, 320px)',
@@ -512,7 +513,7 @@ export function AboutPage() {
           </div>
 
           {/* LEFT half - Image (second in RTL = appears on left) */}
-          <div className="relative w-full lg:w-1/2" style={{ minHeight: 'clamp(180px, 25vh, 280px)' }}>
+          <div className="relative w-full lg:w-1/2 lg:block" style={{ minHeight: 'clamp(180px, 25vh, 280px)' }}>
             <style>{`
               @media (min-width: 1024px) {
                 [data-promo-image="true"] {
@@ -543,6 +544,13 @@ export function AboutPage() {
 
       {/* Statistics Section */}
       <section className="bg-gray-900 py-8 sm:py-12 md:py-20 lg:py-24">
+        <style>{`
+          @media (max-width: 767px) {
+            section.bg-gray-900 {
+              padding-top: 24px !important;
+            }
+          }
+        `}</style>
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <Reveal>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 lg:gap-10">
@@ -570,6 +578,14 @@ export function AboutPage() {
 
       {/* Leadership Section */}
       <section className="py-8 sm:py-12 md:py-24" style={{ background: 'var(--page-bg-5, #EDE6F2)' }}>
+        <style>{`
+          @media (max-width: 767px) {
+            section[style*="EDE6F2"] {
+              padding-top: 24px !important;
+              padding-bottom: 24px !important;
+            }
+          }
+        `}</style>
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <Reveal className="mb-8 sm:mb-12 text-center">
             <h2 className="mx-auto mt-4 max-w-2xl font-display font-black leading-[1.3] text-gray-900" style={{ fontSize: 'clamp(24px, 4vw, 42px)' }}>

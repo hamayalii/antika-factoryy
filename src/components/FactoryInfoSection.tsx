@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft, Shield, Zap, Truck, Calendar } from "lucide-react";
 import { newsArticles } from "../data/newsData";
-import AwardBadge from "./AwardBadge";
 
 /* ---------------------------------- Reveal ---------------------------------- */
 function Reveal({
@@ -90,9 +89,6 @@ function AboutAntikaFactory() {
                   loading="lazy"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
-              </div>
-              <div className="absolute bottom-4 right-4 sm:bottom-6 sm:right-8 lg:bottom-8 lg:right-18 z-10 badge-float" style={{ transform: 'scale(clamp(0.6, 8vw, 1))' }}>
-                <AwardBadge title="بۆ خانووی ئامادەکراو و کەپسول" subtitle="هەڵبژاردەی ژمارە #1 لە تەواوی عێراق" />
               </div>
             </div>
           </Reveal>
