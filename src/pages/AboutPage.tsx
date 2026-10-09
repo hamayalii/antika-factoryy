@@ -26,7 +26,7 @@ function usePromoScrollAnimation() {
           observer.disconnect();
         }
       },
-      { threshold: 0.2, rootMargin: "0px 0px -50px 0px" }
+      { threshold: 0.25, rootMargin: "0px 0px -50px 0px" }
     );
 
     if (sectionRef.current) observer.observe(sectionRef.current);
@@ -428,16 +428,75 @@ export function AboutPage() {
       </section>
 
       {/* Split-Screen Promo Section */}
-      <section ref={promoSectionRef} className="relative w-full overflow-hidden hidden lg:block" style={{ minHeight: 'auto' }}>
-        <div className="flex flex-col lg:flex-row w-full" style={{ minHeight: 'auto' }}>
-          {/* RIGHT half - Orange background with text (first in RTL = appears on right) */}
+      <section ref={promoSectionRef} className="relative w-full overflow-hidden hidden lg:block" style={{ minHeight: 'auto', overflowX: 'clip', backgroundColor: '#ff5a00' }}>
+        <style>{`
+          @media (min-width: 1025px) {
+            [data-promo-image="true"] {
+              will-change: transform, opacity;
+              opacity: 0;
+              transform: translateX(-80px) scale(0.97);
+              transition: opacity 1s cubic-bezier(0.22, 1, 0.36, 1), transform 1s cubic-bezier(0.22, 1, 0.36, 1);
+            }
+            [data-promo-image="true"].is-visible {
+              opacity: 1;
+              transform: translateX(0) scale(1);
+            }
+            .promo-text-wrapper {
+              will-change: transform, opacity;
+              opacity: 0;
+              transform: translateX(80px);
+              transition: opacity 1s cubic-bezier(0.22, 1, 0.36, 1) 0.15s, transform 1s cubic-bezier(0.22, 1, 0.36, 1) 0.15s;
+            }
+            .promo-text-wrapper.is-visible {
+              opacity: 1;
+              transform: translateX(0);
+            }
+          }
+          @media (min-width: 1025px) and (prefers-reduced-motion: reduce) {
+            [data-promo-image="true"],
+            .promo-text-wrapper {
+              opacity: 1 !important;
+              transform: none !important;
+              transition: none !important;
+            }
+          }
+        `}</style>
+        <div className="flex flex-col lg:flex-row w-full" style={{ minHeight: 'auto' }} dir="ltr">
+          {/* LEFT half - Image */}
+          <div className="relative w-full lg:w-1/2 lg:block overflow-hidden" style={{ minHeight: 'clamp(180px, 25vh, 280px)', backgroundColor: '#ff5a00' }}>
+            <style>{`
+              @media (min-width: 1024px) {
+                [data-promo-image="true"] {
+                  min-height: 600px;
+                }
+              }
+            `}</style>
+            <div data-promo-image="true" className={`promo-image-wrapper relative w-full h-full ${promoVisible ? 'is-visible' : ''}`}>
+              <img
+                src="/images/factory-preview.webp"
+                alt="Factory Preview"
+                className="absolute inset-0 w-full h-full object-cover"
+                style={{
+                  userSelect: 'none',
+                  WebkitUserSelect: 'none',
+                  pointerEvents: 'none',
+                }}
+                loading="lazy"
+                decoding="async"
+                draggable={false}
+              />
+            </div>
+          </div>
+
+          {/* RIGHT half - Orange background with text */}
           <div
-            className="relative w-full lg:w-1/2 flex items-center hidden lg:flex"
+            className={`promo-text-wrapper relative w-full lg:w-1/2 flex items-center hidden lg:flex ${promoVisible ? 'is-visible' : ''}`}
             style={{
               backgroundColor: '#ff5a00',
               minHeight: 'clamp(140px, 20vh, 320px)',
               padding: 'clamp(16px, 3vw, 40px)',
             }}
+            dir="rtl"
           >
             <style>{`
               @media (min-width: 1024px) {
@@ -449,13 +508,9 @@ export function AboutPage() {
             `}</style>
             <div data-promo-orange="true" className="w-full">
               <div
-                dir="rtl"
                 className="w-full"
                 style={{
                   maxWidth: 'clamp(100%, 90%, 460px)',
-                  transition: 'opacity 0.6s ease-out, transform 0.6s ease-out',
-                  opacity: promoVisible ? 1 : 0,
-                  transform: promoVisible ? 'translateY(0)' : 'translateY(30px)',
                 }}
               >
                 <h2
@@ -463,9 +518,6 @@ export function AboutPage() {
                   style={{
                     fontSize: 'clamp(24px, 4vw, 42px)',
                     marginBottom: 'clamp(16px, 3vw, 24px)',
-                    opacity: promoVisible ? 1 : 0,
-                    transition: 'opacity 0.6s ease-out 0.1s, transform 0.6s ease-out 0.1s',
-                    transform: promoVisible ? 'translateY(0)' : 'translateY(30px)',
                   }}
                 >
                   کار و دیزاینەکانمان ببینە
@@ -476,9 +528,6 @@ export function AboutPage() {
                     fontSize: 'clamp(14px, 2vw, 20px)',
                     lineHeight: '1.8',
                     marginBottom: 'clamp(20px, 4vw, 32px)',
-                    opacity: promoVisible ? 0.9 : 0,
-                    transition: 'opacity 0.6s ease-out 0.2s, transform 0.6s ease-out 0.2s',
-                    transform: promoVisible ? 'translateY(0)' : 'translateY(30px)',
                   }}
                 >
                   گەر بەدوای کەپسول (Apple Cabin)، کۆشک، یان خانووی ئامادەکراوی قەبارە جیاوازدا دەگەڕێیت، ئێمە هەموو جۆرەکانمان بۆ ئامادەکردوون بە باشترین کوالێتی
@@ -492,10 +541,8 @@ export function AboutPage() {
                     borderStyle: 'solid',
                     borderColor: 'white',
                     padding: 'clamp(12px, 3vw, 14px) clamp(24px, 5vw, 40px)',
-                    opacity: promoVisible ? 1 : 0,
-                    transition: 'opacity 0.6s ease-out 0.3s, transform 0.6s ease-out 0.3s, background-color 0.25s ease-out, color 0.25s ease-out',
-                    transform: promoVisible ? 'translateY(0)' : 'translateY(30px)',
                     minWidth: 'max-content',
+                    transition: 'background-color 0.25s ease-out, color 0.25s ease-out',
                   }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.backgroundColor = 'white';
@@ -509,34 +556,6 @@ export function AboutPage() {
                   بینینی دیزاینەکان
                 </Link>
               </div>
-            </div>
-          </div>
-
-          {/* LEFT half - Image (second in RTL = appears on left) */}
-          <div className="relative w-full lg:w-1/2 lg:block" style={{ minHeight: 'clamp(180px, 25vh, 280px)' }}>
-            <style>{`
-              @media (min-width: 1024px) {
-                [data-promo-image="true"] {
-                  min-height: 600px;
-                }
-              }
-            `}</style>
-            <div data-promo-image="true" className="relative w-full h-full">
-              <img
-                src="/images/factory-preview.webp"
-                alt="Factory Preview"
-                className="absolute inset-0 w-full h-full object-cover"
-                style={{
-                  transform: promoVisible ? 'scale(1)' : 'scale(1.06)',
-                  transition: 'transform 1s ease-out',
-                  userSelect: 'none',
-                  WebkitUserSelect: 'none',
-                  pointerEvents: 'none',
-                }}
-                loading="lazy"
-                decoding="async"
-                draggable={false}
-              />
             </div>
           </div>
         </div>

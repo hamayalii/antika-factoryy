@@ -69,7 +69,7 @@ function MaterialCertCard({
     <div
       key={`${prefix}-${idx}`}
       onClick={() => onSelect(cert)}
-      className={`group relative mx-3 flex-shrink-0 cursor-pointer overflow-hidden rounded-2xl transition-all duration-300 hover:-translate-y-1 ${
+      className={`material-cert-card group relative flex-shrink-0 cursor-pointer overflow-hidden rounded-2xl transition-all duration-300 hover:-translate-y-1 ${
         compact ? "sm:mx-4" : "sm:mx-5"
       }`}
       style={{ width: compact ? "210px" : "240px", border: "1.5px solid #ff5a00" }}
@@ -94,7 +94,7 @@ function MaterialCertCard({
 
       <div className="mt-2 px-2 pb-2 text-right">
         {cert.category && (
-          <span className="inline-block rounded-md bg-brand/10 px-2 py-0.5 text-[10.5px] font-bold text-brand mb-1">
+          <span className="category-badge inline-block rounded-md bg-brand/10 px-2 py-0.5 text-[10.5px] font-bold text-brand mb-1">
             {cert.category}
           </span>
         )}
@@ -183,6 +183,24 @@ export function MaterialCertificatesMarquee({
         dir="ltr"
         className="relative w-full overflow-hidden select-none py-2"
       >
+        <style>{`
+          @media (max-width: 767px) {
+            .material-cert-card {
+              width: clamp(120px, 30vw, 240px) !important;
+              margin-left: 16px !important;
+              margin-right: 16px !important;
+            }
+            .material-cert-card h4 {
+              font-size: 13px !important;
+            }
+            .material-cert-card p {
+              font-size: 11px !important;
+            }
+            .material-cert-card .category-badge {
+              display: none !important;
+            }
+          }
+        `}</style>
         {/* Left fade gradient */}
         <div className={`pointer-events-none absolute inset-y-0 left-0 z-10 w-20 sm:w-36 ${
           isAboutPage
