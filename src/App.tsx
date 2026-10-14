@@ -1163,7 +1163,7 @@ function UseCases() {
 /* ---------------------------------- Slanted Parallax Banner ---------------------------------- */
 function SlantedBanner() {
   return (
-    <section className="slanted-parallax-section relative isolate min-h-[360px] sm:min-h-[480px] lg:min-h-[560px] flex items-center justify-center" role="img" aria-label="کەپسولی نیشتەجێبوون و مۆدێرنی کارگەی ئەنتیکا">
+    <section className="slanted-parallax-section relative isolate min-h-[360px] sm:min-h-[480px] lg:min-h-[560px] flex items-center justify-center" aria-label="کەپسولی نیشتەجێبوون و مۆدێرنی کارگەی ئەنتیکا">
       <div className="relative z-10 mx-auto max-w-4xl px-4 text-center">
         <Reveal>
           <h3 className="font-display text-[24px] sm:text-[36px] md:text-[44px] font-black text-white drop-shadow-xl leading-[1.3]">

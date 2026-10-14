@@ -52,6 +52,21 @@
     Cache-Control = "public, max-age=15552000, stale-while-revalidate=86400, stale-if-error=604800"
     X-Content-Type-Options = "nosniff"
 
+# Agentic resource files with proper MIME types
+[[headers]]
+  for = "/ai-catalog.json"
+  [headers.values]
+    Content-Type = "application/json"
+    Cache-Control = "public, max-age=3600"
+    Access-Control-Allow-Origin = "*"
+
+[[headers]]
+  for = "/llms.txt"
+  [headers.values]
+    Content-Type = "text/markdown; charset=utf-8"
+    Cache-Control = "public, max-age=3600"
+    Access-Control-Allow-Origin = "*"
+
 # HTML caching with edge revalidation
 # Target: Fresh content with edge caching
 [[headers]]
@@ -68,13 +83,25 @@
     Referrer-Policy = "strict-origin-when-cross-origin"
     Permissions-Policy = "camera=(), microphone=(), geolocation=()"
 
-# Redirect SPA routes to index.html
+# Serve static agentic files directly (no SPA redirect)
+[[redirects]]
+  from = "/ai-catalog.json"
+  to = "/ai-catalog.json"
+  status = 200
+  force = false
+
+[[redirects]]
+  from = "/llms.txt"
+  to = "/llms.txt"
+  status = 200
+  force = false
+
+# Redirect SPA routes to index.html (excluding static files)
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
   force = false
-  conditions = {Role = ["admin"]}
 
 # Enable Netlify Edge Functions for critical path optimization
 [functions]

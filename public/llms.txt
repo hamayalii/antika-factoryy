@@ -10,6 +10,14 @@
 - **Contact**: info@antika-factory.com, +9647501234567
 - **Hours**: Monday-Friday, 09:00-18:00 (Iraq Standard Time)
 
+## Navigation Links
+
+- [Home](/)
+- [About Us](/about)
+- [Products](/products)
+- [Gallery](/gallery)
+- [News](/news)
+
 ## Technical Specifications
 
 ### Structural Engineering

@@ -40,7 +40,7 @@ function getHighlightIcon(iconName: string) {
 function NewsSlantedBannerTop() {
   return (
     <div className="bg-[#111827]">
-      <section className="slanted-parallax-section relative isolate min-h-[340px] sm:min-h-[460px] lg:min-h-[520px] flex items-center justify-center -mt-px" style={{ '--wedge-top': '#f8f9fb' } as React.CSSProperties} role="img" aria-label="کەپسولی نیشتەجێبوون و مۆدێرنی کارگەی ئەنتیکا">
+      <section className="slanted-parallax-section relative isolate min-h-[340px] sm:min-h-[460px] lg:min-h-[520px] flex items-center justify-center -mt-px" style={{ '--wedge-top': '#f8f9fb' } as React.CSSProperties} aria-label="کەپسولی نیشتەجێبوون و مۆدێرنی کارگەی ئەنتیکا">
         <div className="relative z-10 mx-auto max-w-4xl px-4 text-center">
           <Reveal>
             <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/40 px-4 py-1.5 text-[12px] sm:text-[13.5px] font-bold text-white backdrop-blur-md mb-3 shadow-lg">
