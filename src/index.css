@@ -347,6 +347,16 @@ h4,
   transform: translateX(0);
 }
 
+/* Hide scrollbar utility for horizontal scrolling */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .reveal,
   .reveal-slide-left,

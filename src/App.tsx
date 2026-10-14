@@ -1033,6 +1033,35 @@ function UseCases() {
           </h2>
         </Reveal>
 
+        {/* Category Filter - Horizontal Scrollable on Mobile, Wrapped on Desktop */}
+        <div className="my-8">
+          <div
+            className="flex overflow-x-auto snap-x snap-mandatory scrollbar-hide gap-3 pb-4 md:flex-wrap md:justify-center md:overflow-visible md:pb-0"
+            role="tablist"
+          >
+            {USE_CASES.map((useCase) => (
+              <button
+                key={useCase.title}
+                onClick={() => setActiveCase(useCase)}
+                onMouseEnter={() => setActiveCase(useCase)}
+                onKeyDown={(e) => handleKeyDown(e, useCase)}
+                role="tab"
+                aria-selected={activeCase.img === useCase.img}
+                tabIndex={activeCase.img === useCase.img ? 0 : -1}
+                className={`
+                  snap-center whitespace-nowrap py-2.5 px-4 rounded-full text-sm font-medium transition-all duration-300
+                  ${activeCase.img === useCase.img
+                    ? 'bg-brand-soft border-2 border-brand text-brand'
+                    : 'bg-white border border-gray-200 text-gray-700 hover:border-brand/50 hover:bg-gray-50'
+                  }
+                `}
+              >
+                {useCase.title}
+              </button>
+            ))}
+          </div>
+        </div>
+
         {/* Main Image Display - Grid stacking for constant height */}
         <div className="mb-12 mx-auto max-w-5xl">
           <div className="grid grid-cols-1 grid-rows-1" dir="ltr">
@@ -1091,39 +1120,6 @@ function UseCases() {
               </div>
             ))}
           </div>
-        </div>
-
-        {/* Glassmorphism Buttons */}
-        <div
-          className="flex flex-wrap items-center justify-center gap-3 mb-10"
-          role="tablist"
-        >
-          {USE_CASES.map((useCase) => (
-            <button
-              key={useCase.title}
-              onClick={() => setActiveCase(useCase)}
-              onMouseEnter={() => setActiveCase(useCase)}
-              onKeyDown={(e) => handleKeyDown(e, useCase)}
-              role="tab"
-              aria-selected={activeCase.img === useCase.img}
-              tabIndex={activeCase.img === useCase.img ? 0 : -1}
-              className={`
-                relative overflow-hidden rounded-xl px-5 py-3 text-sm font-bold transition-all duration-300
-                backdrop-blur-md border
-                ${activeCase.img === useCase.img
-                  ? 'bg-brand/15 border-brand/40 scale-105'
-                  : 'bg-white/60 border-gray-200/50 hover:bg-brand/12 hover:backdrop-blur-md hover:border-brand/30 hover:scale-102'
-                }
-              `}
-            >
-              <span className="relative z-10 text-gray-900">
-                {useCase.title}
-              </span>
-              {activeCase.img === useCase.img && (
-                <div className="absolute inset-0 bg-brand/10" />
-              )}
-            </button>
-          ))}
         </div>
 
         <Reveal delay={300} className="text-center">
@@ -1518,6 +1514,9 @@ function SocialSidebar() {
     return saved !== 'false';
   });
 
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+  const [touchCurrent, setTouchCurrent] = useState<number | null>(null);
+
   // Save state to localStorage whenever it changes
   useEffect(() => {
     localStorage.setItem('socialSidebarVisible', String(isVisible));
@@ -1525,6 +1524,33 @@ function SocialSidebar() {
 
   const toggleSidebar = () => {
     setIsVisible(!isVisible);
+  };
+
+  const closeSidebar = () => {
+    setIsVisible(false);
+  };
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchStart(e.touches[0].clientX);
+    setTouchCurrent(e.touches[0].clientX);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (touchStart !== null) {
+      setTouchCurrent(e.touches[0].clientX);
+    }
+  };
+
+  const handleTouchEnd = () => {
+    if (touchStart !== null && touchCurrent !== null) {
+      const deltaX = touchCurrent - touchStart;
+      const threshold = 50;
+      if (deltaX > threshold) {
+        closeSidebar();
+      }
+    }
+    setTouchStart(null);
+    setTouchCurrent(null);
   };
 
   return (
@@ -1543,9 +1569,22 @@ function SocialSidebar() {
         <ChevronRight className="h-5 w-5" />
       </button>
 
+      {/* Backdrop Overlay */}
+      {isVisible && (
+        <div
+          onClick={closeSidebar}
+          className="fixed inset-0 z-[9998] bg-black/40 transition-opacity"
+          aria-hidden="true"
+        />
+      )}
+
       {/* Sidebar */}
       <div
-        className="fixed left-0 z-[9999] flex flex-col items-center rounded-[14px] bg-white transition-all duration-300"
+        onClick={(e) => e.stopPropagation()}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+        className="fixed left-0 z-[9999] flex flex-col items-center rounded-[14px] bg-white transition-transform duration-300 ease-[cubic-bezier(0.25,1,0.5,1)]"
         style={{
           top: 'calc(50% + 6px)',
           transform: `translateY(-50%) ${isVisible ? 'translateX(0)' : 'translateX(calc(-100% - 12px))'}`,
@@ -1733,7 +1772,7 @@ function AppContent() {
   const [active, setActive] = useState("home");
   const { isContactModalOpen, closeContactModal } = useContactModal();
   const location = useLocation();
-  const [isPending, startTransition] = useTransition();
+  const [, startTransition] = useTransition();
 
   // Big O: Thread blocking reduction - navigation marked as interruptible (Concurrent React)
   // INP impact: Route changes don't block main thread, UI remains responsive
