@@ -56,29 +56,20 @@ export default defineConfig(({ mode }) => {
       deleteOriginFile: false
     }),
     sitemap({
-      hostname: siteUrl,
-      outDir: "dist",
-      sitemap: "sitemap.xml",
-      urls: [
-        { loc: "/", changefreq: "weekly", priority: 1.0 },
-        { loc: "/about", changefreq: "monthly", priority: 0.8 },
-        { loc: "/gallery", changefreq: "monthly", priority: 0.7 },
-        { loc: "/news", changefreq: "weekly", priority: 0.9 },
-        { loc: "/products", changefreq: "weekly", priority: 0.9 },
-        { loc: "/products/capsules", changefreq: "weekly", priority: 0.8 },
-        { loc: "/products/houses", changefreq: "weekly", priority: 0.8 },
-        { loc: "/products/koshk", changefreq: "weekly", priority: 0.8 },
-        { loc: "/products/lighting", changefreq: "weekly", priority: 0.7 },
-        { loc: "/products/shelves", changefreq: "weekly", priority: 0.7 },
-        { loc: "/products/am", changefreq: "weekly", priority: 0.8 },
-        { loc: "/products/as", changefreq: "weekly", priority: 0.8 },
-        { loc: "/products/al", changefreq: "weekly", priority: 0.8 },
-        { loc: "/products/container-house", changefreq: "weekly", priority: 0.8 },
-        { loc: "/products/standard-house", changefreq: "weekly", priority: 0.8 },
-        { loc: "/products/garden-house", changefreq: "weekly", priority: 0.8 },
-        { loc: "/products/cabin-house", changefreq: "weekly", priority: 0.8 },
-        { loc: "/products/concrete-house", changefreq: "weekly", priority: 0.8 },
-      ],
+      baseUrl: process.env.VITE_SITE_URL || 'https://antika-factory.netlify.app',
+      routes: [
+        '/',
+        '/about',
+        '/products',
+        '/gallery',
+        '/news',
+        '/products/lighting',
+        '/products/container-house',
+        '/products/standard-house',
+        '/products/garden-house',
+        '/products/cabin-house',
+        '/products/concrete-house'
+      ]
     })
   ],
   resolve: {
