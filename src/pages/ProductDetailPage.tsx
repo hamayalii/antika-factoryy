@@ -20,10 +20,11 @@ import {
   Clock,
 } from "lucide-react";
 import { getProductBySlug, getRelatedProducts, getCategoryBySlug, isHouseProduct, isKoshkProduct } from "../data/productData";
-import { ProductCard } from "../components/ProductCard";
 import { VerificationPlaceholder } from "../components/VerificationPlaceholder";
 import { Reveal } from "../components/Reveal";
-import { SEO } from "../components/SEO";
+import { SeoHead } from "../components/SeoHead";
+import { generateProductSchema, generateBreadcrumbSchema } from "../utils/schemaGenerators";
+import { SemanticTopicCluster } from "../components/SemanticTopicCluster";
 import { useContactModal } from "../contexts/ContactModalContext";
 
 export function ProductDetailPage() {
@@ -87,9 +88,10 @@ export function ProductDetailPage() {
   if (!product) {
     return (
       <div className="min-h-[70vh] flex items-center justify-center bg-gray-50 px-4 py-24 text-center text-right">
-        <SEO
+        <SeoHead
           title="بەرهەم نەدۆزرایەوە | ئەنتیکا فاکتۆری"
           description="ئەو بەرهەمەی داوات کردووە بوونی نییە یان سڕدراوەتەوە."
+          noindex
         />
         <div className="max-w-md mx-auto">
           <span className="inline-flex h-16 w-16 items-center justify-center rounded-full bg-brand-soft text-brand mb-6">
@@ -116,13 +118,39 @@ export function ProductDetailPage() {
   const relatedProducts = getRelatedProducts(product.slug, 3);
   const currentImage = product.images[activeImageIndex] || "/images/capsule-1.jpg";
 
+  // Generate breadcrumb paths for schema
+  const breadcrumbPaths = [
+    { name: "سەرەکی", url: "/" },
+    { name: sectionTitle, url: sectionLink },
+  ];
+
+  if (category) {
+    breadcrumbPaths.push({
+      name: category.titleKu,
+      url: `/products/${category.slug}`,
+    });
+  }
+
+  breadcrumbPaths.push({
+    name: product.titleKu,
+    url: `/products/${product.slug}`,
+  });
+
+  // Merge product schema and breadcrumb schema
+  const schema = {
+    ...generateProductSchema(product),
+    ...generateBreadcrumbSchema(breadcrumbPaths),
+  };
+
   return (
     <div className="pt-24 min-h-screen text-right">
-      <SEO
+      <SeoHead
         title={`${product.titleKu} | ئەنتیکا فاکتۆری`}
         description={`${product.titleKu} لە پۆلێنی ${product.categoryTitleKu}ی کارگەی ئەنتیکا فاکتۆرییە. بۆ زانیاریی پێوانە و داوای نرخ، سەیری پەڕەی بەرهەم بکە.`}
-        canonical={`https://antika-factory.netlify.app/products/${product.slug}`}
+        canonical={`/products/${product.slug}`}
         image={currentImage}
+        type="product"
+        schema={schema}
       />
 
       {/* 1. Breadcrumb Navigation */}
@@ -529,39 +557,12 @@ export function ProductDetailPage() {
         </div>
       </section>
 
-      {/* 6. Related Products */}
-      {relatedProducts.length > 0 && (
-        <section className="py-16 sm:py-24 border-t border-gray-100">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <Reveal className="mb-10 text-center">
-              <span className="inline-flex items-center gap-2 text-[13.5px] font-bold text-brand">
-                <span className="h-[2px] w-5 rounded bg-brand" />
-                بەرهەمە پەیوەندیدارەکان
-                <span className="h-[2px] w-5 rounded bg-brand" />
-              </span>
-              <h2 className="mt-3 font-display text-2xl sm:text-3xl font-black text-gray-900">
-                مۆدێلی تری کارگەی ئەنتیکا
-              </h2>
-            </Reveal>
-
-            <div className="grid gap-6 md:grid-cols-3">
-              {relatedProducts.map((relProduct) => (
-                <ProductCard key={relProduct.id} product={relProduct} />
-              ))}
-            </div>
-
-            <div className="mt-10 text-center">
-              <Link
-                to={sectionLink}
-                className="inline-flex items-center gap-2 rounded-full border-2 border-gray-200 px-8 py-3 text-[14px] font-bold text-gray-800 transition hover:border-brand hover:text-brand"
-              >
-                {sectionAllTitle}
-                <ArrowLeft className="h-4 w-4" />
-              </Link>
-            </div>
-          </div>
-        </section>
-      )}
+      {/* 6. Related Products - Semantic Topic Cluster */}
+      <SemanticTopicCluster
+        relatedProducts={relatedProducts}
+        currentProductSlug={product.slug}
+        className="py-16 sm:py-24 border-t border-gray-100"
+      />
 
       {/* Lightbox Modal */}
       {lightboxOpen &&

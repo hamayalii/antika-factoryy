@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { Link, Copy, Check } from "lucide-react";
 
 const features = [
   {
@@ -118,6 +119,7 @@ export function SpecialFeatures() {
   const [scrollProgress, setScrollProgress] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
   const [isTablet, setIsTablet] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     // Check for reduced motion preference
@@ -192,8 +194,17 @@ export function SpecialFeatures() {
   const row1Features = features.filter(f => f.row === 1);
   const row2Features = features.filter(f => f.row === 2);
 
+  const handleShareTechnicalSpecs = () => {
+    const shareUrl = `${window.location.origin}${window.location.pathname}#technical-specs`;
+    navigator.clipboard.writeText(shareUrl).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 3000);
+    });
+  };
+
   return (
     <section
+      id="technical-specs"
       ref={sectionRef}
       style={{
         unicodeBidi: 'isolate',
@@ -246,6 +257,43 @@ export function SpecialFeatures() {
           >
             کارگەی ئەنتیکا هەموو پێداویستییەکانی ژیانێکی مۆدێرن لە کوردستان و عێراق دابین دەکات
           </p>
+
+          {/* Shareable Link Button */}
+          <div style={{ marginTop: 'clamp(16px, 3vw, 24px)' }}>
+            <button
+              onClick={handleShareTechnicalSpecs}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px',
+                backgroundColor: copied ? '#059669' : 'rgba(255, 255, 255, 0.1)',
+                color: '#FFFFFF',
+                border: copied ? '1px solid #059669' : '1px solid rgba(255, 255, 255, 0.3)',
+                borderRadius: '9999px',
+                padding: '10px 20px',
+                fontSize: 'clamp(13px, 2vw, 14px)',
+                fontWeight: 500,
+                cursor: 'pointer',
+                transition: 'all 0.2s ease',
+                backdropFilter: 'blur(8px)',
+              }}
+              onMouseEnter={(e) => {
+                if (!copied) {
+                  e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.2)';
+                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.5)';
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (!copied) {
+                  e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.3)';
+                }
+              }}
+            >
+              {copied ? <Check size={16} /> : <Copy size={16} />}
+              <span>{copied ? 'لینک کۆپی کرا!' : 'کۆپی کردنی لینکی تایبەتمەندییەکان'}</span>
+            </button>
+          </div>
         </div>
 
         {/* Row 1: 4-column grid */}

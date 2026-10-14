@@ -1,15 +1,22 @@
 import path from "path";
 import { fileURLToPath } from "url";
+import { loadEnv } from "vite";
 import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 import viteCompression from "vite-plugin-compression";
+import sitemap from "rollup-plugin-sitemap";
+import viteImagemin from "vite-plugin-imagemin";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // https://vite.dev/config/
-export default defineConfig({
+export default defineConfig(({ mode }) => {
+  const env = loadEnv(mode, process.cwd(), "");
+  const siteUrl = env.VITE_SITE_URL || "https://antika-factory.netlify.app";
+
+  return {
   plugins: [
     react({
       babel: {
@@ -19,6 +26,19 @@ export default defineConfig({
       }
     }),
     tailwindcss(),
+    viteImagemin({
+      gifsicle: { optimizationLevel: 7 },
+      optipng: { optimizationLevel: 7 },
+      mozjpeg: { quality: 85 },
+      pngquant: { quality: [0.8, 0.9] },
+      webp: { quality: 85 },
+      svgo: {
+        plugins: [
+          { name: 'removeViewBox', active: false },
+          { name: 'removeEmptyAttrs', active: false }
+        ]
+      }
+    }),
     viteCompression({
       algorithm: "brotliCompress",
       ext: ".br",
@@ -34,6 +54,31 @@ export default defineConfig({
       ext: ".gz",
       threshold: 1024,
       deleteOriginFile: false
+    }),
+    sitemap({
+      hostname: siteUrl,
+      outDir: "dist",
+      sitemap: "sitemap.xml",
+      urls: [
+        { loc: "/", changefreq: "weekly", priority: 1.0 },
+        { loc: "/about", changefreq: "monthly", priority: 0.8 },
+        { loc: "/gallery", changefreq: "monthly", priority: 0.7 },
+        { loc: "/news", changefreq: "weekly", priority: 0.9 },
+        { loc: "/products", changefreq: "weekly", priority: 0.9 },
+        { loc: "/products/capsules", changefreq: "weekly", priority: 0.8 },
+        { loc: "/products/houses", changefreq: "weekly", priority: 0.8 },
+        { loc: "/products/koshk", changefreq: "weekly", priority: 0.8 },
+        { loc: "/products/lighting", changefreq: "weekly", priority: 0.7 },
+        { loc: "/products/shelves", changefreq: "weekly", priority: 0.7 },
+        { loc: "/products/am", changefreq: "weekly", priority: 0.8 },
+        { loc: "/products/as", changefreq: "weekly", priority: 0.8 },
+        { loc: "/products/al", changefreq: "weekly", priority: 0.8 },
+        { loc: "/products/container-house", changefreq: "weekly", priority: 0.8 },
+        { loc: "/products/standard-house", changefreq: "weekly", priority: 0.8 },
+        { loc: "/products/garden-house", changefreq: "weekly", priority: 0.8 },
+        { loc: "/products/cabin-house", changefreq: "weekly", priority: 0.8 },
+        { loc: "/products/concrete-house", changefreq: "weekly", priority: 0.8 },
+      ],
     })
   ],
   resolve: {
@@ -96,4 +141,5 @@ export default defineConfig({
       'Cache-Control': 'public, max-age=31536000, immutable'
     }
   }
+  };
 });

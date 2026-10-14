@@ -1,19 +1,21 @@
-import { useEffect, useRef, useState, useCallback, useTransition } from "react";
+import { useEffect, useRef, useState, useCallback, useTransition, lazy, Suspense } from "react";
 import { BrowserRouter, Routes, Route, Link, useLocation } from "react-router-dom";
-import { SolutionPage } from "./pages/SolutionPage";
 import { solutions } from "./data/solutions";
-import { CapsulesPage } from "./pages/CapsulesPage";
-import { HousesPage } from "./pages/HousesPage";
-import { CategoryOverviewPage } from "./pages/CategoryOverviewPage";
-import { ProductDetailPage } from "./pages/ProductDetailPage";
-import { LightingPage } from "./pages/LightingPage";
-import { ShelvesPage } from "./pages/ShelvesPage";
-import { KoshkPage } from "./pages/KoshkPage";
-import { AllProductsPage } from "./pages/AllProductsPage";
-import { NewsPage } from "./pages/NewsPage";
-import { NewsDetailPage } from "./pages/NewsDetailPage";
-import { GalleryPage } from "./pages/GalleryPage";
-import { AboutPage } from "./pages/AboutPage";
+
+// Route-level code splitting: O(1) initial load through lazy imports
+const SolutionPage = lazy(() => import("./pages/SolutionPage").then(m => ({ default: m.SolutionPage })));
+const CapsulesPage = lazy(() => import("./pages/CapsulesPage").then(m => ({ default: m.CapsulesPage })));
+const HousesPage = lazy(() => import("./pages/HousesPage").then(m => ({ default: m.HousesPage })));
+const CategoryOverviewPage = lazy(() => import("./pages/CategoryOverviewPage").then(m => ({ default: m.CategoryOverviewPage })));
+const ProductDetailPage = lazy(() => import("./pages/ProductDetailPage").then(m => ({ default: m.ProductDetailPage })));
+const LightingPage = lazy(() => import("./pages/LightingPage").then(m => ({ default: m.LightingPage })));
+const ShelvesPage = lazy(() => import("./pages/ShelvesPage").then(m => ({ default: m.ShelvesPage })));
+const KoshkPage = lazy(() => import("./pages/KoshkPage").then(m => ({ default: m.KoshkPage })));
+const AllProductsPage = lazy(() => import("./pages/AllProductsPage").then(m => ({ default: m.AllProductsPage })));
+const NewsPage = lazy(() => import("./pages/NewsPage").then(m => ({ default: m.NewsPage })));
+const NewsDetailPage = lazy(() => import("./pages/NewsDetailPage").then(m => ({ default: m.NewsDetailPage })));
+const GalleryPage = lazy(() => import("./pages/GalleryPage").then(m => ({ default: m.GalleryPage })));
+const AboutPage = lazy(() => import("./pages/AboutPage").then(m => ({ default: m.AboutPage })));
 import { TrustMarquee } from "./components/TrustMarquee";
 import { SpecialFeatures } from "./components/SpecialFeatures";
 import { FactoryInfoSection } from "./components/FactoryInfoSection";
@@ -66,6 +68,20 @@ const WhatsAppIcon = (props: React.SVGProps<SVGSVGElement>) => (
     <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
   </svg>
 );
+
+/* ---------------------------------- LoadingSpinner ---------------------------------- */
+// CSS-only minimal spinner to prevent layout shifts during chunk loading
+function LoadingSpinner() {
+  return (
+    <div className="flex min-h-[50vh] items-center justify-center">
+      <div
+        className="h-12 w-12 animate-spin rounded-full border-4 border-gray-200 border-t-brand"
+        role="status"
+        aria-label="Loading"
+      />
+    </div>
+  );
+}
 
 /* ---------------------------------- Reveal ---------------------------------- */
 function Reveal({
@@ -751,6 +767,8 @@ function Hero() {
                   width="1920"
                   height="960"
                   fetchPriority={index === 0 ? "high" : "auto"}
+                  loading={index === 0 ? "eager" : "lazy"}
+                  decoding={index === 0 ? "sync" : "async"}
                 />
               </picture>
             </div>
@@ -1908,39 +1926,41 @@ function AppContent() {
         }
       >
         <main id="main-content" className="flex-1">
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/solutions/:id" element={<SolutionPage />} />
+          <Suspense fallback={<LoadingSpinner />}>
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/solutions/:id" element={<SolutionPage />} />
 
-            {/* News pages */}
-            <Route path="/news" element={<NewsPage />} />
-            <Route path="/news/:slug" element={<NewsDetailPage />} />
+              {/* News pages */}
+              <Route path="/news" element={<NewsPage />} />
+              <Route path="/news/:slug" element={<NewsDetailPage />} />
 
-            {/* Gallery page */}
-            <Route path="/gallery" element={<GalleryPage />} />
+              {/* Gallery page */}
+              <Route path="/gallery" element={<GalleryPage />} />
 
-            {/* About page */}
-            <Route path="/about" element={<AboutPage />} />
+              {/* About page */}
+              <Route path="/about" element={<AboutPage />} />
 
-            {/* Product and Category pages */}
-            <Route path="/products/capsules" element={<CapsulesPage />} />
-            <Route path="/products/houses" element={<HousesPage />} />
-            <Route path="/products/koshk" element={<KoshkPage />} />
-            <Route path="/what-we-do" element={<AllProductsPage />} />
-            <Route path="/products" element={<AllProductsPage />} />
-            <Route path="/products/lighting" element={<LightingPage />} />
-            <Route path="/products/shelves" element={<ShelvesPage />} />
-            <Route path="/products/category/:categorySlug" element={<CategoryOverviewPage />} />
-            <Route path="/products/am" element={<CategoryOverviewPage />} />
-            <Route path="/products/as" element={<CategoryOverviewPage />} />
-            <Route path="/products/al" element={<CategoryOverviewPage />} />
-            <Route path="/products/container-house" element={<CategoryOverviewPage />} />
-            <Route path="/products/standard-house" element={<CategoryOverviewPage />} />
-            <Route path="/products/garden-house" element={<CategoryOverviewPage />} />
-            <Route path="/products/cabin-house" element={<CategoryOverviewPage />} />
-            <Route path="/products/concrete-house" element={<CategoryOverviewPage />} />
-            <Route path="/products/:slug" element={<ProductDetailPage />} />
-          </Routes>
+              {/* Product and Category pages */}
+              <Route path="/products/capsules" element={<CapsulesPage />} />
+              <Route path="/products/houses" element={<HousesPage />} />
+              <Route path="/products/koshk" element={<KoshkPage />} />
+              <Route path="/what-we-do" element={<AllProductsPage />} />
+              <Route path="/products" element={<AllProductsPage />} />
+              <Route path="/products/lighting" element={<LightingPage />} />
+              <Route path="/products/shelves" element={<ShelvesPage />} />
+              <Route path="/products/category/:categorySlug" element={<CategoryOverviewPage />} />
+              <Route path="/products/am" element={<CategoryOverviewPage />} />
+              <Route path="/products/as" element={<CategoryOverviewPage />} />
+              <Route path="/products/al" element={<CategoryOverviewPage />} />
+              <Route path="/products/container-house" element={<CategoryOverviewPage />} />
+              <Route path="/products/standard-house" element={<CategoryOverviewPage />} />
+              <Route path="/products/garden-house" element={<CategoryOverviewPage />} />
+              <Route path="/products/cabin-house" element={<CategoryOverviewPage />} />
+              <Route path="/products/concrete-house" element={<CategoryOverviewPage />} />
+              <Route path="/products/:slug" element={<ProductDetailPage />} />
+            </Routes>
+          </Suspense>
         </main>
       </FooterReveal>
       <SocialSidebar />

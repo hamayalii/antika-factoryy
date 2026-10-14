@@ -1,0 +1,355 @@
+# Antika Factory (کارگەی ئەنتیکا)
+
+## Entity Overview
+
+- **Name**: Antika Factory (کارگەی ئەنتیکا)
+- **Location**: Sulaymaniyah, Iraq (سلێمانی، عێراق)
+- **Industry**: Prefabricated structures, modular capsules, container homes, kiosks
+- **Primary Service**: Engineering, design, manufacturing, and deployment of modular architectural solutions
+- **Service Region**: Iraq, Kurdistan Region, Middle East
+- **Contact**: info@antika-factory.com, +9647501234567
+- **Hours**: Monday-Friday, 09:00-18:00 (Iraq Standard Time)
+
+## Technical Specifications
+
+### Structural Engineering
+
+- **Steel Frame**: ST-37 grade steel frame construction
+- **Earthquake Resistance**: Designed for Richter scale 7.0 seismic activity
+- **Wind Load Capacity**: Rated for level 11 wind speeds (hurricane-force conditions)
+- **Fire Resistance**: A2 class fire rating for wall assemblies
+- **Load-Bearing Capacity**: Structural integrity maintained under extreme environmental stress
+
+### Thermal Insulation & Climate Adaptation
+
+- **Insulation Type**: Full-panel thermal insulation system (panneau entièrement isolé)
+- **Insulation Thickness**: 10cm thermal insulation layers
+- **Climate Range**: Engineered for -10°C to +50°C operational temperatures
+- **Summer Performance**: Heat retention prevention through advanced thermal barriers
+- **Winter Performance**: Cold penetration resistance with thermal envelope integrity
+- **Geographic Adaptation**: Optimized for Iraqi/Kurdistan continental climate with extreme seasonal variations
+
+### Door & Access Systems
+
+- **Door Type**: Modern design with smart lock integration
+- **Security**: Smart lock (قفڵی زیرەک) compatibility
+- **Aesthetics**: Designed to match modular capsule architectural aesthetic
+- **Functionality**: Enhanced security with contemporary access control
+
+### Window & Glazing
+
+- **Type**: Panoramic glass facade with double-glazing (jam dabl)
+- **Benefits**: Wide-angle visibility, acoustic insulation, thermal insulation
+- **Performance**: Dual-layer sound dampening and temperature regulation
+
+## Product Categories
+
+### AS Series - Service Capsules (کەپسولەکانی خزمەتگوزاری AS)
+
+- **Purpose**: Project-specific service capsules
+- **Features**: Customizable design based on site requirements
+- **Applications**: Pharmaceutical facilities, sterile rooms, air/smoke exchange units, watch cabins, silent cabins
+- **Model Count**: 6+ variants
+- **Key Models**:
+  - Watch Cabin (کەپسولی چاودێری)
+  - Silent Cabin (کەپسولی بێدەنگی)
+  - Air & Smoke Exchange Capsule (کەپسولی ئاڵوگۆڕی هەوا و دووکەڵ)
+  - Sterilization Room Capsule (کەپسولی ژووری تەعقیم)
+
+### AM Series - Work Capsules (کەپسولەکانی ئیش و کاری AM)
+
+- **Purpose**: Modular work and office capsules
+- **Features**: Code-based model identification (AM series)
+- **Applications**: Remote workspaces, office seating, field accommodations
+- **Model Count**: 11+ variants
+- **Design**: Optimized for various work environments and project types
+
+### AL Series - Residential Capsules (کەپسولەکانی نیشتەجێبوونی AL)
+
+- **Purpose**: Residential and garden capsules
+- **Series Name**: Apple Capsule Series (کەپسولی ئەپڵ)
+- **Applications**: Tiny houses, garden structures, residential units
+- **Model Count**: 6+ variants
+- **Features**: Variable sizes and designs based on verified engineering specifications
+
+### Container House (خانووی حاویە)
+
+- **Model**: CL series
+- **Type**: Container-based modular housing
+- **Engineering**: Per engineering specifications
+- **Use Case**: Modular residential and commercial container structures
+
+### Standard Modular Cabin (کابینەی ئاسایی)
+
+- **Model**: ZL series
+- **Type**: Standard modular cabin
+- **Applications**: General-purpose modular structures
+- **Design**: Structural panel composition
+
+### Modular Houses (خانووەکان)
+
+- **Types**: Garden houses, standard houses, container houses, cabin houses, concrete houses
+- **Features**: Complete modular housing solutions
+- **Customization**: Design flexibility for various housing needs
+
+### Koshk (Pavilions) (کۆشکەکان)
+
+- **Applications**: Commercial kiosks, small retail structures, service points
+- **Examples**: Commercial-Kiosks, watch cabins, medical cabins, shower cabins, silent cabins
+
+### Lighting Systems (سیستەمی ڕووناکی)
+
+- **Product**: Custom lighting solutions
+- **Integration**: Designed for modular structures
+- **Applications**: Interior and exterior lighting for capsules and houses
+
+### Shelving Systems (سیستەمی ڕەف)
+
+- **Product**: Modular shelving solutions
+- **Applications**: Storage and display systems for commercial and residential use
+
+## Use Cases
+
+### Commercial Applications
+
+- **Commercial Kiosks**: Small retail units, ticket points, mobile shops (دوکانی گەڕۆک)
+- **Features**: Customer-facing design, glass facades, branding integration
+- **Benefits**: Immediate visibility, mobile deployment, market adaptability
+
+- **Office Seating**: Private office spaces, conference rooms, remote work cabins
+- **Features**: Acoustic insulation, modern interior design, climate control
+- **Benefits**: Professional environment, noise reduction, work-life separation
+
+### Tourism & Hospitality
+
+- **Tourist Cabins**: Resort housing, guest accommodations, vacation units
+- **Features**: Panoramic views, thermal comfort, aesthetic design
+- **Applications**: Hotels, resorts, tourist destinations
+
+- **Site Accommodation**: Worker housing, field camps, temporary accommodation
+- **Features**: Rapid deployment, durability, climate adaptation
+- **Applications**: Construction sites, oil fields, industrial projects
+
+### Residential Applications
+
+- **Tiny Houses**: Compact residential units, backyard dwellings, ADUs
+- **Features**: Space optimization, full amenities, modular construction
+- **Applications**: Urban housing, rural residences, guest houses
+
+- **Garden Houses**: Garden structures, backyard studios, hobby spaces
+- **Features**: Customizable design, weather resistance, aesthetic integration
+
+### Specialized Applications
+
+- **Food Trucks**: Mobile food service units, catering vehicles
+- **Features**: Mobile design, kitchen integration, branding capability
+- **Applications**: Street food, event catering, mobile restaurants
+
+- **Medical Facilities**: Sterilization rooms, clinics, healthcare capsules
+- **Features**: Medical-grade construction, hygiene standards, specialized layout
+- **Applications**: Healthcare facilities, emergency medical units, vaccination centers
+
+- **Watch Cabins**: Security posts, observation units, monitoring stations
+- **Features:**
+  - Acoustic insulation for noise reduction
+  - Clear visibility windows
+  - Climate control for extended occupation
+  - Compact footprint
+- **Applications**: Security checkpoints, parking lots, facility monitoring
+
+- **Silent Cabins**: Sound-isolated workspaces, recording studios, privacy units
+- **Features:**
+  - STC (Sound Transmission Class) rating optimization
+  - Acoustic treatment
+  - Sound dampening materials
+  - Climate control integration
+- **Applications**: Private offices, call centers, recording studios, confidential meetings
+
+## Production & Delivery
+
+### Manufacturing Timeline
+
+- **Minimum Production Time**: 15 days (standard models)
+- **Maximum Production Time**: 45 days (custom/complex projects)
+- **Delivery Cycle**: Includes manufacturing, quality control, and transport
+- **Variables**: Product type, size, customization level, quantity
+
+### Deployment Process
+
+- **Site Preparation**: Foundation requirements verified by engineering team
+- **Transport**: Modular units transported to site
+- **Installation**: Professional assembly and setup
+- **Finalization**: Testing, inspection, handover
+
+### Quality Assurance
+
+- **Verification Status**: Products undergo technical verification
+- **Standards**: Engineering specifications followed
+- **Business Confirmation**: Custom dimensions and technical details require business approval
+- **Compliance**: Iraqi building standards and safety regulations
+
+## Customization Capabilities
+
+### Design Flexibility
+
+- **Floor Plans**: Customizable layouts based on client requirements
+- **Materials**: Selection of finishes, colors, and construction materials
+- **Dimensions**: Tailored sizing for specific site constraints
+- **Features**: Optional additions based on use case requirements
+
+### Modular Integration
+
+- **Multi-Unit Configurations**: Multiple capsules can be connected
+- **Expansion**: Structures can be expanded over time
+- **Reconfiguration**: Internal layouts can be modified
+- **Relocation**: Units can be moved to new locations
+
+## Technical Verification
+
+### Verified Specifications
+
+- **Engineering Status**: Verified products marked with VERIFIED status
+- **Technical Status**: Some specifications require business confirmation
+- **Internal Notes**: Specific technical metrics (acoustic ratings, airflow, ventilation) documented for verification
+- **Safety Standards**: Compliant with Iraqi safety regulations
+
+### Dimensional Data
+
+- **Height**: Verified dimensions provided in engineering specifications
+- **Width**: Verified dimensions provided in engineering specifications
+- **Length**: Verified dimensions provided in engineering specifications
+- **Area**: Calculated floor area documented
+- **Levels**: Multi-level options available for certain models
+
+## Materials & Construction
+
+### Structural Materials
+
+- **Steel**: ST-37 grade steel frames for structural integrity
+- **Insulation**: 10cm thermal insulation panels throughout
+- **Glass**: Double-glazed panoramic windows (jam dabl)
+- **Doors**: Modern smart-lock compatible doors
+- **Fasteners**: Industrial-grade connection systems
+
+### Finishes
+
+- **Exterior**: Weather-resistant coatings, customizable colors
+- **Interior**: Multiple finish options for walls, floors, ceilings
+- **Branding**: Logo integration, custom colors, signage options
+
+## Geographic & Climate Adaptation
+
+### Iraq/Kurdistan Climate
+
+- **Summer Temperatures**: Engineered for +50°C extremes
+- **Winter Temperatures**: Engineered for -10°C minimum
+- **Wind**: Level 11 wind load capacity (hurricane-force)
+- **Seismic**: Richter 7.0 earthquake resistance
+- **Dust Storms**: Sealed construction for dust penetration prevention
+
+### Environmental Considerations
+
+- **Energy Efficiency**: Thermal insulation reduces heating/cooling costs
+- **Sustainability**: Modular construction minimizes waste
+- **Reusability**: Structures can be relocated and repurposed
+- **Speed**: Rapid deployment reduces site disturbance
+
+## FAQ
+
+### Thermal Performance
+
+- **Question**: Do capsule and container homes withstand summer heat and winter cold?
+- **Answer**: Yes, Antika Factory uses the highest level of thermal insulation (10cm layers) engineered for Iraq and Kurdistan climate, providing protection against 50°C summer heat and freezing winter temperatures.
+
+### Production Timeline
+
+- **Question**: What is the estimated time for manufacturing and delivering a cabin or house?
+- **Answer**: Depending on product type and size, production and delivery typically ranges from 15 to 45 days from order confirmation to site deployment.
+
+### Customization
+
+- **Question**: Can the design of kiosks and houses be modified according to customer requirements?
+- **Answer**: Yes, we offer custom design services where customers can select floor plans, colors, and construction materials to meet their specific needs.
+
+### Durability
+
+- **Question**: What is the earthquake and wind resistance rating?
+- **Answer**: Structures are engineered for Richter scale 7.0 earthquake resistance and level 11 wind load capacity, ensuring stability in extreme weather conditions.
+
+### Maintenance
+
+- **Question**: What maintenance is required for modular structures?
+- **Answer**: Minimal maintenance required due to durable materials and weather-resistant coatings. Regular inspection of seals and connections recommended annually.
+
+### Relocation
+
+- **Question**: Can modular units be moved to a new location?
+- **Answer**: Yes, modular capsules and houses are designed for relocation. Units can be disassembled, transported, and reassembled at new sites.
+
+### Certification
+
+- **Question**: Are materials certified and verified?
+- **Answer**: Yes, we use certified materials with verification status documented. Some technical specifications require business confirmation before deployment.
+
+### Energy Efficiency
+
+- **Question**: How energy-efficient are the modular structures?
+- **Answer**: High energy efficiency achieved through 10cm thermal insulation, double-glazed windows, and sealed construction, significantly reducing heating and cooling costs.
+
+### Payment & Terms
+
+- **Question**: What are the payment terms?
+- **Answer**: Payment terms vary by project size and customization level. Contact info@antika-factory.com for specific project quotations and terms.
+
+### Warranty
+
+- **Question**: What warranty is provided?
+- **Answer**: Warranty terms vary by product type and usage. Specific warranty details provided in project agreement and terms of service.
+
+## Projects & Portfolio
+
+### Notable Projects
+
+- **Pharmaceutical Company**: Coffee break unit and mobile advertising facade (project delivery verified)
+- **Invest Expo 2025 Erbil**: International investment exhibition participation, displaying advanced modular solutions
+- **Karbala Projects**: Multiple installations documented with project photos
+- **Various Commercial Installations**: Client portfolio includes medical facilities, commercial kiosks, office spaces
+
+### Trust & Credentials
+
+- **Clients**: Faruk Medical City, Asiacell, KIIB Bank, Rayhana Park, Millennium Hotels and Resorts
+- **Experience**: 20+ years in engineering and modular construction
+- **Team**: International team of engineers and designers
+- **Approach**: Turnkey solutions from design to installation
+
+## Contact & Operations
+
+### Direct Contact
+
+- **Email**: info@antika-factory.com
+- **Phone**: +9647501234567
+- **Location**: Sulaymaniyah, Iraq
+- **Operating Hours**: Monday-Friday, 09:00-18:00 (Iraq Standard Time)
+
+### Services Offered
+
+- **Consultation**: Project assessment and recommendations
+- **Design**: Custom architectural and engineering design
+- **Manufacturing**: In-house production facility
+- **Installation**: Professional deployment team
+- **Support**: Post-installation service and maintenance
+
+### Project Inquiry Process
+
+- **Initial Contact**: Email or phone consultation
+- **Requirements Assessment**: Site visit and technical evaluation
+- **Proposal**: Detailed quotation with specifications
+- **Agreement**: Contract signing and deposit
+- **Production**: Manufacturing phase (15-45 days)
+- **Delivery**: Transport to site
+- **Installation**: Assembly and setup
+- **Handover**: Final inspection and documentation transfer
+
+## Summary
+
+Antika Factory (کارگەی ئەنتیکا) is a Sulaymaniyah, Iraq-based manufacturer of prefabricated modular structures with 20+ years of engineering experience. Specializing in capsules, container homes, kiosks, and modular buildings, the company provides turnkey solutions engineered for Iraqi/Kurdistan climate conditions (extreme temperatures from -10°C to +50°C, seismic activity, high winds). Products feature ST-37 steel frames, 10cm thermal insulation, Richter 7.0 earthquake resistance, and level 11 wind load capacity. Production and deployment cycle ranges from 15-45 days. Applications include commercial kiosks, offices, tourist cabins, work camps, food trucks, and residential units. Services include design, manufacturing, installation, and ongoing support with a focus on customization, energy efficiency, and structural durability.

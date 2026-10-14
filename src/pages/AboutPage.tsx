@@ -2,7 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { DraftingCompass, Factory, Truck, Shield, Award, Layout } from "lucide-react";
 import { Reveal } from "../components/Reveal";
-import { SEO } from "../components/SEO";
+import { SeoHead } from "../components/SeoHead";
+import { SemanticFaq } from "../components/SemanticFaq";
 import { CertificatesMarquee } from "../components/CertificatesMarquee";
 import { MaterialCertificatesMarquee } from "../components/MaterialCertificatesMarquee";
 import { TeamMemberCard } from "../components/TeamMemberCard";
@@ -175,10 +176,10 @@ export function AboutPage() {
           box-sizing: border-box;
         }
       `}</style>
-      <SEO
+      <SeoHead
         title="دەربارەی ئێمە | کارگەی ئەنتیکا"
         description="دەربارەی کارگەی ئەنتیکا - کارگەیەک کە هونەر دەکاتە ژیان. تیمی ئەندازیار و دیزاینەری نێودەوڵەتی بە ئەزموونی زیاتر لە 20 ساڵ."
-        canonical="https://antika-factory.netlify.app/about"
+        canonical="/about"
         image="/images/logo.png"
       />
 
@@ -676,6 +677,9 @@ export function AboutPage() {
           </div>
         </div>
       </section>
+
+      {/* FAQ Section */}
+      <SemanticFaq className="py-12" />
 
       {/* Certificates Marquee */}
       <CertificatesMarquee />
