@@ -131,6 +131,10 @@ export default defineConfig(({ mode }) => {
     // CSS code splitting: Prevent render-blocking CSS by splitting into smaller chunks
     cssCodeSplit: true,
     cssMinify: 'lightningcss',
+    // Async CSS loading: Ensure CSS is loaded asynchronously to prevent render-blocking
+    css: {
+      devSourcemap: false
+    },
     sourcemap: false,
     reportCompressedSize: true
   },

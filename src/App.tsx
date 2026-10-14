@@ -164,6 +164,7 @@ function Logo({
           height="56"
           fetchPriority="high"
           loading="eager"
+          sizes="(max-width: 640px) 40px, 56px"
         />
       </span>
 
@@ -1107,6 +1108,7 @@ function UseCases() {
                     decoding="async"
                     width="800"
                     height="600"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 50vw"
                   />
                 </div>
 

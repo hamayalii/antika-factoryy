@@ -276,6 +276,7 @@ export function ProductDetailPage() {
                       decoding="sync"
                       width="800"
                       height="600"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1024px) 75vw, 66vw"
                     />
 
                     {/* Coming Soon Overlay Badge on Image
