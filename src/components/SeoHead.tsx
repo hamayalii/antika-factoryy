@@ -54,6 +54,10 @@ export function SeoHead({
           {JSON.stringify(schema)}
         </script>
       )}
+
+      {/* Agentic Resource Discovery Links */}
+      <link rel="ai-catalog" type="application/json" href={`${siteUrl}/ai-catalog.json`} />
+      <link rel="llms-context" type="text/markdown" href={`${siteUrl}/llms.txt`} />
     </Helmet>
   );
 }

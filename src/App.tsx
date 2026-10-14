@@ -163,6 +163,7 @@ function Logo({
           width="56"
           height="56"
           fetchPriority="high"
+          loading="eager"
         />
       </span>
 
@@ -1102,7 +1103,10 @@ function UseCases() {
                     src={useCase.img}
                     alt={useCase.title}
                     className="h-full w-full object-contain"
-                    loading="eager"
+                    loading="lazy"
+                    decoding="async"
+                    width="800"
+                    height="600"
                   />
                 </div>
 

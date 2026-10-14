@@ -5,19 +5,19 @@ import { X, Phone } from "lucide-react";
 const PHONE_NUMBERS = [
   {
     display: "0770 124 2724",
-    international: "+964 770 124 2724",
     waDigits: "9647701242724",
+    international: "+9647701242724"
   },
   {
     display: "0750 155 9445",
-    international: "+964 750 155 9445",
     waDigits: "9647501559445",
+    international: "+9647501559445"
   },
   {
     display: "0780 410 8381",
-    international: "+964 780 410 8381",
     waDigits: "9647804108381",
-  },
+    international: "+9647804108381"
+  }
 ];
 
 const WhatsAppIcon = (props: React.SVGProps<SVGSVGElement>) => (
@@ -178,6 +178,7 @@ export function ContactModal({ isOpen, onClose, triggerRef }: ContactModalProps)
                   rel="noopener noreferrer"
                   className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-[#25D366] px-4 py-3 text-sm font-semibold text-white transition-all hover:bg-[#20bd5a] hover:shadow-md focus:outline-none focus:ring-2 focus:ring-[#25D366] focus:ring-offset-2 min-h-[44px]"
                   aria-label={`واتساپ بۆ ${phone.display}`}
+                  data-mcp-action="contact_sales_whatsapp"
                 >
                   <WhatsAppIcon className="h-4 w-4" />
                   <span>واتساپ</span>
@@ -186,6 +187,7 @@ export function ContactModal({ isOpen, onClose, triggerRef }: ContactModalProps)
                   href={`tel:${phone.international}`}
                   className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-brand px-4 py-3 text-sm font-semibold text-white transition-all hover:bg-brand-dark hover:shadow-md focus:outline-none focus:ring-2 focus:ring-brand focus:ring-offset-2 min-h-[44px]"
                   aria-label={`پەیوەندی بە ${phone.display}`}
+                  data-mcp-action="contact_sales_phone"
                 >
                   <Phone className="h-4 w-4" />
                   <span>پەیوەندی</span>

@@ -272,6 +272,10 @@ export function ProductDetailPage() {
                       alt={`${product.titleKu} - ئەنتیکا فاکتۆری`}
                       className="h-full w-full object-cover cursor-pointer transition-transform duration-500 hover:scale-105"
                       onClick={() => setLightboxOpen(true)}
+                      loading="eager"
+                      decoding="sync"
+                      width="800"
+                      height="600"
                     />
 
                     {/* Coming Soon Overlay Badge on Image
@@ -313,6 +317,10 @@ export function ProductDetailPage() {
                             src={img}
                             alt={`${product.titleKu} وێنەی ${idx + 1}`}
                             className="h-full w-full object-cover"
+                            loading="lazy"
+                            decoding="async"
+                            width="80"
+                            height="64"
                           />
                         </button>
                       ))}

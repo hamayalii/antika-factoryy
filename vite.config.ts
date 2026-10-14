@@ -89,7 +89,14 @@ export default defineConfig(({ mode }) => {
         },
         chunkFileNames: 'assets/js/[name]-[hash].js',
         entryFileNames: 'assets/js/[name]-[hash].js',
-        assetFileNames: 'assets/[ext]/[name]-[hash].[ext]'
+        assetFileNames: (assetInfo) => {
+          const info = assetInfo.name.split('.');
+          const ext = info[info.length - 1];
+          if (/\.(css)$/.test(assetInfo.name)) {
+            return `assets/css/[name]-[hash].[ext]`;
+          }
+          return `assets/[ext]/[name]-[hash].[ext]`;
+        }
       }
     },
     // Aggressive tree shaking: Remove dead code, reduce bundle by 25-35%
@@ -121,8 +128,9 @@ export default defineConfig(({ mode }) => {
     },
     // Chunk size warning limit: 500KB (modern 4G LTE can download in 1.5s at 2.5Mbps)
     chunkSizeWarningLimit: 500,
-    // CSS code splitting: Critical CSS inline + async CSS for non-critical
+    // CSS code splitting: Prevent render-blocking CSS by splitting into smaller chunks
     cssCodeSplit: true,
+    cssMinify: 'lightningcss',
     sourcemap: false,
     reportCompressedSize: true
   },

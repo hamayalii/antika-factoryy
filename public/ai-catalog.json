@@ -1,0 +1,39 @@
+{
+  "version": "1.0",
+  "name": "Antika Factory AI Catalog",
+  "description": "Structured catalog of prefab and container homes engineered for Autonomous AI Agents.",
+  "resources": [
+    {
+      "path": "/llms.txt",
+      "type": "text/markdown",
+      "rel": "llms-context"
+    }
+  ],
+  "schemas": {
+    "VerifiedProduct": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "slug": { "type": "string" },
+        "categoryTitleKu": { "type": "string" },
+        "titleKu": { "type": "string" },
+        "dimensionsRaw": { "type": "string" },
+        "applicationsKu": { "type": "array", "items": { "type": "string" } }
+      }
+    }
+  },
+  "actions": [
+    {
+      "name": "contact_sales_whatsapp",
+      "description": "Redirects the user or agent to WhatsApp to initiate a purchase, inquiry, or design request.",
+      "method": "DEEP_LINK",
+      "urlPattern": "https://wa.me/{phoneNumber}"
+    },
+    {
+      "name": "contact_sales_phone",
+      "description": "Initiates a direct phone call to the factory's sales engineering team.",
+      "method": "TEL",
+      "urlPattern": "tel:{phoneNumber}"
+    }
+  ]
+}

@@ -485,6 +485,8 @@ export function AboutPage() {
                 loading="lazy"
                 decoding="async"
                 draggable={false}
+                width="800"
+                height="600"
               />
             </div>
           </div>
