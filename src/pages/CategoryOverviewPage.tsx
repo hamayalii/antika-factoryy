@@ -1,20 +1,23 @@
 import { useEffect } from "react";
 import { useParams, Link, useLocation } from "react-router-dom";
-import { ArrowLeft, Home, ChevronLeft, Layers, MessageCircle, PhoneCall, Mail, HelpCircle } from "lucide-react";
-import { getCategoryBySlug, getProductsByCategory, isHouseCategory, isKoshkCategory } from "../data/productData";
+import { ArrowLeft, ArrowRight, Home, ChevronLeft, ChevronRight, Layers, MessageCircle, PhoneCall, Mail, HelpCircle } from "lucide-react";
+import { getCategoryBySlug, getProductsByCategory, isHouseCategory, isKoshkCategory, localizeCategory } from "../data/productData";
 import { ProductCard } from "../components/ProductCard";
 import { Reveal } from "../components/Reveal";
 import { SEO } from "../components/SEO";
 import { SelectiveHydration } from "../components/SelectiveHydration";
+import { useLanguage } from "../contexts/LanguageContext";
 
 export function CategoryOverviewPage() {
   // Support /products/category/:categorySlug (dynamic) and hardcoded /products/:slug category routes
   const { categorySlug } = useParams<{ categorySlug: string }>();
   const location = useLocation();
+  const { language, t, dir } = useLanguage();
   // Derive slug: prefer explicit :categorySlug param, otherwise use last path segment
   const derivedSlug = categorySlug ?? location.pathname.split("/").filter(Boolean).pop();
   const category = derivedSlug ? getCategoryBySlug(derivedSlug) : undefined;
   const products = category ? getProductsByCategory(category.id) : [];
+  const copy = category ? localizeCategory(category, language) : null;
 
   const parentLink = category && isKoshkCategory(category.id)
     ? "/products/koshk"
@@ -23,44 +26,44 @@ export function CategoryOverviewPage() {
     : "/products/capsules";
 
   const parentTitle = category && isKoshkCategory(category.id)
-    ? "کۆشکەکان"
+    ? t("nav.koshk")
     : category && isHouseCategory(category.id)
-    ? "خانوو"
-    : "کەپسولەکان";
+    ? t("categoryOverview.parentHouses")
+    : t("nav.capsules");
 
   const parentAllTitle = category && isKoshkCategory(category.id)
-    ? "بینینی سەرجەم کۆشکەکان"
+    ? t("categoryOverview.allKoshk")
     : category && isHouseCategory(category.id)
-    ? "بینینی سەرجەم خانووەکان"
-    : "بینینی سەرجەم کەپسولەکان";
+    ? t("categoryOverview.allHouses")
+    : t("categoryOverview.allCapsules");
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, [derivedSlug]);
 
-  if (!category) {
+  if (!category || !copy) {
     return (
-      <div className="min-h-[70vh] flex items-center justify-center bg-gray-50 px-4 py-24 text-center text-right">
+      <div className="min-h-[70vh] flex items-center justify-center bg-gray-50 px-4 py-24 text-center text-start">
         <SEO
-          title="پۆلێن نەدۆزرایەوە | ئەنتیکا فاکتۆری"
-          description="ئەم بەشەی بەرهەمەکان بوونی نییە یان گوێزراوەتەوە."
+          title={t("categoryOverview.notFoundSeoTitle")}
+          description={t("categoryOverview.notFoundSeoDesc")}
         />
         <div className="max-w-md mx-auto">
           <span className="inline-flex h-16 w-16 items-center justify-center rounded-full bg-brand-soft text-brand mb-6">
             <HelpCircle className="h-8 w-8" />
           </span>
           <h1 className="font-display text-2xl sm:text-3xl font-black text-gray-900 mb-3">
-            پۆلێن نەدۆزرایەوە
+            {t("categoryOverview.notFoundTitle")}
           </h1>
           <p className="text-[15px] text-gray-600 mb-8 leading-relaxed">
-            ببورە، ئەو پۆلێنەی داوات کردووە نەدۆزرایەوە. دەتوانیت سەرجەم بەرهەمەکانی تر لە بەشی کەپسولەکان یان خانوو ببینیت.
+            {t("categoryOverview.notFoundBody")}
           </p>
           <Link
             to="/products/capsules"
             className="inline-flex items-center gap-2 rounded-full bg-brand px-8 py-3.5 text-[14px] font-bold text-white transition hover:bg-brand-dark shadow-md"
           >
-            گەڕانەوە بۆ کەپسولەکان
-            <ArrowLeft className="h-4 w-4" />
+            {t("categoryOverview.backToCapsules")}
+            {dir === "rtl" ? <ArrowLeft className="h-4 w-4" /> : <ArrowRight className="h-4 w-4" />}
           </Link>
         </div>
       </div>
@@ -68,23 +71,27 @@ export function CategoryOverviewPage() {
   }
 
   return (
-    <div className="pt-24 min-h-screen text-right">
+    <div className="pt-24 min-h-screen text-start">
       <SEO
-        title={`${category.titleKu} | ئەنتیکا فاکتۆری`}
-        description={category.shortDescriptionKu}
+        title={`${copy.title} | ${t("categoryOverview.seoBrand")}`}
+        description={copy.shortDescription}
         canonical={`https://antika-factory.netlify.app/products/${category.slug}`}
       />
 
       {/* Breadcrumb Navigation */}
-      <nav aria-label="ڕێڕەوی پەڕەکان" className="border-b border-gray-200 py-3.5">
+      <nav aria-label={t("product.breadcrumbAria")} className="border-b border-gray-200 py-3.5">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 overflow-x-hidden">
           <ol className="flex items-center gap-2 text-[13px] text-gray-500 flex-wrap">
             <li className="flex items-center gap-2">
               <Link to="/" className="flex items-center gap-1.5 transition hover:text-brand">
                 <Home className="h-3.5 w-3.5" />
-                <span>سەرەکی</span>
+                <span>{t("nav.home")}</span>
               </Link>
-              <ChevronLeft className="h-3.5 w-3.5 text-gray-400" />
+              {dir === "rtl" ? (
+                <ChevronLeft className="h-3.5 w-3.5 text-gray-400" />
+              ) : (
+                <ChevronRight className="h-3.5 w-3.5 text-gray-400" />
+              )}
             </li>
             <li className="flex items-center gap-2">
               <Link
@@ -93,10 +100,14 @@ export function CategoryOverviewPage() {
               >
                 {parentTitle}
               </Link>
-              <ChevronLeft className="h-3.5 w-3.5 text-gray-400" />
+              {dir === "rtl" ? (
+                <ChevronLeft className="h-3.5 w-3.5 text-gray-400" />
+              ) : (
+                <ChevronRight className="h-3.5 w-3.5 text-gray-400" />
+              )}
             </li>
             <li className="font-bold text-gray-900" aria-current="page">
-              {category.titleKu}
+              {copy.title}
             </li>
           </ol>
         </div>
@@ -111,20 +122,20 @@ export function CategoryOverviewPage() {
                 <div className="flex items-center gap-2 mb-4">
                   <span className="inline-flex items-center gap-1.5 rounded-full bg-brand-soft px-3.5 py-1.5 text-[12.5px] font-bold text-brand">
                     <Layers className="h-3.5 w-3.5" />
-                    پۆلێنی بەرهەم
+                    {t("categoryOverview.badge")}
                   </span>
                   <span className="text-xs font-semibold text-gray-400">
-                    {category.titleEn}
+                    {language === "en" ? category.titleKu : category.titleEn}
                   </span>
                 </div>
                 <h1
                   className="font-display font-black leading-[1.25] text-gray-900"
                   style={{ fontSize: "clamp(28px, 5vw, 46px)" }}
                 >
-                  {category.titleKu}
+                  {copy.title}
                 </h1>
                 <p className="mt-5 text-[16px] sm:text-[17px] font-light leading-relaxed text-gray-600">
-                  {category.descriptionKu}
+                  {copy.description}
                 </p>
 
                 <div className="mt-8 flex flex-col sm:flex-row items-center gap-4">
@@ -135,7 +146,7 @@ export function CategoryOverviewPage() {
                     className="inline-flex items-center justify-center gap-2 rounded-full bg-brand px-7 py-3.5 text-[14px] font-bold text-white shadow-md transition hover:bg-brand-dark w-full sm:w-auto"
                   >
                     <MessageCircle className="h-4 w-4" />
-                    داوای نرخ بکە
+                    {t("categoryOverview.requestPrice")}
                   </a>
                   <Link
                     to={parentLink}
@@ -153,7 +164,7 @@ export function CategoryOverviewPage() {
                   <div className="overflow-hidden rounded-2xl bg-gray-100 shadow-lg border border-gray-100">
                     <img
                       src={category.image}
-                      alt={category.titleKu}
+                      alt={copy.title}
                       className="w-full h-auto min-h-[250px] sm:min-h-[320px] lg:min-h-[380px] object-cover"
                       loading="lazy"
                     />
@@ -171,11 +182,11 @@ export function CategoryOverviewPage() {
           <Reveal className="mb-10 text-center">
             <span className="inline-flex items-center gap-2 text-[13.5px] font-bold text-brand">
               <span className="h-[2px] w-5 rounded bg-brand" />
-              مۆدێلە بەردەستەکان ({products.length})
+              {t("categoryOverview.modelsAvailable", { n: products.length })}
               <span className="h-[2px] w-5 rounded bg-brand" />
             </span>
             <h2 className="mt-3 font-display text-2xl sm:text-3xl font-black text-gray-900">
-              سەرجەم مۆدێلەکانی {category.titleKu}
+              {t("categoryOverview.allModels", { title: copy.title })}
             </h2>
           </Reveal>
 
@@ -199,10 +210,10 @@ export function CategoryOverviewPage() {
         <div className="mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
           <Reveal>
             <h2 className="font-display text-2xl sm:text-3xl font-black">
-              پێویستیت بە دیزاینی تایبەتە لە {category.titleKu}؟
+              {t("categoryOverview.customDesignTitle", { title: copy.title })}
             </h2>
             <p className="mx-auto mt-4 max-w-xl text-[15.5px] text-white/90 font-light">
-              پەیوەندیمان پێوە بکە بۆ گفتوگۆکردنی پێداویستییەکانی پڕۆژەکەت و دابینکردنی مۆدێلی گونجاو.
+              {t("categoryOverview.customDesignBody")}
             </p>
           </Reveal>
 
@@ -215,7 +226,7 @@ export function CategoryOverviewPage() {
                 className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-[14.5px] font-bold text-brand shadow hover:bg-gray-100 transition w-full sm:w-auto justify-center"
               >
                 <MessageCircle className="h-4 w-4" />
-                واتسئاپ: <span dir="ltr">+964 750 123 4567</span>
+                {t("solutions.whatsappLabel")} <span dir="ltr">+964 750 123 4567</span>
               </a>
 
               <a
@@ -223,7 +234,7 @@ export function CategoryOverviewPage() {
                 className="inline-flex items-center gap-2 rounded-full border-2 border-white px-7 py-3.5 text-[14.5px] font-bold text-white hover:bg-white/10 transition w-full sm:w-auto justify-center"
               >
                 <PhoneCall className="h-4 w-4" />
-                پەیوەندی تەلەفۆنی
+                {t("solutions.phoneCta")}
               </a>
 
               <a

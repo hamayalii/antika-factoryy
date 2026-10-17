@@ -3,6 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import {
   Home as HomeIcon,
   ChevronLeft,
+  ChevronRight,
   Calendar,
   Clock,
   ArrowLeft,
@@ -16,9 +17,10 @@ import {
   Lamp,
   ShieldCheck,
 } from "lucide-react";
-import { getNewsBySlug } from "../data/newsData";
+import { getNewsBySlug, localizeNewsArticle } from "../data/newsData";
 import { Reveal } from "../components/Reveal";
 import { SEO } from "../components/SEO";
+import { useLanguage } from "../contexts/LanguageContext";
 
 function getHighlightIcon(iconName: string) {
   switch (iconName) {
@@ -41,48 +43,53 @@ const FacebookIcon = (props: React.SVGProps<SVGSVGElement>) => (
 
 export function NewsDetailPage() {
   const { slug } = useParams<{ slug: string }>();
-  const [lang, setLang] = useState<"ku" | "ar">("ku");
+  const { language, t, dir } = useLanguage();
   const [copied, setCopied] = useState(false);
 
   const article = slug ? getNewsBySlug(slug) : undefined;
+  const localized = article ? localizeNewsArticle(article, language) : null;
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, [slug]);
 
-  if (!article) {
+  if (!article || !localized) {
     return (
-      <div className="min-h-[70vh] flex items-center justify-center bg-gray-50 px-4 py-24 text-center text-right">
+      <div className="min-h-[70vh] flex items-center justify-center bg-gray-50 px-4 py-24 text-center text-start">
         <SEO
-          title="هەواڵ نەدۆزرایەوە | کارگەی ئەنتیکا"
-          description="ئەو بابەتەی بەدوایدا دەگەڕێیت نەدۆزرایەوە."
+          title={t("news.notFound.seoTitle")}
+          description={t("news.notFound.seoDesc")}
         />
         <div className="max-w-md mx-auto">
           <h1 className="font-display text-2xl sm:text-3xl font-black text-gray-900 mb-3">
-            هەواڵ نەدۆزرایەوە
+            {t("news.notFound.title")}
           </h1>
           <p className="text-[15px] text-gray-600 mb-8 leading-relaxed">
-            ببورە، ئەو هەواڵەی بەدوایدا دەگەڕێیت لەوانەیە سڕدرابێتەوە یان بەستەرەکەی هەڵە بێت.
+            {t("news.notFound.body")}
           </p>
           <Link
             to="/news"
             className="inline-flex items-center gap-2 rounded-full bg-brand px-8 py-3.5 text-[14px] font-bold text-white transition hover:bg-brand-dark shadow-md"
           >
-            گەڕانەوە بۆ پەڕەی هەواڵەکان
-            <ArrowLeft className="h-4 w-4" />
+            {t("news.notFound.cta")}
+            {dir === "rtl" ? <ArrowLeft className="h-4 w-4" /> : <ArrowRight className="h-4 w-4" />}
           </Link>
         </div>
       </div>
     );
   }
 
-  const title = lang === "ku" ? article.titleKu : article.titleAr;
-  const excerpt = lang === "ku" ? article.excerptKu : article.excerptAr;
-  const content = lang === "ku" ? article.contentKu : article.contentAr;
-  const highlights = lang === "ku" ? article.highlightItemsKu : article.highlightItemsAr;
-  const conclusion = lang === "ku" ? article.conclusionKu : article.conclusionAr;
-  const category = lang === "ku" ? article.categoryKu : article.categoryAr;
-  const tags = lang === "ku" ? article.tagsKu : article.tagsAr;
+  const {
+    title,
+    excerpt,
+    content,
+    highlightItems: highlights,
+    conclusion,
+    category,
+    tags,
+    readMinutes,
+    overlayCaption,
+  } = localized;
 
   const handleShare = () => {
     if (navigator.share) {
@@ -98,60 +105,44 @@ export function NewsDetailPage() {
   };
 
   return (
-    <div className="pt-24 min-h-screen text-right font-body">
+    <div className="pt-24 min-h-screen text-start font-body">
       <SEO
-        title={`${title} | کارگەی ئەنتیکا`}
+        title={`${title} | ${t("news.seoBrand")}`}
         description={excerpt}
         canonical={`https://antika-factory.netlify.app/news/${article.slug}`}
         image={article.image}
       />
 
       {/* 1. Breadcrumb Bar */}
-      <nav aria-label="ڕێڕەوی پەڕەکان" className="border-b border-gray-200/80 backdrop-blur-md py-3.5 sticky top-20 z-20">
+      <nav aria-label={t("product.breadcrumbAria")} className="border-b border-gray-200/80 backdrop-blur-md py-3.5 sticky top-20 z-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 overflow-x-hidden">
           <div className="flex items-center justify-between flex-wrap gap-2">
             <ol className="flex items-center gap-2 text-[13px] text-gray-500 overflow-hidden flex-wrap">
               <li className="flex items-center gap-2 shrink-0">
                 <Link to="/" className="flex items-center gap-1.5 transition hover:text-brand">
                   <HomeIcon className="h-3.5 w-3.5" />
-                  <span>{lang === "ku" ? "سەرەکی" : "الرئيسية"}</span>
+                  <span>{t("nav.home")}</span>
                 </Link>
-                <ChevronLeft className="h-3.5 w-3.5 text-gray-400" />
+                {dir === "rtl" ? (
+                  <ChevronLeft className="h-3.5 w-3.5 text-gray-400" />
+                ) : (
+                  <ChevronRight className="h-3.5 w-3.5 text-gray-400" />
+                )}
               </li>
               <li className="flex items-center gap-2 shrink-0">
                 <Link to="/news" className="transition hover:text-brand">
-                  {lang === "ku" ? "هەواڵەکان" : "الأخبار"}
+                  {t("news.title")}
                 </Link>
-                <ChevronLeft className="h-3.5 w-3.5 text-gray-400" />
+                {dir === "rtl" ? (
+                  <ChevronLeft className="h-3.5 w-3.5 text-gray-400" />
+                ) : (
+                  <ChevronRight className="h-3.5 w-3.5 text-gray-400" />
+                )}
               </li>
               <li className="font-bold text-gray-900 truncate max-w-[200px] sm:max-w-md" aria-current="page">
                 {title}
               </li>
             </ol>
-
-            {/* Language Switcher Button */}
-            <div className="flex items-center bg-gray-100 p-1 rounded-full border border-gray-200 shrink-0">
-              <button
-                onClick={() => setLang("ku")}
-                className={`px-3 py-1 rounded-full text-xs font-bold transition-all ${
-                  lang === "ku"
-                    ? "bg-brand text-white shadow-sm"
-                    : "text-gray-600 hover:text-gray-900"
-                }`}
-              >
-                کوردی
-              </button>
-              <button
-                onClick={() => setLang("ar")}
-                className={`px-3 py-1 rounded-full text-xs font-bold transition-all ${
-                  lang === "ar"
-                    ? "bg-brand text-white shadow-sm"
-                    : "text-gray-600 hover:text-gray-900"
-                }`}
-              >
-                العربية
-              </button>
-            </div>
           </div>
         </div>
       </nav>
@@ -172,7 +163,7 @@ export function NewsDetailPage() {
               <span className="text-gray-300">•</span>
               <span className="flex items-center gap-1.5 text-xs font-medium text-gray-500">
                 <Clock className="h-3.5 w-3.5 text-gray-400" />
-                {article.readTime}
+                {t("news.readTime", { n: readMinutes })}
               </span>
             </div>
 
@@ -185,7 +176,7 @@ export function NewsDetailPage() {
             </h1>
 
             {/* Excerpt Lead */}
-            <p className="mt-5 text-[16px] sm:text-[18px] text-gray-600 leading-relaxed font-normal border-r-4 border-brand pr-4 bg-white/50 py-2 rounded-l-xl">
+            <p className="mt-5 text-[16px] sm:text-[18px] text-gray-600 leading-relaxed font-normal border-s-4 border-brand ps-4 bg-white/50 py-2 rounded-e-xl">
               {excerpt}
             </p>
           </Reveal>
@@ -198,9 +189,9 @@ export function NewsDetailPage() {
                 alt={title}
                 className="w-full h-auto min-h-[250px] sm:min-h-[350px] md:min-h-[450px] max-h-[550px] object-cover object-center"
               />
-              {(article.overlayCaptionKu || article.overlayCaptionAr) && (
-                <div className="absolute bottom-4 right-4 bg-black/70 backdrop-blur-md rounded-xl px-4 py-2 text-xs text-white">
-                  {lang === "ku" ? article.overlayCaptionKu : article.overlayCaptionAr}
+              {overlayCaption && (
+                <div className="absolute bottom-4 end-4 bg-black/70 backdrop-blur-md rounded-xl px-4 py-2 text-xs text-white">
+                  {overlayCaption}
                 </div>
               )}
             </div>
@@ -219,7 +210,7 @@ export function NewsDetailPage() {
             <div className="my-8">
               <h3 className="font-display text-lg sm:text-xl font-black text-gray-900 mb-5 flex items-center gap-2">
                 <Sparkles className="h-5 w-5 text-brand" />
-                {lang === "ku" ? "بەشە نمایشکراوەکانی کۆشکەکەمان:" : "أبرز المعروضات في جناحنا:"}
+                {t("news.detail.highlights")}
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
                 {highlights.map((item, idx) => (
@@ -250,17 +241,17 @@ export function NewsDetailPage() {
 
             {/* Video Integration Link */}
             {article.videoUrl && (
-              <div className="rounded-2xl bg-gradient-to-r from-blue-900 to-indigo-950 p-6 sm:p-8 text-white flex flex-col sm:flex-row items-center justify-between gap-6 shadow-md text-center sm:text-right">
-                <div className="flex items-center gap-4 text-right">
+              <div className="rounded-2xl bg-gradient-to-r from-blue-900 to-indigo-950 p-6 sm:p-8 text-white flex flex-col sm:flex-row items-center justify-between gap-6 shadow-md text-center sm:text-start">
+                <div className="flex items-center gap-4 text-start">
                   <div className="grid h-14 w-14 shrink-0 place-items-center rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 text-white">
                     <Video className="h-7 w-7 text-white" />
                   </div>
                   <div>
                     <h4 className="font-display text-lg font-bold">
-                      {lang === "ku" ? "ڤیدیۆی ڕاستەوخۆ و ڕاپۆرتی پێشانگاکە" : "فيديو التغطية الخاصة بالمعرض"}
+                      {t("news.video.title")}
                     </h4>
                     <p className="text-xs sm:text-sm text-gray-300 mt-1">
-                      {lang === "ku" ? "سەیری ڤیدیۆی بەشداری و کۆشکی ئەنتیکا فاکتۆری بکە لە فەیسبووک" : "شاهد فيديو تغطية مشاركتنا وجناح مصنع أنتيكا على فيسبوك"}
+                      {t("news.video.body")}
                     </p>
                   </div>
                 </div>
@@ -272,7 +263,7 @@ export function NewsDetailPage() {
                   className="shrink-0 inline-flex items-center gap-2.5 rounded-full bg-white text-gray-900 px-6 py-3 text-[13.5px] font-bold shadow-lg transition hover:bg-brand hover:text-white"
                 >
                   <FacebookIcon className="h-4 w-4 text-[#1877F2]" />
-                  <span>{lang === "ku" ? "بینینی ڤیدیۆ لە فەیسبووک" : "مشاهدة الفيديو"}</span>
+                  <span>{t("news.video.cta")}</span>
                 </a>
               </div>
             )}
@@ -297,7 +288,7 @@ export function NewsDetailPage() {
                   className="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-4 py-2 text-xs font-bold text-gray-700 transition hover:bg-gray-50 hover:border-gray-300"
                 >
                   <Share2 className="h-3.5 w-3.5 text-brand" />
-                  {copied ? (lang === "ku" ? "بەستەرەکە کۆپیکرا!" : "تم نسخ الرابط!") : (lang === "ku" ? "هاوبەشکردن" : "مشاركة")}
+                  {copied ? t("news.copied") : t("news.share")}
                 </button>
               </div>
             </div>
@@ -309,16 +300,16 @@ export function NewsDetailPage() {
               to="/news"
               className="inline-flex items-center justify-center gap-2 text-[14px] font-bold text-gray-700 hover:text-brand transition w-full sm:w-auto"
             >
-              <ArrowRight className="h-4 w-4" />
-              <span>{lang === "ku" ? "گەڕانەوە بۆ هەموو هەواڵەکان" : "العودة لجميع الأخبار"}</span>
+              {dir === "rtl" ? <ArrowRight className="h-4 w-4" /> : <ArrowLeft className="h-4 w-4" />}
+              <span>{t("news.backAll")}</span>
             </Link>
 
             <Link
               to="/products"
               className="inline-flex items-center justify-center gap-2 text-[14px] font-bold text-brand hover:text-brand-dark transition w-full sm:w-auto"
             >
-              <span>{lang === "ku" ? "بینینی بەرهەمەکانمان" : "استعراض منتجاتنا"}</span>
-              <ArrowLeft className="h-4 w-4" />
+              <span>{t("news.viewProducts")}</span>
+              {dir === "rtl" ? <ArrowLeft className="h-4 w-4" /> : <ArrowRight className="h-4 w-4" />}
             </Link>
           </div>
         </div>

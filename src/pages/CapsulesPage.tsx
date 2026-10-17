@@ -1,13 +1,15 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Home, ChevronLeft, Layers, MessageCircle, PhoneCall, Mail, ArrowLeft, Home as HomeIcon } from "lucide-react";
-import { capsuleCategories, capsuleProducts } from "../data/productData";
+import { Home, ChevronLeft, ChevronRight, Layers, MessageCircle, PhoneCall, Mail, ArrowLeft, ArrowRight, Home as HomeIcon } from "lucide-react";
+import { capsuleCategories, capsuleProducts, localizeCategory } from "../data/productData";
 import { ProductCard } from "../components/ProductCard";
 import { Reveal } from "../components/Reveal";
 import { SEO } from "../components/SEO";
+import { useLanguage } from "../contexts/LanguageContext";
 
 export function CapsulesPage() {
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  const { language, t, dir } = useLanguage();
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -19,32 +21,40 @@ export function CapsulesPage() {
       : capsuleProducts.filter((p) => p.categoryId === selectedCategory);
 
   return (
-    <div className="pt-24 min-h-screen text-right">
+    <div className="pt-24 min-h-screen text-start">
       <SEO
-        title="کەپسولە مۆدولارەکان | کارگەی ئەنتیکا"
-        description="زنجیرەی کەپسولە مۆدولار و پێشکەوتووەکانی کارگەی ئەنتیکا بۆ نیشتەجێبوون، ئیش و کار، و خزمەتگوزاریی پڕۆژە."
+        title={t("capsulesPage.seoTitle")}
+        description={t("capsulesPage.seoDescription")}
         canonical="https://antika-factory.netlify.app/products/capsules"
       />
 
       {/* Breadcrumb */}
-      <nav aria-label="ڕێڕەوی پەڕەکان" className="border-b border-gray-200 py-3.5">
+      <nav aria-label={t("product.breadcrumbAria")} className="border-b border-gray-200 py-3.5">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 overflow-x-hidden">
           <ol className="flex items-center gap-2 text-[13px] text-gray-500 flex-wrap">
             <li className="flex items-center gap-2">
               <Link to="/" className="flex items-center gap-1.5 transition hover:text-brand">
                 <Home className="h-3.5 w-3.5" />
-                <span>سەرەکی</span>
+                <span>{t("nav.home")}</span>
               </Link>
-              <ChevronLeft className="h-3.5 w-3.5 text-gray-400" />
+              {dir === "rtl" ? (
+                <ChevronLeft className="h-3.5 w-3.5 text-gray-400" />
+              ) : (
+                <ChevronRight className="h-3.5 w-3.5 text-gray-400" />
+              )}
             </li>
             <li className="flex items-center gap-2">
               <Link to="/#products" className="transition hover:text-brand">
-                بەرهەمەکانمان
+                {t("listing.productsCrumb")}
               </Link>
-              <ChevronLeft className="h-3.5 w-3.5 text-gray-400" />
+              {dir === "rtl" ? (
+                <ChevronLeft className="h-3.5 w-3.5 text-gray-400" />
+              ) : (
+                <ChevronRight className="h-3.5 w-3.5 text-gray-400" />
+              )}
             </li>
             <li className="font-bold text-gray-900" aria-current="page">
-              کەپسولەکان
+              {t("nav.capsules")}
             </li>
           </ol>
         </div>
@@ -56,16 +66,16 @@ export function CapsulesPage() {
           <Reveal className="text-center max-w-3xl mx-auto">
             <span className="inline-flex items-center gap-2 rounded-full bg-brand-soft px-4 py-1.5 text-[13px] font-bold text-brand mb-4">
               <Layers className="h-4 w-4" />
-              کەپسولە مۆدیولارەکان ({capsuleProducts.length} مۆدێلی جیاواز)
+              {t("capsulesPage.badge", { n: capsuleProducts.length })}
             </span>
             <h1
               className="font-display font-black leading-[1.25] text-gray-900"
               style={{ fontSize: "clamp(28px, 4.5vw, 46px)" }}
             >
-              کەپسولە ئەندازیارییە پێشکەوتووەکان
+              {t("capsulesPage.title")}
             </h1>
             <p className="mt-4 text-[15.5px] sm:text-[16.5px] text-gray-600 leading-relaxed font-light">
-              دیزاین و دروستکردنی کەپسولی نیشتەجێبوون (AL)، کەپسولی ئیش و کار (AM)، و کەپسولەکانی خزمەتگوزاریی پڕۆژە (AS) بە بەرزترین ستانداردەکانی تەلارسازی و کەرەستەی ئەندازیاری.
+              {t("capsulesPage.subtitle")}
             </p>
           </Reveal>
         </div>
@@ -83,7 +93,7 @@ export function CapsulesPage() {
                 : "bg-white border border-gray-200 text-gray-700 hover:bg-gray-100"
                 }`}
             >
-              هەموو کەپسولەکان ({capsuleProducts.length})
+              {t("capsulesPage.all", { n: capsuleProducts.length })}
             </button>
 
             {capsuleCategories.map((cat) => {
@@ -97,7 +107,7 @@ export function CapsulesPage() {
                     : "bg-white border border-gray-200 text-gray-700 hover:bg-gray-100"
                     }`}
                 >
-                  {cat.titleKu} ({count})
+                  {localizeCategory(cat, language).title} ({count})
                 </button>
               );
             })}
@@ -115,16 +125,16 @@ export function CapsulesPage() {
           {/* Notice / Switch to Houses banner */}
           <Reveal delay={100} className="mt-14">
             <div className="rounded-2xl border border-gray-200 bg-white p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-6 shadow-sm">
-              <div className="flex items-center gap-4 text-right">
+              <div className="flex items-center gap-4 text-start">
                 <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-brand-soft text-brand">
                   <HomeIcon className="h-6 w-6" />
                 </span>
                 <div>
                   <h3 className="font-display text-[17px] font-bold text-gray-900">
-                    بەدوای خانووی باخچە یان خانووی حاویەدا دەگەڕێیت؟
+                    {t("capsulesPage.housesBanner.title")}
                   </h3>
                   <p className="text-[13.5px] text-gray-600 mt-1">
-                    خانووی حاویە، خانووی ئاسایی، خانووی باخچە، و خانووی کوخ لە بەشێکی تایبەتدا ببینە.
+                    {t("capsulesPage.housesBanner.body")}
                   </p>
                 </div>
               </div>
@@ -132,8 +142,8 @@ export function CapsulesPage() {
                 to="/products/houses"
                 className="inline-flex shrink-0 items-center gap-2 rounded-full bg-gray-900 px-6 py-3 text-[13.5px] font-bold text-white hover:bg-gray-800 transition"
               >
-                بینینی بەشی خانوو
-                <ArrowLeft className="h-4 w-4" />
+                {t("capsulesPage.housesBanner.cta")}
+                {dir === "rtl" ? <ArrowLeft className="h-4 w-4" /> : <ArrowRight className="h-4 w-4" />}
               </Link>
             </div>
           </Reveal>
@@ -145,10 +155,10 @@ export function CapsulesPage() {
         <div className="mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
           <Reveal>
             <h2 className="font-display text-2xl sm:text-3xl lg:text-4xl font-black">
-              پێویستیت بە کەپسولی تایبەتە بۆ پڕۆژەکەت؟
+              {t("capsulesPage.ctaTitle")}
             </h2>
             <p className="mx-auto mt-4 max-w-xl text-[15.5px] text-white/90 font-light">
-              بۆ دیاریکردنی پێوانە و زانینی نرخ و ڕاوێژکردنی تەلارسازی، تیمی ئەندازیاری کارگەی ئەنتیکا هەمیشە ئامادەیە.
+              {t("capsulesPage.ctaBody")}
             </p>
           </Reveal>
 
@@ -161,7 +171,7 @@ export function CapsulesPage() {
                 className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-[14.5px] font-bold text-brand shadow hover:bg-gray-100 transition w-full sm:w-auto justify-center"
               >
                 <MessageCircle className="h-4 w-4" />
-                واتسئاپ: <span dir="ltr">+964 750 123 4567</span>
+                {t("solutions.whatsappLabel")} <span dir="ltr">+964 750 123 4567</span>
               </a>
 
               <a
@@ -169,7 +179,7 @@ export function CapsulesPage() {
                 className="inline-flex items-center gap-2 rounded-full border-2 border-white px-7 py-3.5 text-[14.5px] font-bold text-white hover:bg-white/10 transition w-full sm:w-auto justify-center"
               >
                 <PhoneCall className="h-4 w-4" />
-                پەیوەندی تەلەفۆنی
+                {t("solutions.phoneCta")}
               </a>
 
               <a

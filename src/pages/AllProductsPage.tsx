@@ -3,11 +3,13 @@ import { Link } from "react-router-dom";
 import {
   Home,
   ChevronLeft,
+  ChevronRight,
   Layers,
   PhoneCall,
   MessageCircle,
   Mail,
   ArrowLeft,
+  ArrowRight,
   Box,
   Lightbulb,
   Grid,
@@ -26,11 +28,13 @@ import { Reveal } from "../components/Reveal";
 import { SEO } from "../components/SEO";
 import { MaterialCertificatesMarquee } from "../components/MaterialCertificatesMarquee";
 import { SelectiveHydration } from "../components/SelectiveHydration";
+import { useLanguage } from "../contexts/LanguageContext";
 
 type FilterTab = "all" | "capsules" | "houses" | "koshk" | "lighting" | "shelves";
 
 export function AllProductsPage() {
   const [selectedTab, setSelectedTab] = useState<FilterTab>("all");
+  const { t, dir } = useLanguage();
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -56,26 +60,30 @@ export function AllProductsPage() {
   const currentProducts = getFilteredProducts();
 
   return (
-    <div className="pt-24 min-h-screen text-right">
+    <div className="pt-24 min-h-screen text-start">
       <SEO
-        title="سەرجەم بەرهەمەکانمان | کارگەی ئەنتیکا"
-        description="سەرجەم بەرهەمەکانی کارگەی ئەنتیکا: کەپسولە مۆدیولارەکان، خانووە سەربەخۆکان، کۆشکە بازرگانییەکان، لایتی ڕووناکی، و ڕەفەی ئەندازیاری."
+        title={t("allProductsPage.seoTitle")}
+        description={t("allProductsPage.seoDescription")}
         canonical="https://antika-factory.netlify.app/products"
       />
 
       {/* Breadcrumb */}
-      <nav aria-label="ڕێڕەوی پەڕەکان" className="border-b border-gray-200 py-3.5">
+      <nav aria-label={t("product.breadcrumbAria")} className="border-b border-gray-200 py-3.5">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 overflow-x-hidden">
           <ol className="flex items-center gap-2 text-[13px] text-gray-500 flex-wrap">
             <li className="flex items-center gap-2">
               <Link to="/" className="flex items-center gap-1.5 transition hover:text-brand">
                 <Home className="h-3.5 w-3.5" />
-                <span>سەرەکی</span>
+                <span>{t("nav.home")}</span>
               </Link>
-              <ChevronLeft className="h-3.5 w-3.5 text-gray-400" />
+              {dir === "rtl" ? (
+                <ChevronLeft className="h-3.5 w-3.5 text-gray-400" />
+              ) : (
+                <ChevronRight className="h-3.5 w-3.5 text-gray-400" />
+              )}
             </li>
             <li className="font-bold text-gray-900" aria-current="page">
-              سەرجەم بەرهەمەکانمان
+              {t("allProductsPage.crumb")}
             </li>
           </ol>
         </div>
@@ -87,16 +95,16 @@ export function AllProductsPage() {
           <Reveal className="text-center max-w-3xl mx-auto">
             <span className="inline-flex items-center gap-2 rounded-full bg-brand-soft px-4 py-1.5 text-[13px] font-bold text-brand mb-4">
               <Layers className="h-4 w-4" />
-              سەرجەم بەرهەمەکان ({allProducts.length} بەرهەم)
+              {t("allProductsPage.badge", { n: allProducts.length })}
             </span>
             <h1
               className="font-display font-black leading-[1.25] text-gray-900"
               style={{ fontSize: "clamp(28px, 4.5vw, 46px)" }}
             >
-              تەواوی بەرهەمەکانی کارگەی ئەنتیکا
+              {t("allProductsPage.title")}
             </h1>
             <p className="mt-4 text-[15.5px] sm:text-[16.5px] text-gray-600 leading-relaxed font-light">
-              پێشانگای گشتیی سەرجەم بەرهەمەکانمان: کەپسولە پێشکەوتووەکان، خانووە سەربەخۆ و مۆدیولارەکان، کۆشکی بازرگانی، لایتی ڕووناکی هونەری، و ڕەفە ئەندازیارییەکان.
+              {t("allProductsPage.subtitle")}
             </p>
           </Reveal>
         </div>
@@ -120,7 +128,7 @@ export function AllProductsPage() {
                   : "bg-white border border-gray-200 text-gray-700 hover:bg-gray-100"
               }`}
             >
-              هەموو بەرهەمەکان ({allProducts.length})
+              {t("allProductsPage.all", { n: allProducts.length })}
             </button>
 
             <button
@@ -131,7 +139,7 @@ export function AllProductsPage() {
                   : "bg-white border border-gray-200 text-gray-700 hover:bg-gray-100"
               }`}
             >
-              کەپسولەکان ({capsuleProducts.length})
+              {t("allProductsPage.tabCapsules")} ({capsuleProducts.length})
             </button>
 
             <button
@@ -142,7 +150,7 @@ export function AllProductsPage() {
                   : "bg-white border border-gray-200 text-gray-700 hover:bg-gray-100"
               }`}
             >
-              خانوو ({houseProducts.length})
+              {t("allProductsPage.tabHouses")} ({houseProducts.length})
             </button>
 
             <button
@@ -153,7 +161,7 @@ export function AllProductsPage() {
                   : "bg-white border border-gray-200 text-gray-700 hover:bg-gray-100"
               }`}
             >
-              کۆشکەکان ({koshkProducts.length})
+              {t("allProductsPage.tabKoshk")} ({koshkProducts.length})
             </button>
 
             <button
@@ -164,7 +172,7 @@ export function AllProductsPage() {
                   : "bg-white border border-gray-200 text-gray-700 hover:bg-gray-100"
               }`}
             >
-              لایتی ڕووناکی ({lightingProducts.length})
+              {t("allProductsPage.tabLighting")} ({lightingProducts.length})
             </button>
 
             <button
@@ -175,7 +183,7 @@ export function AllProductsPage() {
                   : "bg-white border border-gray-200 text-gray-700 hover:bg-gray-100"
               }`}
             >
-              ڕەفەکان ({shelvesProducts.length})
+              {t("allProductsPage.tabShelves")} ({shelvesProducts.length})
             </button>
           </div>
 
@@ -196,8 +204,8 @@ export function AllProductsPage() {
           {/* Quick Dedicated Categories Nav */}
           <Reveal delay={120} className="mt-16">
             <div className="rounded-2xl border border-gray-200 bg-white p-6 sm:p-8 shadow-sm">
-              <h3 className="font-display text-[18px] font-bold text-gray-900 mb-6 text-center sm:text-right">
-                بەشە تایبەتمەندەکانی بەرهەمەکانمان
+              <h3 className="font-display text-[18px] font-bold text-gray-900 mb-6 text-center sm:text-start">
+                {t("allProductsPage.sectionsTitle")}
               </h3>
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 grid-cols-1">
                 <Link
@@ -209,10 +217,14 @@ export function AllProductsPage() {
                       <Layers className="h-5 w-5" />
                     </span>
                     <span className="font-bold text-[14.5px] text-gray-900 group-hover:text-brand transition">
-                      کەپسولەکان
+                      {t("allProductsPage.tabCapsules")}
                     </span>
                   </div>
-                  <ArrowLeft className="h-4 w-4 text-gray-400 group-hover:text-brand transition group-hover:-translate-x-1" />
+                  {dir === "rtl" ? (
+                    <ArrowLeft className="h-4 w-4 text-gray-400 group-hover:text-brand transition group-hover:-translate-x-1" />
+                  ) : (
+                    <ArrowRight className="h-4 w-4 text-gray-400 group-hover:text-brand transition group-hover:translate-x-1" />
+                  )}
                 </Link>
 
                 <Link
@@ -224,10 +236,14 @@ export function AllProductsPage() {
                       <Box className="h-5 w-5" />
                     </span>
                     <span className="font-bold text-[14.5px] text-gray-900 group-hover:text-brand transition">
-                      خانوو
+                      {t("allProductsPage.tabHouses")}
                     </span>
                   </div>
-                  <ArrowLeft className="h-4 w-4 text-gray-400 group-hover:text-brand transition group-hover:-translate-x-1" />
+                  {dir === "rtl" ? (
+                    <ArrowLeft className="h-4 w-4 text-gray-400 group-hover:text-brand transition group-hover:-translate-x-1" />
+                  ) : (
+                    <ArrowRight className="h-4 w-4 text-gray-400 group-hover:text-brand transition group-hover:translate-x-1" />
+                  )}
                 </Link>
 
                 <Link
@@ -239,10 +255,14 @@ export function AllProductsPage() {
                       <Store className="h-5 w-5" />
                     </span>
                     <span className="font-bold text-[14.5px] text-gray-900 group-hover:text-brand transition">
-                      کۆشکەکان
+                      {t("allProductsPage.tabKoshk")}
                     </span>
                   </div>
-                  <ArrowLeft className="h-4 w-4 text-gray-400 group-hover:text-brand transition group-hover:-translate-x-1" />
+                  {dir === "rtl" ? (
+                    <ArrowLeft className="h-4 w-4 text-gray-400 group-hover:text-brand transition group-hover:-translate-x-1" />
+                  ) : (
+                    <ArrowRight className="h-4 w-4 text-gray-400 group-hover:text-brand transition group-hover:translate-x-1" />
+                  )}
                 </Link>
 
                 <Link
@@ -254,10 +274,14 @@ export function AllProductsPage() {
                       <Lightbulb className="h-5 w-5" />
                     </span>
                     <span className="font-bold text-[14.5px] text-gray-900 group-hover:text-brand transition">
-                      لایتی ڕووناکی
+                      {t("allProductsPage.tabLighting")}
                     </span>
                   </div>
-                  <ArrowLeft className="h-4 w-4 text-gray-400 group-hover:text-brand transition group-hover:-translate-x-1" />
+                  {dir === "rtl" ? (
+                    <ArrowLeft className="h-4 w-4 text-gray-400 group-hover:text-brand transition group-hover:-translate-x-1" />
+                  ) : (
+                    <ArrowRight className="h-4 w-4 text-gray-400 group-hover:text-brand transition group-hover:translate-x-1" />
+                  )}
                 </Link>
 
                 <Link
@@ -269,10 +293,14 @@ export function AllProductsPage() {
                       <Grid className="h-5 w-5" />
                     </span>
                     <span className="font-bold text-[14.5px] text-gray-900 group-hover:text-brand transition">
-                      ڕەفەکان
+                      {t("allProductsPage.tabShelves")}
                     </span>
                   </div>
-                  <ArrowLeft className="h-4 w-4 text-gray-400 group-hover:text-brand transition group-hover:-translate-x-1" />
+                  {dir === "rtl" ? (
+                    <ArrowLeft className="h-4 w-4 text-gray-400 group-hover:text-brand transition group-hover:-translate-x-1" />
+                  ) : (
+                    <ArrowRight className="h-4 w-4 text-gray-400 group-hover:text-brand transition group-hover:translate-x-1" />
+                  )}
                 </Link>
               </div>
             </div>
@@ -285,10 +313,10 @@ export function AllProductsPage() {
         <div className="mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
           <Reveal>
             <h2 className="font-display text-2xl sm:text-3xl lg:text-4xl font-black">
-              پێویستیت بە دیزاینی تایبەت یان بەرهەمێک هەیە بە پێوانەی شوێنەکەت؟
+              {t("allProductsPage.ctaTitle")}
             </h2>
             <p className="mx-auto mt-4 max-w-xl text-[15.5px] text-white/90 font-light">
-              بۆ دیاریکردنی پێوانە و زانینی نرخ و ڕاوێژکردن، تیمی ئەندازیاری کارگەی ئەنتیکا ئامادەیە پەیوەندیت پێوە بکات.
+              {t("allProductsPage.ctaBody")}
             </p>
           </Reveal>
 
@@ -301,7 +329,7 @@ export function AllProductsPage() {
                 className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-[14.5px] font-bold text-brand shadow hover:bg-gray-100 transition w-full sm:w-auto justify-center"
               >
                 <MessageCircle className="h-4 w-4" />
-                واتسئاپ: <span dir="ltr">+964 750 123 4567</span>
+                {t("solutions.whatsappLabel")} <span dir="ltr">+964 750 123 4567</span>
               </a>
 
               <a
@@ -309,7 +337,7 @@ export function AllProductsPage() {
                 className="inline-flex items-center gap-2 rounded-full border-2 border-white px-7 py-3.5 text-[14.5px] font-bold text-white hover:bg-white/10 transition w-full sm:w-auto justify-center"
               >
                 <PhoneCall className="h-4 w-4" />
-                پەیوەندی تەلەفۆنی
+                {t("solutions.phoneCta")}
               </a>
 
               <a

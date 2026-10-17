@@ -7,6 +7,7 @@ import { SemanticFaq } from "../components/SemanticFaq";
 import { CertificatesMarquee } from "../components/CertificatesMarquee";
 import { MaterialCertificatesMarquee } from "../components/MaterialCertificatesMarquee";
 import { TeamMemberCard } from "../components/TeamMemberCard";
+import { useLanguage } from "../contexts/LanguageContext";
 
 function usePromoScrollAnimation() {
   const [isVisible, setIsVisible] = useState(false);
@@ -149,6 +150,7 @@ function useImageSlider(interval: number = 5000) {
 }
 
 export function AboutPage() {
+  const { t, dir } = useLanguage();
   const { isVisible: promoVisible, sectionRef: promoSectionRef } = usePromoScrollAnimation();
   const activeSlideIndex = useImageSlider(5000);
 
@@ -166,7 +168,7 @@ export function AboutPage() {
   }, []);
 
   return (
-    <div className="min-h-screen text-right font-body">
+    <div className="min-h-screen text-start font-body">
       <style>{`
         html, body {
           overflow-x: hidden !important;
@@ -177,8 +179,8 @@ export function AboutPage() {
         }
       `}</style>
       <SeoHead
-        title="دەربارەی ئێمە | کارگەی ئەنتیکا"
-        description="دەربارەی کارگەی ئەنتیکا - کارگەیەک کە هونەر دەکاتە ژیان. تیمی ئەندازیار و دیزاینەری نێودەوڵەتی بە ئەزموونی زیاتر لە 20 ساڵ."
+        title={t("about.seoTitle")}
+        description={t("about.seoDescription")}
         canonical="/about"
         image="/images/logo.png"
       />
@@ -226,7 +228,7 @@ export function AboutPage() {
             marginTop: '80px',
           }}
         >
-          <div dir="rtl" className="text-center w-full max-w-[1100px]">
+          <div dir={dir} className="text-center w-full max-w-[1100px]">
             <h1
               className="font-display font-black leading-[1.15] text-white text-center"
               style={{
@@ -234,9 +236,9 @@ export function AboutPage() {
                 fontWeight: 600,
               }}
             >
-              داهێنان لە پشت
+              {t("about.hero.titleLine1")}
               <br />
-              بەرهەمەکانمانەوە
+              {t("about.hero.titleLine2")}
             </h1>
             <p
               className="mt-[0.6em] font-normal leading-[1.6] text-white text-center"
@@ -246,8 +248,8 @@ export function AboutPage() {
                 fontWeight: 400,
               }}
             >
-              ئێمە خاوەنی ئەزموونێکی فراوانین لە دیزاینکردن و دروستکردنی
-              <br /> خانووە کەپسولییە ئاستبەرزەکاندا
+              {t("about.hero.lead1Line1")}
+              <br /> {t("about.hero.lead1Line2")}
             </p>
             <p
               className="mt-4 font-normal leading-[1.6] text-white text-center"
@@ -257,10 +259,9 @@ export function AboutPage() {
                 fontWeight: 400,
               }}
             >
-              چاوێک بە نموونەی کارەکانماندا بخشێنە کە تێیدا ئەو پڕۆژانە <br />
-              خراونەتەڕوو کە
-              بۆ کڕیارە ڕازییەکانمان لە سەرانسەری <br />
-              عێراق جێبەجێمان کردوون
+              {t("about.hero.lead2Line1")} <br />
+              {t("about.hero.lead2Line2")} <br />
+              {t("about.hero.lead2Line3")}
             </p>
           </div>
         </div>
@@ -319,7 +320,7 @@ export function AboutPage() {
             `}</style>
             {/* Step 1 */}
             <div
-              dir="rtl"
+              dir={dir}
               className="flex items-start gap-[18px] steps-grid-mobile"
             >
               <Truck
@@ -339,7 +340,7 @@ export function AboutPage() {
                     lineHeight: '1.4',
                   }}
                 >
-گواستنەوە و ڕادەستکردن (Turnkey)                                  </span>
+{t("about.steps.delivery.title")}                                  </span>
                 <span
                   className="mt-3"
                   style={{
@@ -349,13 +350,13 @@ export function AboutPage() {
                     lineHeight: '1.6',
                   }}
                 >
-جێبەجێکردنی خێرا و دانانی تەواوەتی پڕۆژەکە لە هەر شوێنێکی عێراق بێت               </span>
+{t("about.steps.delivery.desc")}               </span>
               </div>
             </div>
 
             {/* Step 2 */}
             <div
-              dir="rtl"
+              dir={dir}
               className="flex items-start gap-[18px] steps-grid-mobile"
             >
               <DraftingCompass
@@ -375,7 +376,7 @@ export function AboutPage() {
                     lineHeight: '1.4',
                   }}
                 >
-دیزاین و نەخشەسازیی ورد                </span>
+{t("about.steps.design.title")}                </span>
                 <span
                   className="mt-3"
                   style={{
@@ -385,13 +386,13 @@ export function AboutPage() {
                     lineHeight: '1.6',
                   }}
                 >
-گۆڕینی خەیاڵ و پێداویستییەکانی کڕیار بۆ دیزاینی 3D و ئەندازیاریی سەرنجڕاکێش                </span>
+{t("about.steps.design.desc")}                </span>
               </div>
             </div>
 
             {/* Step 3 */}
             <div
-              dir="rtl"
+              dir={dir}
               className="flex items-start gap-[18px] steps-grid-mobile"
             >
               <Factory
@@ -411,7 +412,7 @@ export function AboutPage() {
                     lineHeight: '1.4',
                   }}
                 >
-دروستکردن بە کوالێتیی بەرز                </span>
+{t("about.steps.build.title")}                </span>
                 <span
                   className="mt-3"
                   style={{
@@ -421,7 +422,7 @@ export function AboutPage() {
                     lineHeight: '1.6',
                   }}
                 >
-پشت بەستن بە کەرەستەی بڕوانامەدار و تەکنەلۆجیای مۆدێرن لە کارگەی تایبەتی خۆماندا                </span>
+{t("about.steps.build.desc")}                </span>
               </div>
             </div>
           </div>
@@ -499,7 +500,7 @@ export function AboutPage() {
               minHeight: 'clamp(140px, 20vh, 320px)',
               padding: 'clamp(16px, 3vw, 40px)',
             }}
-            dir="rtl"
+            dir={dir}
           >
             <style>{`
               @media (min-width: 1024px) {
@@ -523,7 +524,7 @@ export function AboutPage() {
                     marginBottom: 'clamp(16px, 3vw, 24px)',
                   }}
                 >
-                  کار و دیزاینەکانمان ببینە
+                  {t("about.promo.title")}
                 </h2>
                 <p
                   className="text-white font-body"
@@ -533,7 +534,7 @@ export function AboutPage() {
                     marginBottom: 'clamp(20px, 4vw, 32px)',
                   }}
                 >
-                  گەر بەدوای کەپسول (Apple Cabin)، کۆشک، یان خانووی ئامادەکراوی قەبارە جیاوازدا دەگەڕێیت، ئێمە هەموو جۆرەکانمان بۆ ئامادەکردوون بە باشترین کوالێتی
+                  {t("about.promo.body")}
                 </p>
                 <Link
                   to="/products"
@@ -556,7 +557,7 @@ export function AboutPage() {
                     e.currentTarget.style.color = 'white';
                   }}
                 >
-                  بینینی دیزاینەکان
+                  {t("about.promo.cta")}
                 </Link>
               </div>
             </div>
@@ -577,9 +578,9 @@ export function AboutPage() {
           <Reveal>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 lg:gap-10">
               {[
-                { target: 300, suffix: "+", l: "پرۆژەی تەواو", d: 4000 },
-                { target: 20, suffix: "", l: "ساڵ ئەزموون", d: 2500 },
-                { target: 100, suffix: "%", l: "ڕەزامەندی", d: 3500 },
+                { target: 300, suffix: "+", l: t("about.stats.projects"), d: 4000 },
+                { target: 20, suffix: "", l: t("about.stats.experience"), d: 2500 },
+                { target: 100, suffix: "%", l: t("about.stats.satisfaction"), d: 3500 },
               ].map((s) => (
                 <div
                   key={s.l}
@@ -611,7 +612,7 @@ export function AboutPage() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <Reveal className="mb-8 sm:mb-12 text-center">
             <h2 className="mx-auto mt-4 max-w-2xl font-display font-black leading-[1.3] text-gray-900" style={{ fontSize: 'clamp(24px, 4vw, 42px)' }}>
-              پێشەنگ لە پیشەسازی خانوو و کابینەی ئامادەکراودا
+              {t("about.leadership.title")}
             </h2>
           </Reveal>
 
@@ -619,18 +620,18 @@ export function AboutPage() {
             {[
               {
                 icon: <Shield className="h-6 w-6 sm:h-8 sm:w-8 text-brand" />,
-                title: "پێشەنگ لە پیشەسازی خانووی ئامادەکراو",
-                description: "گەشەی بەردەوامی تۆڕی کڕیارانی ئەنتیکا هاوشان لەگەڵ کوالێتیی بەرز و متمانەی بەردەوام وایکردووە کارگەی ئەنتیکا ببێتە یەکێک لە گەورەترین و متمانەپێکراوترین ناوەندەکانی دروستکردنی خانوو و کابینەی مۆدێرن لە تەواوی عێراقدا",
+                title: t("about.leadership.pioneer.title"),
+                description: t("about.leadership.pioneer.desc"),
               },
               {
                 icon: <Award className="h-6 w-6 sm:h-8 sm:w-8 text-brand" />,
-                title: "سەدان پڕۆژەی جێبەجێکراو",
-                description: "کارگەی ئەنتیکا سەدان خانووی ئامادەکراو و کابینەی لە سەرانسەری عێراقدا دروستکردووە و ڕادەستی کڕیارانی کردووە، هاوکات بەرهەمەکانمان بۆ چەندین کەرتی جیاوازی گشتی و تایبەت دابینکراون",
+                title: t("about.leadership.projects.title"),
+                description: t("about.leadership.projects.desc"),
               },
               {
                 icon: <Layout className="h-6 w-6 sm:h-8 sm:w-8 text-brand" />,
-                title: "هەمەجۆریی لە دیزاین و ڕووبەردا",
-                description: "کارگەی ئەنتیکا نەخشە و دیزاینی جۆراوجۆری نیشتەجێبوون پێشکەشی کڕیاران دەکات کە ڕووبەرەکانیان لە ٥٠ مەترەوە بۆ ٥٠٠ مەتر دووجا دەستپێدەکات، ئەمە جگە لە جێبەجێکردنی چەندین پڕۆژەی بازرگانی، کارگێڕی و یەکەی نیشتەجێبوونی تایبەت",
+                title: t("about.leadership.variety.title"),
+                description: t("about.leadership.variety.desc"),
               },
             ].map((feature, index) => (
               <Reveal key={index} delay={index * 150}>
@@ -657,23 +658,24 @@ export function AboutPage() {
       <section className="py-8 sm:py-12 md:py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
-            <div dir="rtl" className="text-right">
+            <div dir={dir} className="text-start">
               <p className="text-[16px] sm:text-[18px] md:text-[20px] font-normal leading-relaxed text-gray-700">
-                کارگەی ئەنتیکا لە تێبینییەکی سادەوە سەری هەڵدا: شێوازی نەریتیی بیناسازی زۆر خاو، تێچووی زۆر و زۆر نەگونجاو بوو بۆ پێداویستییە سەردەمییەکان و وەک کەسێک کە بە قووڵی لە بواری ئەندازیاری و بیناسازیدا کارم کردووە، بە چاوی خۆم دەمبینی کە چۆن کڕیاران لە عێراقدا کێشەی دۆزینەوەی خانووی پێشوەختە دروستکراوی باوەڕپێکراویان هەیە. بازاڕ پڕ بوو لە بژاردە، کەچی هیچ ڕێگەیەکی ڕوون نەبوو بۆ بەراوردکردنی کوالێتی، پتەوی، یان بەهای کارەکان
+                {t("about.team.story1")}
               </p>
               <p className="mt-6 text-[16px] sm:text-[18px] md:text-[20px] font-normal leading-relaxed text-gray-700">
-                مەرجە شاراوەکان، ڕوون نەبوونی تایبەتمەندییەکان و نەبوونی ڕێنمایی پیشەگەرانە، پرۆسەی بڕیاردانیان زۆر ماندووکەر کردبوو ئەو کاتەی کە دەبوو بۆ دروستکردنی شوێنی جوان تەرخان بکرێت، لە گەڕان و دوودڵیدا بەفیڕۆ دەچوو
+                {t("about.team.story2")}
               </p>
               <p className="mt-6 text-[16px] sm:text-[18px] md:text-[20px] font-normal leading-relaxed text-gray-700">
-                دەرکم بەوە کرد کە دەبێت ڕێگەیەکی باشتر هەبێت — کارگەیەک کە نەک تەنها بەرهەم، بەڵکو شەفافییەتی تەواو، ئامۆژگاریی شارەزایان و چارەسەری گشتگیر (Turnkey) پێشکەش بکات. بە پشتبەستن بە ٢٠ ساڵ ئەزموونی ئەندازیاری و بە پاڵپشتیی تیمێکی نێودەوڵەتی لە پسپۆڕان، کارگەی ئەنتیکام دامەزراند بۆ ئەوەی ببێتە ئەو هاوبەشە جێمتمانەیە و ئێمە تەنها کەپسوول و پێکهاتەی پێشوەختە دروستکراو بەرهەم ناهێنین؛ بەڵکو شارەزایی، کەرەستەی کوالێتی بەرز و پاڵپشتییەکی پیشەگەرانە پێشکەش دەکەین کە دڵنیایی دەدات لە سەرکەوتنی هەر پڕۆژەیەک، لە دیزاینی سەرەتاییەوە تا قۆناغی کۆتایی جێگیرکردن لە سەرتاسەری عێراقدا
+                {t("about.team.story3")}
               </p>
             </div>
             <div className="flex justify-center lg:justify-end">
               <TeamMemberCard
                 name="Karzan"
-                description="An expert in Capsules, Prefab Houses, Apple Cabins & Container Homes"
+                description={t("about.teamMember.role")}
+                cta={t("about.teamMember.cta")}
                 imageSrc="/images/factory-preview2.webp"
-                style={{ marginLeft: '0' }}
+                style={{ marginInlineStart: '0' }}
               />
             </div>
           </div>

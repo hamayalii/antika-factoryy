@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import {
   Home,
   ChevronLeft,
+  ChevronRight,
   ShieldCheck,
   Zap,
   Sparkles,
@@ -11,15 +12,18 @@ import {
   MessageCircle,
   Mail,
   ArrowLeft,
+  ArrowRight,
   Box,
 } from "lucide-react";
-import { houseCategories, houseProducts } from "../data/productData";
+import { houseCategories, houseProducts, localizeCategory } from "../data/productData";
 import { ProductCard } from "../components/ProductCard";
 import { Reveal } from "../components/Reveal";
 import { SEO } from "../components/SEO";
+import { useLanguage } from "../contexts/LanguageContext";
 
 export function HousesPage() {
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  const { language, t, dir } = useLanguage();
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -31,32 +35,40 @@ export function HousesPage() {
       : houseProducts.filter((p) => p.categoryId === selectedCategory);
 
   return (
-    <div className="pt-24 min-h-screen text-right">
+    <div className="pt-24 min-h-screen text-start">
       <SEO
-        title="خانوو و یەکە مۆدولارەکان | کارگەی ئەنتیکا"
-        description="بەرهەمهێنانی خانووی حاویە، خانووی ئاسایی، خانووی باخچە، و خانووی کوخ بە ستانداردی ئەندازیاری و کەرەستەی خۆڕاگر لە کارگەی ئەنتیکا."
+        title={t("housesPage.seoTitle")}
+        description={t("housesPage.seoDescription")}
         canonical="https://antika-factory.netlify.app/products/houses"
       />
 
       {/* Breadcrumb */}
-      <nav aria-label="ڕێڕەوی پەڕەکان" className="border-b border-gray-200 py-3.5">
+      <nav aria-label={t("product.breadcrumbAria")} className="border-b border-gray-200 py-3.5">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 overflow-x-hidden">
           <ol className="flex items-center gap-2 text-[13px] text-gray-500 flex-wrap">
             <li className="flex items-center gap-2">
               <Link to="/" className="flex items-center gap-1.5 transition hover:text-brand">
                 <Home className="h-3.5 w-3.5" />
-                <span>سەرەکی</span>
+                <span>{t("nav.home")}</span>
               </Link>
-              <ChevronLeft className="h-3.5 w-3.5 text-gray-400" />
+              {dir === "rtl" ? (
+                <ChevronLeft className="h-3.5 w-3.5 text-gray-400" />
+              ) : (
+                <ChevronRight className="h-3.5 w-3.5 text-gray-400" />
+              )}
             </li>
             <li className="flex items-center gap-2">
               <Link to="/#products" className="transition hover:text-brand">
-                بەرهەمەکانمان
+                {t("listing.productsCrumb")}
               </Link>
-              <ChevronLeft className="h-3.5 w-3.5 text-gray-400" />
+              {dir === "rtl" ? (
+                <ChevronLeft className="h-3.5 w-3.5 text-gray-400" />
+              ) : (
+                <ChevronRight className="h-3.5 w-3.5 text-gray-400" />
+              )}
             </li>
             <li className="font-bold text-gray-900" aria-current="page">
-              خانوو
+              {t("housesPage.crumb")}
             </li>
           </ol>
         </div>
@@ -68,16 +80,16 @@ export function HousesPage() {
           <Reveal className="text-center max-w-3xl mx-auto">
             <span className="inline-flex items-center gap-2 rounded-full bg-brand-soft px-4 py-1.5 text-[13px] font-bold text-brand mb-4">
               <Sparkles className="h-4 w-4" />
-              خانووە سەربەخۆکان ({houseProducts.length} جۆری سەرەکی)
+              {t("housesPage.badge", { n: houseProducts.length })}
             </span>
             <h1
               className="font-display font-black leading-[1.25] text-gray-900"
               style={{ fontSize: "clamp(28px, 4.5vw, 46px)" }}
             >
-              خانووە سەربەخۆکان و ئەندازیارییەکان
+              {t("housesPage.title")}
             </h1>
             <p className="mt-4 text-[15.5px] sm:text-[16.5px] text-gray-600 leading-relaxed font-light">
-              بەرهەمهێنانی خانووی حاویە، خانووی ئاسایی، خانووی باخچە، خانووی کوخی دوو قات و خانووی کۆنکریت بە ستانداردی بەرز و کەرەستەی خۆڕاگر لە کارگەی ئەنتیکا فاکتۆری بۆ باخ، کێڵگە، یەکەی نیشتەجێبوون و پڕۆژە تایبەتەکان.
+              {t("housesPage.subtitle")}
             </p>
           </Reveal>
         </div>
@@ -95,7 +107,7 @@ export function HousesPage() {
                 : "bg-white border border-gray-200 text-gray-700 hover:bg-gray-100"
                 }`}
             >
-              هەموو جۆرەکانی خانوو ({houseProducts.length})
+              {t("housesPage.all", { n: houseProducts.length })}
             </button>
 
             {houseCategories.map((cat) => (
@@ -107,7 +119,7 @@ export function HousesPage() {
                   : "bg-white border border-gray-200 text-gray-700 hover:bg-gray-100"
                   }`}
               >
-                {cat.titleKu}
+                {localizeCategory(cat, language).title}
               </button>
             ))}
           </div>
@@ -126,23 +138,23 @@ export function HousesPage() {
             {[
               {
                 icon: ShieldCheck,
-                title: "بەرگری گەرمی و سەرما",
-                desc: "خانووەکان بەشێوەیەک درووست ئەکرێن بەرگەی گەرمای هاوین و سەرمای زستان بگرن",
+                title: t("housesPage.features.thermal.title"),
+                desc: t("housesPage.features.thermal.desc"),
               },
               {
                 icon: Box,
-                title: "پێکهاتەی بەهێز و ئۆرجیناڵ",
-                desc: "بەکارهێنانی بەهێزترین و باشترین کەرەستەکانی بیناسازی لە دروستکردندا",
+                title: t("housesPage.features.structure.title"),
+                desc: t("housesPage.features.structure.desc"),
               },
               {
                 icon: Zap,
-                title: "خێرایی لە دروستکردن و دانان",
-                desc: "دروستکردن لە کارگە و گواستنەوە و جێگیرکردنی ئاسان لە شوێنی مەبەست",
+                title: t("housesPage.features.speed.title"),
+                desc: t("housesPage.features.speed.desc"),
               },
               {
                 icon: Sparkles,
-                title: "دیزاینی تایبەت بەپێی خواست",
-                desc: "ڕێکخستنی دابەشکاریی ژوورەکان و دیکۆری ناوەوە بەپێی پێداویستیی کڕیار",
+                title: t("housesPage.features.custom.title"),
+                desc: t("housesPage.features.custom.desc"),
               },
             ].map((f, idx) => (
               <Reveal key={idx} delay={idx * 60}>
@@ -164,16 +176,16 @@ export function HousesPage() {
           {/* Notice / Switch to Capsules banner */}
           <Reveal delay={100} className="mt-14">
             <div className="rounded-2xl border border-gray-200 bg-white p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-6 shadow-sm">
-              <div className="flex items-center gap-4 text-right">
+              <div className="flex items-center gap-4 text-start">
                 <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-brand-soft text-brand">
                   <Layers className="h-6 w-6" />
                 </span>
                 <div>
                   <h3 className="font-display text-[17px] font-bold text-gray-900">
-                    بەدوای کەپسولە تایبەتەکان دەگەڕێیت؟
+                    {t("housesPage.capsulesBanner.title")}
                   </h3>
                   <p className="text-[13.5px] text-gray-600 mt-1">
-                    کەپسولەکانی نیشتەجێبوون، ئیش و کار، و کەپسولەکانی خزمەتگوزاریی ببینە
+                    {t("housesPage.capsulesBanner.body")}
                   </p>
                 </div>
               </div>
@@ -181,8 +193,8 @@ export function HousesPage() {
                 to="/products/capsules"
                 className="inline-flex shrink-0 items-center gap-2 rounded-full bg-gray-900 px-6 py-3 text-[13.5px] font-bold text-white hover:bg-gray-800 transition"
               >
-                بینینی کەپسولەکان
-                <ArrowLeft className="h-4 w-4" />
+                {t("housesPage.capsulesBanner.cta")}
+                {dir === "rtl" ? <ArrowLeft className="h-4 w-4" /> : <ArrowRight className="h-4 w-4" />}
               </Link>
             </div>
           </Reveal>
@@ -194,10 +206,10 @@ export function HousesPage() {
         <div className="mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
           <Reveal>
             <h2 className="font-display text-2xl sm:text-3xl lg:text-4xl font-black">
-              پێویستیت بە خانوویەکی سەربەخۆ هەیە بە خواستی خۆت و پێوانەی شوێنەکەت؟
+              {t("housesPage.ctaTitle")}
             </h2>
             <p className="mx-auto mt-4 max-w-xl text-[15.5px] text-white/90 font-light">
-              بۆ ڕاوێژکردن لەسەر قەبارە، تەلارسازی و دیاریکردنی نرخ، تیمی ئەندازیاری کارگەی ئەنتیکا هەمیشە ئامادەیە بۆ گفتوگۆکردن.
+              {t("housesPage.ctaBody")}
             </p>
           </Reveal>
 
@@ -210,7 +222,7 @@ export function HousesPage() {
                 className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-[14.5px] font-bold text-brand shadow hover:bg-gray-100 transition w-full sm:w-auto justify-center"
               >
                 <MessageCircle className="h-4 w-4" />
-                واتسئاپ: <span dir="ltr">+964 750 123 4567</span>
+                {t("solutions.whatsappLabel")} <span dir="ltr">+964 750 123 4567</span>
               </a>
 
               <a
@@ -218,7 +230,7 @@ export function HousesPage() {
                 className="inline-flex items-center gap-2 rounded-full border-2 border-white px-7 py-3.5 text-[14.5px] font-bold text-white hover:bg-white/10 transition w-full sm:w-auto justify-center"
               >
                 <PhoneCall className="h-4 w-4" />
-                پەیوەندی تەلەفۆنی
+                {t("solutions.phoneCta")}
               </a>
 
               <a

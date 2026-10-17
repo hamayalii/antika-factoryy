@@ -3,6 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import { createPortal } from "react-dom";
 import {
   ArrowLeft,
+  ArrowRight,
   ChevronLeft,
   Home,
   PhoneCall,
@@ -30,7 +31,7 @@ import { useContactModal } from "../contexts/ContactModalContext";
 import { useLanguage } from "../contexts/LanguageContext";
 
 export function ProductDetailPage() {
-  const { t, language } = useLanguage();
+  const { t, language, dir } = useLanguage();
   const { slug } = useParams<{ slug: string }>();
   const product = slug ? getProductBySlug(slug) : undefined;
   const category = product ? getCategoryBySlug(product.categoryId) : undefined;
@@ -111,7 +112,7 @@ export function ProductDetailPage() {
             className="inline-flex items-center gap-2 rounded-full bg-brand px-8 py-3.5 text-[14px] font-bold text-white transition hover:bg-brand-dark shadow-md"
           >
             {t("product.notFound.back")}
-            <ArrowLeft className="h-4 w-4" />
+            {dir === "rtl" ? <ArrowLeft className="h-4 w-4" /> : <ArrowRight className="h-4 w-4" />}
           </Link>
         </div>
       </div>
@@ -184,7 +185,11 @@ export function ProductDetailPage() {
                 <Home className="h-3.5 w-3.5" />
                 <span>{t("product.home")}</span>
               </Link>
-              <ChevronLeft className="h-3.5 w-3.5 text-gray-400" />
+              {dir === "rtl" ? (
+                <ChevronLeft className="h-3.5 w-3.5 text-gray-400" />
+              ) : (
+                <ChevronRight className="h-3.5 w-3.5 text-gray-400" />
+              )}
             </li>
             <li className="flex items-center gap-2">
               <Link
@@ -193,14 +198,22 @@ export function ProductDetailPage() {
               >
                 {sectionTitle}
               </Link>
-              <ChevronLeft className="h-3.5 w-3.5 text-gray-400" />
+              {dir === "rtl" ? (
+                <ChevronLeft className="h-3.5 w-3.5 text-gray-400" />
+              ) : (
+                <ChevronRight className="h-3.5 w-3.5 text-gray-400" />
+              )}
             </li>
             {category && (
               <li className="flex items-center gap-2">
                 <Link to={`/products/${category.slug}`} className="transition hover:text-brand">
                   {localizedCategory?.title ?? category.titleKu}
                 </Link>
+                {dir === "rtl" ? (
                 <ChevronLeft className="h-3.5 w-3.5 text-gray-400" />
+              ) : (
+                <ChevronRight className="h-3.5 w-3.5 text-gray-400" />
+              )}
               </li>
             )}
             <li className="font-bold text-gray-900" aria-current="page">
@@ -234,7 +247,7 @@ export function ProductDetailPage() {
                   )}
 
                   <span className="text-xs font-semibold text-gray-400">
-                    {language === "ku" ? product.titleEn : product.titleKu}
+                    {language === "en" ? product.titleKu : product.titleEn}
                   </span>
 
                   {product.isComingSoon && (
@@ -669,7 +682,7 @@ export function ProductDetailPage() {
                     className="grid h-11 w-11 place-items-center rounded-full bg-black/50 text-white hover:bg-black/70 transition"
                     aria-label={t("product.prevImage")}
                   >
-                    <ChevronRight className="h-6 w-6" />
+                    {dir === "rtl" ? <ChevronRight className="h-6 w-6" /> : <ChevronLeft className="h-6 w-6" />}
                   </button>
                   <span className="text-sm font-medium text-white/90">
                     {activeImageIndex + 1} / {product.images.length}
@@ -681,7 +694,7 @@ export function ProductDetailPage() {
                     className="grid h-11 w-11 place-items-center rounded-full bg-black/50 text-white hover:bg-black/70 transition"
                     aria-label={t("product.nextImage")}
                   >
-                    <ChevronLeft className="h-6 w-6" />
+                    {dir === "rtl" ? <ChevronLeft className="h-6 w-6" /> : <ChevronRight className="h-6 w-6" />}
                   </button>
                 </div>
               )}

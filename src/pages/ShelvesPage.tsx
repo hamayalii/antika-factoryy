@@ -1,40 +1,51 @@
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Home, ChevronLeft, Sparkles, MessageCircle, PhoneCall, ArrowLeft, CheckCircle2 } from "lucide-react";
+import { Home, ChevronLeft, ChevronRight, Sparkles, MessageCircle, PhoneCall, ArrowLeft, ArrowRight, CheckCircle2 } from "lucide-react";
 import { Reveal } from "../components/Reveal";
 import { SEO } from "../components/SEO";
+import { useLanguage } from "../contexts/LanguageContext";
 
 export function ShelvesPage() {
+  const { t, dir } = useLanguage();
+
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
 
   return (
-    <div className="pt-24 min-h-screen text-right">
+    <div className="pt-24 min-h-screen text-start">
       <SEO
-        title="ڕەفەکان | کارگەی ئەنتیکا"
-        description="دیزاین و دروستکردنی ڕەفەی ئەندازیاری و مۆدێرن لە کارگەی ئەنتیکا فاکتۆری."
+        title={t("shelvesPage.seoTitle")}
+        description={t("shelvesPage.seoDescription")}
       />
 
       {/* Breadcrumb */}
-      <nav aria-label="ڕێڕەوی پەڕەکان" className="border-b border-gray-200 py-3.5">
+      <nav aria-label={t("product.breadcrumbAria")} className="border-b border-gray-200 py-3.5">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 overflow-x-hidden">
           <ol className="flex items-center gap-2 text-[13px] text-gray-500 flex-wrap">
             <li className="flex items-center gap-2">
               <Link to="/" className="flex items-center gap-1.5 transition hover:text-brand">
                 <Home className="h-3.5 w-3.5" />
-                <span>سەرەکی</span>
+                <span>{t("nav.home")}</span>
               </Link>
-              <ChevronLeft className="h-3.5 w-3.5 text-gray-400" />
+              {dir === "rtl" ? (
+                <ChevronLeft className="h-3.5 w-3.5 text-gray-400" />
+              ) : (
+                <ChevronRight className="h-3.5 w-3.5 text-gray-400" />
+              )}
             </li>
             <li className="flex items-center gap-2">
               <Link to="/#products" className="transition hover:text-brand">
-                بەرهەمەکانمان
+                {t("listing.productsCrumb")}
               </Link>
-              <ChevronLeft className="h-3.5 w-3.5 text-gray-400" />
+              {dir === "rtl" ? (
+                <ChevronLeft className="h-3.5 w-3.5 text-gray-400" />
+              ) : (
+                <ChevronRight className="h-3.5 w-3.5 text-gray-400" />
+              )}
             </li>
             <li className="font-bold text-gray-900" aria-current="page">
-              ڕەفەکان
+              {t("shelvesPage.title")}
             </li>
           </ol>
         </div>
@@ -48,16 +59,16 @@ export function ShelvesPage() {
               <Reveal>
                 <span className="inline-flex items-center gap-2 rounded-full bg-brand-soft px-4 py-2 text-[13px] font-bold text-brand">
                   <Sparkles className="h-4 w-4" />
-                  بەرهەمە ئەندازیارییەکان
+                  {t("shelvesPage.badge")}
                 </span>
                 <h1
                   className="mt-5 font-display font-black leading-[1.25] text-gray-900"
                   style={{ fontSize: "clamp(30px, 5vw, 50px)" }}
                 >
-                  ڕەفەکان
+                  {t("shelvesPage.title")}
                 </h1>
                 <p className="mt-5 text-[16px] sm:text-[17px] font-light leading-relaxed text-gray-600">
-                  ڕێکخستنێکی نموونەیی و پێدانی جوانییەکی تایبەت بە دیزاینی ناوەوە. ڕەفەکانی ئەنتیکا فاکتۆری بە کوالێتییەکی باڵا لە پۆڵا، ئاسن و دار دروست دەکرێن بۆ ناوماڵ، کافێ، ڕێستۆرانت، کارگە و ئۆفیسە مۆدێرنەکان.
+                  {t("shelvesPage.heroLead")}
                 </p>
                 <div className="mt-8 flex flex-col sm:flex-wrap gap-4">
                   <a
@@ -66,14 +77,14 @@ export function ShelvesPage() {
                     rel="noopener noreferrer"
                     className="inline-flex items-center justify-center gap-2 rounded-full bg-brand px-7 py-3.5 text-[14.5px] font-bold text-white shadow hover:bg-brand-dark transition w-full sm:w-auto"
                   >
-                    داواکردن بەپێی پێوانەی شوێنەکەت
-                    <ArrowLeft className="h-4 w-4" />
+                    {t("shelvesPage.cta1")}
+                    {dir === "rtl" ? <ArrowLeft className="h-4 w-4" /> : <ArrowRight className="h-4 w-4" />}
                   </a>
                   <Link
                     to="/products/capsules"
                     className="inline-flex items-center justify-center gap-2 rounded-full border-2 border-gray-200 px-7 py-3.5 text-[14.5px] font-bold text-gray-800 hover:border-brand hover:text-brand transition w-full sm:w-auto"
                   >
-                    بینینی کەپسولەکان
+                    {t("shelvesPage.viewCapsules")}
                   </Link>
                 </div>
               </Reveal>
@@ -83,7 +94,7 @@ export function ShelvesPage() {
               <div className="overflow-hidden rounded-2xl shadow-xl">
                 <img
                   src="/images/work-shelves.webp"
-                  alt="ڕەفەکانی ئەنتیکا فاکتۆری"
+                  alt={t("shelvesPage.imgAlt")}
                   className="w-full h-auto min-h-[300px] sm:min-h-[400px] object-cover"
                 />
               </div>
@@ -97,23 +108,23 @@ export function ShelvesPage() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <Reveal className="mb-12 text-center">
             <h2 className="font-display text-2xl sm:text-3xl font-black text-gray-900">
-              تایبەتمەندییەکانی ڕەفەی ئەنتیکا
+              {t("shelvesPage.featuresTitle")}
             </h2>
           </Reveal>
 
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {[
               {
-                title: "پێکهاتەی بەهێز و سەلامەت",
-                desc: "بەرگەی کێشی قورس دەگرێت بەهۆی بەکارهێنانی کەرەستەی ئەندازیاری و لەحیمکاری ورد.",
+                title: t("shelvesPage.features.structure.title"),
+                desc: t("shelvesPage.features.structure.desc"),
               },
               {
-                title: "ڕەنگکردنی فڕنی (Powder Coating)",
-                desc: "ڕووی کانزاکان بە شێوازی فڕنی پۆشراون کە ڕێگری لە ژەنگ، داخوران و خڕاندن دەکات.",
+                title: t("shelvesPage.features.powder.title"),
+                desc: t("shelvesPage.features.powder.desc"),
               },
               {
-                title: "قەبارە و دیزاینی تایبەتمەندکراو",
-                desc: "دروستکردن بەپێی شوێن و ژوورەکەت تا ڕێک بەپێی سانتمەتر لە شوێنی مەبەست جێگیر ببێت.",
+                title: t("shelvesPage.features.custom.title"),
+                desc: t("shelvesPage.features.custom.desc"),
               },
             ].map((f, i) => (
               <Reveal key={i} delay={i * 90}>
@@ -135,10 +146,10 @@ export function ShelvesPage() {
         <div className="mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
           <Reveal>
             <h2 className="font-display text-2xl sm:text-3xl font-black">
-              پێویستت بە ڕەفەی تایبەتە بۆ شوێنەکەت؟
+              {t("shelvesPage.ctaTitle")}
             </h2>
             <p className="mx-auto mt-4 max-w-xl text-[15.5px] text-white/90 font-light">
-              پەیوەندیمان پێوە بکە تا ئەندازیارەکانمان بەپێی ڕووبەری شوێنەکەت دیزاینت بۆ ئامادە بکەن.
+              {t("shelvesPage.ctaBody")}
             </p>
             <div className="mt-8 flex flex-col sm:flex-wrap justify-center gap-4">
               <a
@@ -148,14 +159,14 @@ export function ShelvesPage() {
                 className="inline-flex items-center justify-center gap-2 rounded-full bg-white px-7 py-3.5 text-[14.5px] font-bold text-brand shadow hover:bg-gray-100 transition w-full sm:w-auto"
               >
                 <MessageCircle className="h-4 w-4" />
-                واتسئاپ: <span dir="ltr">+964 750 123 4567</span>
+                {t("solutions.whatsappLabel")} <span dir="ltr">+964 750 123 4567</span>
               </a>
               <a
                 href="tel:+9647501234567"
                 className="inline-flex items-center justify-center gap-2 rounded-full border-2 border-white px-7 py-3.5 text-[14.5px] font-bold text-white hover:bg-white/10 transition w-full sm:w-auto"
               >
                 <PhoneCall className="h-4 w-4" />
-                پەیوەندی تەلەفۆنی
+                {t("solutions.phoneCta")}
               </a>
             </div>
           </Reveal>
