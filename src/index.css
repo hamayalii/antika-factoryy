@@ -265,6 +265,16 @@ textarea {
   outline-offset: 2px;
 }
 
+/* Registry-component focus ring (EasyUI intro-loader's skip control) */
+.focus-ring {
+  outline: none;
+}
+
+.focus-ring:focus-visible {
+  outline: 1px solid rgba(255, 255, 255, 0.45);
+  outline-offset: 1px;
+}
+
 /* Text wrap optimization for headings */
 h1,
 h2,
@@ -381,6 +391,34 @@ h4,
   }
   50% {
     transform: translateY(-6px);
+  }
+}
+
+/* ---------- Typewriter caret (components/ui/Typewriter.tsx) ---------- */
+/* Compositor-only `opacity` blink — no layout, no repaint of surrounding text. */
+@keyframes typewriter-caret-blink {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+.typewriter-caret {
+  display: inline-block;
+  width: 2px;
+  height: 1em;
+  margin-inline-start: 2px;
+  vertical-align: text-bottom;
+  border-radius: 1px;
+  background: currentColor;
+  animation: typewriter-caret-blink 1.05s step-end infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .typewriter-caret {
+    animation: none;
   }
 }
 

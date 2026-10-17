@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, useCallback, useTransition, lazy, Suspense } from "react";
+import { createPortal } from "react-dom";
 import { BrowserRouter, Routes, Route, Link, useLocation } from "react-router-dom";
 import { solutions } from "./data/solutions";
 
@@ -16,12 +17,21 @@ const NewsPage = lazy(() => import("./pages/NewsPage").then(m => ({ default: m.N
 const NewsDetailPage = lazy(() => import("./pages/NewsDetailPage").then(m => ({ default: m.NewsDetailPage })));
 const GalleryPage = lazy(() => import("./pages/GalleryPage").then(m => ({ default: m.GalleryPage })));
 const AboutPage = lazy(() => import("./pages/AboutPage").then(m => ({ default: m.AboutPage })));
+// The 23rd.dev interactive typewriter machine (~68KB single file). Its chunk
+// is requested ONLY when the footer's message modal opens — never on initial
+// page load — and the SVG engine itself is then built lazily on top of that.
+const TypewriterMachine = lazy(() => import("./components/ui/typewriter-machine").then(m => ({ default: m.Typewriter })));
+// EasyUI intro loader (pulls in framer-motion). Deliberately lazy: the chunk
+// is fetched ONLY when the hero image misses the 600ms grace window, so fast
+// connections never download it and never see the overlay.
+const IntroLoader = lazy(() => import("./components/ui/intro-loader").then(m => ({ default: m.IntroLoader })));
 import { TrustMarquee } from "./components/TrustMarquee";
 import { SpecialFeatures } from "./components/SpecialFeatures";
 import { FactoryInfoSection } from "./components/FactoryInfoSection";
 import { ContactModal } from "./components/ContactModal";
 import { ContactModalProvider, useContactModal } from "./contexts/ContactModalContext";
 import { SelectiveHydration } from "./components/SelectiveHydration";
+import { Typewriter } from "./components/ui/Typewriter";
 import {
   ArrowLeft,
   ArrowRight,
@@ -695,13 +705,25 @@ const HERO_SLIDES = [
   },
 ];
 
-function Hero() {
+function Hero({ onMediaLoaded }: { onMediaLoaded?: () => void }) {
   const [current, setCurrent] = useState(0);
   const [previous, setPrevious] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
   // textPhase: 'visible' | 'exiting' | 'entering'
   const [textPhase, setTextPhase] = useState<'visible' | 'exiting' | 'entering'>('visible');
   const [displayedSlide, setDisplayedSlide] = useState(0);
+
+  // LCP media probe for the delayed-fallback intro loader. A ref callback (not
+  // only onLoad) is required because a cache hit can complete before React
+  // attaches the event handler — `complete` + naturalWidth covers that race.
+  const handlePrimaryImageRef = useCallback(
+    (img: HTMLImageElement | null) => {
+      if (img && img.complete && img.naturalWidth > 0) {
+        onMediaLoaded?.();
+      }
+    },
+    [onMediaLoaded]
+  );
 
   const goTo = (nextIndex: number) => {
     if (nextIndex === current) return;
@@ -771,6 +793,11 @@ function Hero() {
                   fetchPriority={index === 0 ? "high" : "auto"}
                   loading={index === 0 ? "eager" : "lazy"}
                   decoding={index === 0 ? "sync" : "async"}
+                  ref={index === 0 ? handlePrimaryImageRef : undefined}
+                  onLoad={index === 0 ? onMediaLoaded : undefined}
+                  // A broken bitmap must not trap users behind an intro splash:
+                  // settle on error so the grace timer disarms either way.
+                  onError={index === 0 ? onMediaLoaded : undefined}
                 />
               </picture>
             </div>
@@ -1359,9 +1386,71 @@ function FooterReveal({ children, footerContent }: { children: React.ReactNode; 
 }
 
 /* ---------------------------------- Footer ---------------------------------- */
+
+/**
+ * Simulated contact-message transport — there is no backend on this static
+ * deployment yet. Swap the body for the real endpoint, e.g.:
+ *   await fetch("/api/contact", { method: "POST", body: JSON.stringify(payload) });
+ * The footer success state keeps working unchanged: the Typewriter only
+ * mounts after this promise resolves.
+ */
+async function submitContactMessage(payload: {
+  name: string;
+  email: string;
+  msg: string;
+}): Promise<void> {
+  void payload;
+}
+
 function FooterContent({ onNav: _onNav }: { onNav?: (id: string) => void }) {
   const [form, setForm] = useState({ name: "", email: "", msg: "" });
-  const [sent, setSent] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  // Immersive typewriter-machine modal — opened ONLY by focusing the message
+  // textarea (not the name/email fields).
+  const [showMachineModal, setShowMachineModal] = useState(false);
+  // The invisible textarea layered over the machine: keeps the native mobile
+  // keyboard up while the SVG machine mirrors form.msg live.
+  const machineInputRef = useRef<HTMLTextAreaElement | null>(null);
+
+  // While the modal is open: focus the invisible input (60ms lets the portal
+  // paint first on mobile), let Escape close, and lock the page behind the
+  // overlay. Everything is torn down when it closes or unmounts.
+  useEffect(() => {
+    if (!showMachineModal) return;
+    const focusTimer = window.setTimeout(() => machineInputRef.current?.focus(), 60);
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setShowMachineModal(false);
+    };
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", onKeyDown);
+    return () => {
+      window.clearTimeout(focusTimer);
+      window.removeEventListener("keydown", onKeyDown);
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [showMachineModal]);
+
+  const handleContactSubmit = useCallback(
+    async (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+      if (isSubmitting) return;
+
+      setIsSubmitting(true);
+      try {
+        await submitContactMessage(form);
+        // Success only after the promise resolves — the Typewriter is mounted
+        // at this exact moment and never exists during initial page load.
+        setIsSubmitted(true);
+      } catch {
+        // Transport failed: keep the form mounted so the user can retry.
+      } finally {
+        setIsSubmitting(false);
+      }
+    },
+    [form, isSubmitting]
+  );
 
   return (
     <div className="bg-gray-900 pt-12 sm:pt-16 text-white">
@@ -1453,17 +1542,23 @@ function FooterContent({ onNav: _onNav }: { onNav?: (id: string) => void }) {
           <Reveal delay={220}>
             <div className="text-right">
               <h4 className="font-display text-[15px] sm:text-[16px] font-extrabold">نامە بنێرە</h4>
-              {sent ? (
-                <div className="mt-4 sm:mt-5 rounded-xl bg-brand/20 p-4 sm:p-6 text-center">
-                  <p className="text-[12px] sm:text-[14px] font-bold text-brand">سوپاس! نامەکەت گەیشت.</p>
+              {/* Always-mounted polite live region: assistive tech announces the
+                  complete message the moment submission succeeds, while the
+                  animated visual layer stays purely decorative. */}
+              <div role="status" aria-live="polite" dir="rtl" className="sr-only">
+                {isSubmitted ? "سوپاس بۆ پەیامەکەت، بە زووترین کات وەڵامت دەدەینەوە..." : ""}
+              </div>
+              {isSubmitted ? (
+                <div
+                  dir="rtl"
+                  aria-hidden="true"
+                  className="mt-4 sm:mt-5 text-brand font-semibold text-[15px] sm:text-lg leading-7 sm:leading-8"
+                >
+                  <Typewriter speed={50} text="سوپاس بۆ پەیامەکەت، بە زووترین کات وەڵامت دەدەینەوە..." />
                 </div>
               ) : (
                 <form
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                    setSent(true);
-                    setTimeout(() => setSent(false), 3000);
-                  }}
+                  onSubmit={handleContactSubmit}
                   className="mt-4 sm:mt-5 space-y-2 sm:space-y-3"
                 >
                   <input
@@ -1486,13 +1581,15 @@ function FooterContent({ onNav: _onNav }: { onNav?: (id: string) => void }) {
                     placeholder="نامەکەت"
                     value={form.msg}
                     onChange={(e) => setForm({ ...form, msg: e.target.value })}
+                    onFocus={() => setShowMachineModal(true)}
                     rows={3}
                     className="w-full rounded-lg border border-gray-700 bg-gray-800 px-3 sm:px-4 py-2.5 sm:py-3 text-[12px] sm:text-[13px] text-white placeholder:text-gray-500 transition focus:border-brand focus:outline-none resize-none"
                     required
                   />
                   <button
                     type="submit"
-                    className="flex w-full items-center justify-center gap-2 rounded-full bg-brand px-4 sm:px-5 py-3 sm:py-3.5 text-[13px] sm:text-[14.5px] font-bold text-white transition hover:bg-brand-dark"
+                    disabled={isSubmitting}
+                    className="flex w-full items-center justify-center gap-2 rounded-full bg-brand px-4 sm:px-5 py-3 sm:py-3.5 text-[13px] sm:text-[14.5px] font-bold text-white transition hover:bg-brand-dark disabled:cursor-not-allowed disabled:opacity-60"
                   >
                     ناردن
                     <Send className="h-3.5 w-3.5 sm:h-4 sm:w-4 -scale-x-100" />
@@ -1515,6 +1612,69 @@ function FooterContent({ onNav: _onNav }: { onNav?: (id: string) => void }) {
           <p className="text-[11px] sm:text-[12.5px] text-gray-500">© 2026 ANTIKA FACTORY. هەموو مافەکان پارێزراون.</p>
         </div>
       </div>
+
+      {/* Immersive typewriter-machine modal. Portaled to <body> so it escapes
+          the footer's stacking context, conditionally mounted so neither the
+          lazy chunk nor the SVG engine exists before first use. */}
+      {showMachineModal &&
+        createPortal(
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-label="ئامێری نووسین"
+            dir="rtl"
+            className="fixed inset-0 z-[10000] flex flex-col items-center justify-center bg-black/80 backdrop-blur-md"
+            onClick={(e) => {
+              // Close only when the dark backdrop itself is clicked.
+              if (e.target === e.currentTarget) setShowMachineModal(false);
+            }}
+          >
+            <button
+              type="button"
+              onClick={() => setShowMachineModal(false)}
+              aria-label="داخستن"
+              className="absolute right-4 top-4 z-20 grid h-11 w-11 place-items-center rounded-full bg-white/10 text-white transition hover:bg-white/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
+            >
+              <X className="h-5 w-5" />
+            </button>
+
+            <p className="mb-3 px-6 text-center text-[12px] sm:text-[13px] text-white/50">
+              هەرچی بنووسیت لەسەر کاغەزەکە دەردەکەوێت
+            </p>
+
+            <div className="relative aspect-[932/492] w-[min(92vw,880px)] max-h-[min(64vh,560px)]">
+              <Suspense fallback={null}>
+                <TypewriterMachine
+                  text={form.msg || "تکایە پەیامەکەت بنووسە..."}
+                  color="#ff5a00"
+                  interactive={false}
+                  rtl={true}
+                  loop={false}
+                  columns={32}
+                  speed={16}
+                  sound={true}
+                  startDelay={250}
+                  label="ANTIKA"
+                  className="bg-transparent"
+                />
+              </Suspense>
+              {/* Invisible real textarea over the machine: captures every
+                  keystroke (and keeps the mobile keyboard up) while the SVG
+                  mirrors form.msg live, without re-rendering the machine. */}
+              <textarea
+                ref={machineInputRef}
+                value={form.msg}
+                onChange={(e) => setForm({ ...form, msg: e.target.value })}
+                dir="rtl"
+                aria-label="نامەکەت"
+                spellCheck={false}
+                autoComplete="off"
+                className="absolute inset-0 z-10 h-full w-full cursor-text resize-none border-0 bg-transparent p-0 opacity-0 outline-none"
+              />
+            </div>
+          </div>,
+          document.body
+        )}
     </div>
   );
 }
@@ -1757,10 +1917,10 @@ function BackToTop() {
 }
 
 /* ----------------------------------- HomePage ----------------------------------- */
-function HomePage() {
+function HomePage({ onMediaLoaded }: { onMediaLoaded?: () => void }) {
   return (
     <>
-      <Hero />
+      <Hero onMediaLoaded={onMediaLoaded} />
       <UseCases />
       {/* Big O: Hydration O(k) where k = below-viewport components only (deferred to viewport entry) */}
       {/* Thread blocking: 0ms during initial load (hydrates on scroll) */}
@@ -1797,6 +1957,49 @@ function AppContent() {
   const { isContactModalOpen, closeContactModal } = useContactModal();
   const location = useLocation();
   const [, startTransition] = useTransition();
+
+  /* ---------- Delayed-fallback intro loader (LCP-gated) ---------- */
+  // Fast connections: the hero bitmap resolves while the 600ms grace timer is
+  // still pending, the effect cleanup disarms it, and <IntroLoader> NEVER
+  // mounts — no extra DOM, no overlay, no LCP/TBT cost. Slow connections: the
+  // timer wins, the overlay fades in and runs its greeting sequence.
+  const [isMediaLoaded, setIsMediaLoaded] = useState(false);
+  const [showLoader, setShowLoader] = useState(false);
+  const introHasRunRef = useRef(false);
+  const introExitTimerRef = useRef<number | null>(null);
+  const isHomeRoute = location.pathname === "/";
+
+  const handleMediaLoaded = useCallback(() => setIsMediaLoaded(true), []);
+
+  useEffect(() => {
+    // Only the home route owns the tracked hero bitmap. Arming the timer on
+    // other routes would flash the splash on every direct visit because no
+    // image could ever resolve the guard.
+    if (!isHomeRoute || isMediaLoaded || showLoader || introHasRunRef.current) return;
+
+    const timer = window.setTimeout(() => {
+      introHasRunRef.current = true; // one intro per session, never re-armed
+      setShowLoader(true);
+    }, 600);
+
+    return () => window.clearTimeout(timer);
+  }, [isHomeRoute, isMediaLoaded, showLoader]);
+
+  const handleIntroComplete = useCallback(() => {
+    // onComplete fires the moment the sequence ends; the loader still plays
+    // its own 650ms blur/scale exit. Keep it mounted ~700ms so that graceful
+    // fade finishes instead of a hard unmount cut.
+    introExitTimerRef.current = window.setTimeout(() => {
+      introExitTimerRef.current = null;
+      setShowLoader(false);
+    }, 700);
+  }, []);
+
+  useEffect(() => () => {
+    if (introExitTimerRef.current !== null) {
+      window.clearTimeout(introExitTimerRef.current);
+    }
+  }, []);
 
   // Big O: Thread blocking reduction - navigation marked as interruptible (Concurrent React)
   // INP impact: Route changes don't block main thread, UI remains responsive
@@ -1934,7 +2137,7 @@ function AppContent() {
         <main id="main-content" className="flex-1">
           <Suspense fallback={<LoadingSpinner />}>
             <Routes>
-              <Route path="/" element={<HomePage />} />
+              <Route path="/" element={<HomePage onMediaLoaded={handleMediaLoaded} />} />
               <Route path="/solutions/:id" element={<SolutionPage />} />
 
               {/* News pages */}
@@ -1971,6 +2174,22 @@ function AppContent() {
       </FooterReveal>
       <SocialSidebar />
       <BackToTop />
+      {/* Delayed-fallback splash: this subtree is created ONLY after the hero
+          image missed the 600ms grace window. The lazy chunk (framer-motion)
+          is fetched at that exact moment, off the critical path. */}
+      {showLoader && (
+        <Suspense fallback={null}>
+          <IntroLoader
+            greetings={['Hello!', 'سڵاو!', 'Hola!', 'مَرْحَباً!', 'Bonjour!']}
+            fullScreen={true}
+            intervalMs={250}
+            showProgress={true}
+            allowSkip={true}
+            className="z-[10001]"
+            onComplete={handleIntroComplete}
+          />
+        </Suspense>
+      )}
       <ContactModal
         isOpen={isContactModalOpen}
         onClose={closeContactModal}
