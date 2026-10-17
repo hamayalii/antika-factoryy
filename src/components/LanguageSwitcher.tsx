@@ -80,7 +80,7 @@ export function LanguageSwitcher({ className = "" }: { className?: string }) {
             key={option.code}
             type="button"
             lang={option.htmlLang}
-            title={option.ready ? option.nativeName : `${option.nativeName} — ${t("header.languageSoon")}`}
+            title={option.nativeName}
             aria-pressed={isActive}
             onClick={() => selectLanguage(option.code)}
             className={`relative h-6 overflow-hidden rounded-full text-[11px] font-bold tracking-wide transition-all duration-300 ease-out focus:outline-none focus-visible:ring-2 focus-visible:ring-brand/60 ${
@@ -92,10 +92,6 @@ export function LanguageSwitcher({ className = "" }: { className?: string }) {
             }`}
           >
             {option.label}
-            {/* AR ships ahead of its copy: small amber dot flags "coming soon". */}
-            {!option.ready && (
-              <span className="absolute right-1 top-1 h-1 w-1 rounded-full bg-amber-400" aria-hidden="true" />
-            )}
           </button>
         );
       })}

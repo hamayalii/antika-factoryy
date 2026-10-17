@@ -40,7 +40,7 @@ interface LanguageContextValue {
   /** Writing direction of the active language ("rtl" for ku/ar, "ltr" for en). */
   dir: "rtl" | "ltr";
   isRtl: boolean;
-  /** Metadata (label, nativeName, htmlLang, ready…) for the active language. */
+  /** Metadata (label, nativeName, dir, htmlLang) for the active language. */
   meta: LanguageOption;
   setLanguage: (language: Language) => void;
   /**
