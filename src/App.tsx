@@ -1,10 +1,8 @@
 import { useEffect, useRef, useState, useCallback, useTransition, lazy, Suspense } from "react";
 import { createPortal } from "react-dom";
 import { BrowserRouter, Routes, Route, Link, useLocation } from "react-router-dom";
-import { solutions } from "./data/solutions";
 
 // Route-level code splitting: O(1) initial load through lazy imports
-const SolutionPage = lazy(() => import("./pages/SolutionPage").then(m => ({ default: m.SolutionPage })));
 const CapsulesPage = lazy(() => import("./pages/CapsulesPage").then(m => ({ default: m.CapsulesPage })));
 const HousesPage = lazy(() => import("./pages/HousesPage").then(m => ({ default: m.HousesPage })));
 const CategoryOverviewPage = lazy(() => import("./pages/CategoryOverviewPage").then(m => ({ default: m.CategoryOverviewPage })));
@@ -422,8 +420,7 @@ function Header({
                 >
                   <button
                     onClick={() => setOpenDropdown(openDropdown === n.id ? null : n.id)}
-                    className={`nav-link flex items-center gap-1 text-[14px] font-medium transition-colors ${(n.id === 'solutions' && location.pathname.includes('/solutions')) ||
-                      (n.id === 'capsules' && (location.pathname.includes('/products/al') || location.pathname.includes('/products/am') || location.pathname.includes('/products/as'))) ||
+                    className={`nav-link flex items-center gap-1 text-[14px] font-medium transition-colors ${(n.id === 'capsules' && (location.pathname.includes('/products/al') || location.pathname.includes('/products/am') || location.pathname.includes('/products/as'))) ||
                       (n.id === 'houses' && (location.pathname.includes('/products/cl') || location.pathname.includes('/products/kl') || location.pathname.includes('/products/container-house'))) ||
                       (n.id === 'cabins' && (location.pathname.includes('/products/zl') || location.pathname.includes('/products/pl') || location.pathname.includes('/products/concrete-house-model') || location.pathname.includes('/products/standard-house') || location.pathname.includes('/products/garden-house') || location.pathname.includes('/products/cabin-house') || location.pathname.includes('/products/concrete-house'))) ||
                       (n.id === 'artworks' && (location.pathname.includes('/products/lighting') || location.pathname.includes('/products/shelves')))
@@ -438,16 +435,6 @@ function Header({
                   {/* Dropdown Menu */}
                   <div className={`absolute top-full right-0 pt-2 w-52 transition-all duration-200 ${openDropdown === n.id ? 'opacity-100 visible translate-y-0 pointer-events-auto' : 'opacity-0 invisible -translate-y-2 pointer-events-none'}`}>
                     <div className="rounded-xl shadow-xl ring-1 ring-black/5 py-2" style={{ backgroundColor: NAV_GRADIENT_COLORS.find(c => c.id === n.id)?.color || '#FFFFFF' }}>
-                      {n.id === 'solutions' && solutions.map((s) => (
-                        <Link
-                          key={s.id}
-                          to={`/solutions/${s.id}`}
-                          onClick={() => setOpenDropdown(null)}
-                          className="block px-4 py-2 text-[13px] font-medium text-gray-700 hover:bg-gray-50 hover:text-brand transition-colors"
-                        >
-                          {s.title}
-                        </Link>
-                      ))}
                       {n.id === 'capsules' && CAPSULE_ITEMS.map((item) => (
                         <Link
                           key={item.id}
@@ -573,16 +560,6 @@ function Header({
                     <ChevronDown className={`h-4 w-4 transition-transform ${mobileDropdowns[n.id] ? 'rotate-180' : ''}`} />
                   </button>
                   <div className={`flex flex-col ps-4 pe-8 pb-3 space-y-1 overflow-hidden transition-all duration-300 ${mobileDropdowns[n.id] ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}>
-                    {n.id === 'solutions' && solutions.map((s) => (
-                      <Link
-                        key={s.id}
-                        to={`/solutions/${s.id}`}
-                        onClick={() => { setOpen(false); setMobileDropdowns({}); }}
-                        className="text-[12.5px] text-gray-600 hover:text-brand transition-colors py-1.5"
-                      >
-                        {s.title}
-                      </Link>
-                    ))}
                     {n.id === 'capsules' && CAPSULE_ITEMS.map((item) => (
                       <Link
                         key={item.id}
@@ -707,6 +684,21 @@ const HERO_SLIDES = [
       cta1: "View our work",
       cta2: "About us",
     },
+    ar: {
+      tag: "السليمانية - كردستان، العراق",
+      title: "ابتكار في التصميم، دقة في التصنيع",
+      desc: (
+        <>
+          نقدّم وحداتنا السكنية العصرية وفق معيار
+          <br />
+          عالمي — مزيج من إطلالة بانورامية ٢٧٠ درجة وحياة ذكية
+          <br />
+          مع نظام بناء قوي ومتين
+        </>
+      ),
+      cta1: "شاهد أعمالنا",
+      cta2: "من نحن",
+    },
   },
   {
     img: "/images/hero-2.webp",
@@ -740,6 +732,21 @@ const HERO_SLIDES = [
       ),
       cta1: "Our Services",
       cta2: "Contact",
+    },
+    ar: {
+      tag: "السليمانية - كردستان، العراق",
+      title: "تصميم جديد لأسلوب حياة جديد",
+      desc: (
+        <>
+          مزيج من التصميم العصري والاستخدام المتنوع،
+          <br />
+          من المكاتب الخاصة وقاعات الاجتماعات إلى المقاهي
+          <br />
+          والوحدات التجارية المتنقلة بأعلى جودة وأفضل سعر
+        </>
+      ),
+      cta1: "خدماتنا",
+      cta2: "اتصل بنا",
     },
   },
 ];
@@ -795,8 +802,7 @@ function Hero({ onMediaLoaded }: { onMediaLoaded?: () => void }) {
   const prev = () => goTo((current - 1 + HERO_SLIDES.length) % HERO_SLIDES.length);
 
   const slide = HERO_SLIDES[displayedSlide];
-  // Arabic is not translated yet and resolves to the English hero copy.
-  const copy = language === "ku" ? slide.ku : slide.en;
+  const copy = language === "ku" ? slide.ku : language === "ar" ? slide.ar : slide.en;
 
   return (
     <section
@@ -1032,6 +1038,17 @@ const USE_CASES = [
     benefitsEn: [
       "Instant attention in public spaces and malls",
       "Easy relocation of the kiosk to a new spot as your market moves"
+    ],
+    titleAr: "الكشك التجاري",
+    descAr: "كشك عصري مصمَّم لنقاط البيع، وشبابيك بيع التذاكر، والمتاجر الصغيرة، أو المتاجر المتنقلة (القابلة للنقل) — ليبرز نشاطك التجاري فوراً وبشكل مميز في السوق.",
+    featuresAr: [
+      "تصميم مفتوح يواجه الزبائن مع زجاج قوي ومحمي",
+      "مساحة مخصصة لوضع الشعار ولوحة إضاءة وهوية الشركة",
+      "نظام قفل وحماية قوي للمعدات الداخلية"
+    ],
+    benefitsAr: [
+      "جذب الانتباه بسرعة في الأماكن العامة والمولات",
+      "سهولة نقل الكشك إلى موقع جديد بحسب حركة السوق"
     ]
   },
   {
@@ -1057,6 +1074,17 @@ const USE_CASES = [
     benefitsEn: [
       "Separates your work environment from private home life (remote work)",
       "Gives your company a distinctive, professional image during meetings"
+    ],
+    titleAr: "مكتب ومساحة جلوس خاصة",
+    descAr: "كبسولة متعددة الاستخدامات لإنشاء مساحة عمل مستقلة في حديقة منزلك، أو كقاعة اجتماعات عصرية للشركات والأماكن التجارية.",
+    featuresAr: [
+      "عزل صوتي قوي (Acoustic Insulation) لتوفير الهدوء والتركيز العالي",
+      "ديكور وإضاءة عصرية مع مساحة كافية للمكتب ومعدات العمل",
+      "نموذج قابل للتغيير بحسب رغبة العميل واحتياجاته"
+    ],
+    benefitsAr: [
+      "فصل بيئة العمل عن الحياة الخاصة في المنزل (Remote Work)",
+      "إعطاء شركتك صورة مميزة واحترافية أثناء الاجتماعات"
     ]
   },
   {
@@ -1082,6 +1110,17 @@ const USE_CASES = [
     benefitsEn: [
       "Attracts tourists with its distinctive design and suitable size",
       "Very fast installation in remote areas without heavy construction machinery"
+    ],
+    titleAr: "إسكان المنتجعات والإقامات السياحية",
+    descAr: "حل معماري معاصر للقرى السياحية والمصايف والمناطق الجبلية. صُممت هذه الكبسولات خصيصاً لتكون مكاناً مريحاً لإقامة السياح في أقسى الظروف الجوية.",
+    featuresAr: [
+      "عزل حراري وبردي قوي لتحمّل الثلوج والأمطار الغزيرة ودرجات الحرارة المرتفعة",
+      "نوافذ زجاجية مزدوجة (Double Glazed) بانورامية لمشاهدة المناظر الطبيعية",
+      "هيكل مقاوم للتآكل والصدأ للاستخدام الطويل في الطبيعة"
+    ],
+    benefitsAr: [
+      "جذب السياح بفضل تصميمه الفريد وحجمه المناسب",
+      "تركيب سريع جداً في المناطق النائية دون الحاجة إلى معدات بناء ثقيلة"
     ]
   },
   {
@@ -1105,6 +1144,16 @@ const USE_CASES = [
     benefitsEn: [
       "Immediate use with no construction time lost at the project site",
       "A comfortable environment that raises employee productivity"
+    ],
+    titleAr: "مخيمات العمل ومواقع المشاريع",
+    descAr: "وحدة عمل سريعة وجاهزة للاستخدام لشركات البناء والنفط والمقاولات. توفّر حلاً سريعاً لإسكان الموظفين والمهندسين في موقع العمل.",
+    featuresAr: [
+      "هيكل فولاذي قوي لتحمّل ظروف العمل الميداني القاسية",
+      "إمكانية الرفع والنقل بسهولة بواسطة الرافعة الشوكية أو الرافعة إلى مشروع آخر"
+    ],
+    benefitsAr: [
+      "استخدام فوري دون إهدار وقت البناء في موقع المشروع",
+      "توفير بيئة مريحة ورفع إنتاجية الموظفين"
     ]
   },
   {
@@ -1130,6 +1179,17 @@ const USE_CASES = [
     benefitsEn: [
       "Start your project at a far lower cost than renting a shop and kitchen",
       "Easy transport to festivals and busy locations"
+    ],
+    titleAr: "عربات وأكشاك الطعام",
+    descAr: "عربات وأكشاك لتحضير الطعام والمشروبات بأحجام مختلفة، صُممت لبدء مشروعك الغذائي بأسلوب جذاب وعصري للغاية.",
+    featuresAr: [
+      "تصميم داخلي من الستانلس ستيل (Stainless Steel) المقاوم للصدأ وسهل التنظيف",
+      "تجهيز مساحات مخصصة للمعدات (ثلاجة، ماكينة قهوة، شواية) مع شبكة مياه نظيفة وصرف",
+      "نافذة تقديم مناسبة (Serving Window) لتقديم المنتجات للزبائن"
+    ],
+    benefitsAr: [
+      "بدء المشروع بتكلفة أقل بكثير من استئجار متجر ومطبخ",
+      "إمكانية النقل بسهولة للمشاركة في المهرجانات والأماكن المزدحمة"
     ]
   },
   {
@@ -1155,6 +1215,17 @@ const USE_CASES = [
     benefitsEn: [
       "A significant reduction in monthly electricity and fuel costs",
       "A calm, healthy environment for spending a few months or weekend getaways"
+    ],
+    titleAr: "وحدة سكنية صغيرة",
+    descAr: "وحدة سكنية كاملة بحجم صغير تناسب من يريد منزلاً صغيراً ومستقلاً على أرضه أو وسط الطبيعة، أو حديقة، أو مزرعة، وفق أعلى معايير المعيشة.",
+    featuresAr: [
+      "تصميم داخلي عصري (غرفة نوم، مطبخ، وحمام/دورة مياه)",
+      "استخدام مواد صديقة للبيئة ومنع هدر الطاقة (تبريد وتدفئة)",
+      "دمج الإضاءة الطبيعية من خلال الزجاج الذكي"
+    ],
+    benefitsAr: [
+      "خفض ملحوظ في التكاليف الشهرية للكهرباء والوقود",
+      "توفير بيئة هادئة وصحية لقضاء عدة أشهر أو عطلات نهاية الأسبوع"
     ]
   },
 ];
@@ -1162,6 +1233,7 @@ const USE_CASES = [
 function UseCases() {
   const { t, language, dir } = useLanguage();
   const isKu = language === "ku";
+  const isAr = language === "ar";
   const [activeCase, setActiveCase] = useState(USE_CASES[0]);
 
   const handleKeyDown = (e: React.KeyboardEvent, useCase: typeof USE_CASES[0]) => {
@@ -1212,7 +1284,7 @@ function UseCases() {
                   }
                 `}
               >
-                {isKu ? useCase.title : useCase.titleEn}
+                {isAr ? useCase.titleAr : isKu ? useCase.title : useCase.titleEn}
               </button>
             ))}
           </div>
@@ -1238,7 +1310,7 @@ function UseCases() {
                 <div className="relative aspect-[4/3] overflow-hidden">
                   <img
                     src={useCase.img}
-                    alt={isKu ? useCase.title : useCase.titleEn}
+                    alt={isAr ? useCase.titleAr : isKu ? useCase.title : useCase.titleEn}
                     className="h-full w-full object-contain"
                     loading="lazy"
                     decoding="async"
@@ -1251,16 +1323,16 @@ function UseCases() {
                 {/* Text - Right side, black color */}
                 <div className="text-start" dir={dir}>
                   <h3 className="font-display text-2xl font-bold sm:text-3xl text-gray-900">
-                    {isKu ? useCase.title : useCase.titleEn}
+                    {isAr ? useCase.titleAr : isKu ? useCase.title : useCase.titleEn}
                   </h3>
                   <p className="mt-3 text-sm sm:text-base text-gray-600 leading-relaxed">
-                    {isKu ? useCase.desc : useCase.descEn}
+                    {isAr ? useCase.descAr : isKu ? useCase.desc : useCase.descEn}
                   </p>
                   {useCase.features && (
                     <div className="mt-4">
                       <h4 className="font-bold text-gray-900 mb-2">{t("home.useCases.features")}</h4>
                       <ul className="list-disc list-inside text-sm sm:text-base text-gray-600 space-y-1">
-                        {(isKu ? useCase.features : useCase.featuresEn ?? []).map((feature, index) => (
+                        {(isAr ? useCase.featuresAr : isKu ? useCase.features : useCase.featuresEn ?? []).map((feature, index) => (
                           <li key={index}>{feature}</li>
                         ))}
                       </ul>
@@ -1270,7 +1342,7 @@ function UseCases() {
                     <div className="mt-4">
                       <h4 className="font-bold text-gray-900 mb-2">{t("home.useCases.benefits")}</h4>
                       <ul className="list-disc list-inside text-sm sm:text-base text-gray-600 space-y-1">
-                        {(isKu ? useCase.benefits : useCase.benefitsEn ?? []).map((benefit, index) => (
+                        {(isAr ? useCase.benefitsAr : isKu ? useCase.benefits : useCase.benefitsEn ?? []).map((benefit, index) => (
                           <li key={index}>{benefit}</li>
                         ))}
                       </ul>
@@ -1325,6 +1397,8 @@ const PROCESS_STEPS = [
     titleEn: "Consultation",
     desc: "پەیوەندی بکە و داواکاریەکەت بڵێ بۆ دیزاین",
     descEn: "Get in touch and tell us your design brief",
+    titleAr: "الاستشارة",
+    descAr: "تواصل معنا وأخبرنا بمتطلباتك للتصميم",
   },
   {
     n: "02",
@@ -1332,6 +1406,8 @@ const PROCESS_STEPS = [
     titleEn: "Design",
     desc: "دیزاینی تایبەت و پلانێکی وردبینی بۆ پرۆژەکەت",
     descEn: "A custom design and a detailed plan for your project",
+    titleAr: "التصميم",
+    descAr: "تصميم مخصص ومخطط دقيق لمشروعك",
   },
   {
     n: "03",
@@ -1339,6 +1415,8 @@ const PROCESS_STEPS = [
     titleEn: "Manufacturing",
     desc: "دروستکردن لە کارگەی خۆمان بە کوالێتی بەرز",
     descEn: "Built in our own factory to high quality",
+    titleAr: "التصنيع",
+    descAr: "التصنيع في مصنعنا الخاص بجودة عالية",
   },
   {
     n: "04",
@@ -1346,12 +1424,15 @@ const PROCESS_STEPS = [
     titleEn: "Delivery",
     desc: "گەیاندن و دابەشکردن لە کاتی دیاریکراودا",
     descEn: "Delivered and installed on the agreed schedule",
+    titleAr: "التسليم",
+    descAr: "التوصيل والتسليم في الوقت المحدد",
   },
 ];
 
 function Process() {
   const { t, language } = useLanguage();
   const isKu = language === "ku";
+  const isAr = language === "ar";
   return (
     <section className="process-diagonal-section">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -1373,8 +1454,8 @@ function Process() {
                 <div className="mx-auto mb-4 grid h-16 w-16 place-items-center rounded-full bg-brand text-white font-display text-2xl font-black">
                   {step.n}
                 </div>
-                <h3 className="font-display text-[18px] font-bold text-gray-900">{isKu ? step.title : step.titleEn}</h3>
-                <p className="mt-2 text-[14px] text-gray-600">{isKu ? step.desc : step.descEn}</p>
+                <h3 className="font-display text-[18px] font-bold text-gray-900">{isAr ? step.titleAr : isKu ? step.title : step.titleEn}</h3>
+                <p className="mt-2 text-[14px] text-gray-600">{isAr ? step.descAr : isKu ? step.desc : step.descEn}</p>
               </div>
             </Reveal>
           ))}
@@ -2166,7 +2247,6 @@ function AppContent() {
       'page-gallery',
       'page-news',
       'page-news-detail',
-      'page-solution',
       'page-capsules',
       'page-cabins',
       'page-koshk',
@@ -2188,8 +2268,6 @@ function AppContent() {
       body.classList.add('page-news');
     } else if (pathname.startsWith('/news/')) {
       body.classList.add('page-news-detail');
-    } else if (pathname.startsWith('/solutions/')) {
-      body.classList.add('page-solution');
     } else if (
       pathname === '/products/capsules' ||
       pathname === '/products/houses' ||
@@ -2277,7 +2355,6 @@ function AppContent() {
           <Suspense fallback={<LoadingSpinner />}>
             <Routes>
               <Route path="/" element={<HomePage onMediaLoaded={handleMediaLoaded} />} />
-              <Route path="/solutions/:id" element={<SolutionPage />} />
 
               {/* News pages */}
               <Route path="/news" element={<NewsPage />} />
