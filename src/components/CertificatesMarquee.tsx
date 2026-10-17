@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { X, ZoomIn } from "lucide-react";
 import { createPortal } from "react-dom";
+import { useLanguage } from "../contexts/LanguageContext";
 
 interface Certificate {
   id: string;
@@ -56,6 +57,7 @@ function CertificateCard({
   idx: number;
   onSelect: (cert: Certificate) => void;
 }) {
+  const { t } = useLanguage();
   return (
     <div
       key={`${prefix}-${idx}`}
@@ -76,7 +78,7 @@ function CertificateCard({
         <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 backdrop-blur-[2px] transition-opacity duration-300 group-hover:opacity-100">
           <span className="inline-flex items-center gap-1.5 rounded-full bg-white/90 px-3.5 py-1.5 text-xs font-bold text-gray-900 shadow-lg backdrop-blur">
             <ZoomIn className="h-3.5 w-3.5 text-brand" />
-            بینینی بڕوانامە
+            {t("certs.view")}
           </span>
         </div>
       </div>
@@ -93,6 +95,7 @@ function CertificateCard({
 }
 
 export function CertificatesMarquee() {
+  const { t, dir } = useLanguage();
   const [selectedCert, setSelectedCert] = useState<Certificate | null>(null);
 
   // Lock body scroll when modal is open
@@ -113,15 +116,15 @@ export function CertificatesMarquee() {
       
 
       {/* Header */}
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-right mb-10">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-start mb-10">
         <h2
           className="mt-3 font-display font-black leading-[1.3] text-gray-900"
           style={{ fontSize: "clamp(26px, 3.5vw, 42px)" }}
         >
-          بڕوانامە و دەستخۆشییە بەدەستهاتووەکانمان
+          {t("certs.title")}
         </h2>
         <p className="mt-3 text-base sm:text-lg text-gray-600 leading-relaxed">
-          ئەو بڕوانامە و دەستخۆشییانەی کە سەلمێنەری کواڵیتی بەرز و ستانداردی جیهانی کارەکانمانن
+          {t("certs.subtitle")}
         </p>
       </div>
 
@@ -168,7 +171,7 @@ export function CertificatesMarquee() {
       {selectedCert &&
         createPortal(
           <div
-            dir="rtl"
+            dir={dir}
             role="dialog"
             aria-modal="true"
             className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm animate-fadeIn"
@@ -187,7 +190,7 @@ export function CertificatesMarquee() {
                 </div>
                 <button
                   onClick={() => setSelectedCert(null)}
-                  aria-label="داخستن"
+                  aria-label={t("common.close")}
                   className="grid h-11 w-11 place-items-center rounded-full bg-gray-100 text-gray-700 transition hover:bg-gray-200"
                 >
                   <X className="h-6 w-6" />

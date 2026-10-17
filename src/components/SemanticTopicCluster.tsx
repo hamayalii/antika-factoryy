@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import { localizeProduct, type VerifiedProduct } from "../data/productData";
 import { useLanguage } from "../contexts/LanguageContext";
 
@@ -19,7 +19,7 @@ export function SemanticTopicCluster({
   viewAllLabel,
   className = "",
 }: SemanticTopicClusterProps) {
-  const { t, language } = useLanguage();
+  const { t, language, dir } = useLanguage();
 
   if (relatedProducts.length === 0) {
     return null;
@@ -67,7 +67,7 @@ export function SemanticTopicCluster({
                     </h3>
 
                     <p className="text-[12px] text-gray-500 mt-1 font-medium">
-                      {language === "ku" ? product.titleEn : product.titleKu}
+                      {language === "en" ? product.titleKu : product.titleEn}
                     </p>
 
                     <p className="text-[13px] text-gray-600 mt-2 line-clamp-2">
@@ -87,7 +87,7 @@ export function SemanticTopicCluster({
               className="inline-flex items-center gap-2 rounded-full border-2 border-gray-200 px-7 py-3 text-[13.5px] font-bold text-gray-900 transition hover:border-brand hover:text-brand"
             >
               {viewAllLabel}
-              <ArrowLeft className="h-4 w-4" />
+              {dir === "rtl" ? <ArrowLeft className="h-4 w-4" /> : <ArrowRight className="h-4 w-4" />}
             </Link>
           </div>
         )}

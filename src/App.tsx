@@ -268,7 +268,7 @@ function Header({
   onNav: (id: string) => void;
 }) {
   const { openContactModal } = useContactModal();
-  const { t } = useLanguage();
+  const { t, dir } = useLanguage();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
@@ -456,7 +456,7 @@ function Header({
                           className="block px-4 py-2 text-[13px] font-medium text-gray-700 hover:bg-gray-50 hover:text-brand transition-colors"
                         >
                           {t(item.labelKey)}
-                          {item.isComingSoon && <span className="mr-2 text-[11px] text-gray-500">- {t("common.comingSoonShort")}</span>}
+                          {item.isComingSoon && <span className="ms-2 text-[11px] text-gray-500">- {t("common.comingSoonShort")}</span>}
                         </Link>
                       ))}
                       {n.id === 'houses' && HOUSE_ITEMS.map((item) => (
@@ -467,7 +467,7 @@ function Header({
                           className="block px-4 py-2 text-[13px] font-medium text-gray-700 hover:bg-gray-50 hover:text-brand transition-colors"
                         >
                           {t(item.labelKey)}
-                          {item.isComingSoon && <span className="mr-2 text-[11px] text-gray-500">- {t("common.comingSoonShort")}</span>}
+                          {item.isComingSoon && <span className="ms-2 text-[11px] text-gray-500">- {t("common.comingSoonShort")}</span>}
                         </Link>
                       ))}
                       {n.id === 'artworks' && ARTWORK_ITEMS.map((item) => (
@@ -478,7 +478,7 @@ function Header({
                           className="block px-4 py-2 text-[13px] font-medium text-gray-700 hover:bg-gray-50 hover:text-brand transition-colors"
                         >
                           {t(item.labelKey)}
-                          {item.isComingSoon && <span className="mr-2 text-[11px] text-gray-500">- {t("common.comingSoonShort")}</span>}
+                          {item.isComingSoon && <span className="ms-2 text-[11px] text-gray-500">- {t("common.comingSoonShort")}</span>}
                         </Link>
                       ))}
                       {n.id === 'cabins' && CABIN_ITEMS.map((item) => (
@@ -489,7 +489,7 @@ function Header({
                           className="block px-4 py-2 text-[13px] font-medium text-gray-700 hover:bg-gray-50 hover:text-brand transition-colors"
                         >
                           {t(item.labelKey)}
-                          {item.isComingSoon && <span className="mr-2 text-[11px] text-gray-500">- {t("common.comingSoonShort")}</span>}
+                          {item.isComingSoon && <span className="ms-2 text-[11px] text-gray-500">- {t("common.comingSoonShort")}</span>}
                         </Link>
                       ))}
                       {n.id === 'koshk' && KOSHK_ITEMS.map((item) => (
@@ -500,7 +500,7 @@ function Header({
                           className="block px-4 py-2 text-[13px] font-medium text-gray-700 hover:bg-gray-50 hover:text-brand transition-colors"
                         >
                           {t(item.labelKey)}
-                          {item.isComingSoon && <span className="mr-2 text-[11px] text-gray-500">- {t("common.comingSoonShort")}</span>}
+                          {item.isComingSoon && <span className="ms-2 text-[11px] text-gray-500">- {t("common.comingSoonShort")}</span>}
                         </Link>
                       ))}
                     </div>
@@ -532,7 +532,7 @@ function Header({
                 }`}
             >
               {t("header.contactCta")}
-              <ArrowLeft className="h-4 w-4" strokeWidth={2.5} />
+              {dir === "rtl" ? <ArrowLeft className="h-4 w-4" strokeWidth={2.5} /> : <ArrowRight className="h-4 w-4" strokeWidth={2.5} />}
             </button>
             <button
               ref={menuButtonRef}
@@ -567,12 +567,12 @@ function Header({
                 <div key={n.id} className="flex flex-col border-b border-gray-100 last:border-0">
                   <button
                     onClick={() => setMobileDropdowns({ ...mobileDropdowns, [n.id]: !mobileDropdowns[n.id] })}
-                    className="flex items-center justify-between rounded-xl px-4 py-3 text-[13.5px] font-semibold text-gray-700 w-full text-right"
+                    className="flex items-center justify-between rounded-xl px-4 py-3 text-[13.5px] font-semibold text-gray-700 w-full text-start"
                   >
                     {t(n.labelKey)}
                     <ChevronDown className={`h-4 w-4 transition-transform ${mobileDropdowns[n.id] ? 'rotate-180' : ''}`} />
                   </button>
-                  <div className={`flex flex-col pl-4 pr-8 pb-3 space-y-1 overflow-hidden transition-all duration-300 ${mobileDropdowns[n.id] ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}>
+                  <div className={`flex flex-col ps-4 pe-8 pb-3 space-y-1 overflow-hidden transition-all duration-300 ${mobileDropdowns[n.id] ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}>
                     {n.id === 'solutions' && solutions.map((s) => (
                       <Link
                         key={s.id}
@@ -591,7 +591,7 @@ function Header({
                         className="text-[12.5px] text-gray-600 hover:text-brand transition-colors py-1.5"
                       >
                         {t(item.labelKey)}
-                        {item.isComingSoon && <span className="mr-2 text-[10.5px] text-gray-500">- {t("common.comingSoon")}</span>}
+                        {item.isComingSoon && <span className="ms-2 text-[10.5px] text-gray-500">- {t("common.comingSoon")}</span>}
                       </Link>
                     ))}
                     {n.id === 'houses' && HOUSE_ITEMS.map((item) => (
@@ -602,7 +602,7 @@ function Header({
                         className="text-[12.5px] text-gray-600 hover:text-brand transition-colors py-1.5"
                       >
                         {t(item.labelKey)}
-                        {item.isComingSoon && <span className="mr-2 text-[10.5px] text-gray-500">- {t("common.comingSoon")}</span>}
+                        {item.isComingSoon && <span className="ms-2 text-[10.5px] text-gray-500">- {t("common.comingSoon")}</span>}
                       </Link>
                     ))}
                     {n.id === 'artworks' && ARTWORK_ITEMS.map((item) => (
@@ -613,7 +613,7 @@ function Header({
                         className="text-[12.5px] text-gray-600 hover:text-brand transition-colors py-1.5"
                       >
                         {t(item.labelKey)}
-                        {item.isComingSoon && <span className="mr-2 text-[10.5px] text-gray-500">- {t("common.comingSoon")}</span>}
+                        {item.isComingSoon && <span className="ms-2 text-[10.5px] text-gray-500">- {t("common.comingSoon")}</span>}
                       </Link>
                     ))}
                     {n.id === 'cabins' && CABIN_ITEMS.map((item) => (
@@ -624,7 +624,7 @@ function Header({
                         className="text-[12.5px] text-gray-600 hover:text-brand transition-colors py-1.5"
                       >
                         {t(item.labelKey)}
-                        {item.isComingSoon && <span className="mr-2 text-[10.5px] text-gray-500">- {t("common.comingSoon")}</span>}
+                        {item.isComingSoon && <span className="ms-2 text-[10.5px] text-gray-500">- {t("common.comingSoon")}</span>}
                       </Link>
                     ))}
                     {n.id === 'koshk' && KOSHK_ITEMS.map((item) => (
@@ -635,7 +635,7 @@ function Header({
                         className="text-[12.5px] text-gray-600 hover:text-brand transition-colors py-1.5"
                       >
                         {t(item.labelKey)}
-                        {item.isComingSoon && <span className="mr-2 text-[10.5px] text-gray-500">- {t("common.comingSoon")}</span>}
+                        {item.isComingSoon && <span className="ms-2 text-[10.5px] text-gray-500">- {t("common.comingSoon")}</span>}
                       </Link>
                     ))}
                   </div>
@@ -663,7 +663,7 @@ function Header({
               className="mt-2 inline-flex items-center justify-center gap-2 rounded-xl bg-brand px-4 py-3 text-[13.5px] font-semibold text-white"
             >
               {t("header.contactCta")}
-              <ArrowLeft className="h-4 w-4" />
+              {dir === "rtl" ? <ArrowLeft className="h-4 w-4" /> : <ArrowRight className="h-4 w-4" />}
             </button>
           </nav>
         </div>
@@ -745,7 +745,7 @@ const HERO_SLIDES = [
 ];
 
 function Hero({ onMediaLoaded }: { onMediaLoaded?: () => void }) {
-  const { language } = useLanguage();
+  const { language, dir } = useLanguage();
   const [current, setCurrent] = useState(0);
   const [previous, setPrevious] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
@@ -908,7 +908,7 @@ function Hero({ onMediaLoaded }: { onMediaLoaded?: () => void }) {
               className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-brand px-8 py-4 text-[15px] font-bold text-white shadow-lg transition hover:bg-brand-dark"
             >
               {copy.cta1}
-              <ArrowLeft className="h-4 w-4" />
+              {dir === "rtl" ? <ArrowLeft className="h-4 w-4" /> : <ArrowRight className="h-4 w-4" />}
             </a>
             <a
               href="/about"
@@ -924,7 +924,7 @@ function Hero({ onMediaLoaded }: { onMediaLoaded?: () => void }) {
       <div className="relative z-10 mx-auto hidden min-h-[100svh] max-w-7xl items-center px-4 pb-20 pt-32 sm:px-6 lg:flex lg:px-8">
         <div
           key={`desk-${displayedSlide}`}
-          className="w-full max-w-2xl text-center lg:mr-0 lg:text-right"
+          className="w-full max-w-2xl text-center lg:me-0 lg:text-start"
           style={{
             opacity: textPhase === 'exiting' ? 0 : undefined,
             transform: textPhase === 'exiting' ? 'translateY(18px)' : undefined,
@@ -962,7 +962,7 @@ function Hero({ onMediaLoaded }: { onMediaLoaded?: () => void }) {
                 className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-brand px-8 py-4 text-[15px] font-bold text-white shadow-lg transition hover:bg-brand-dark sm:w-auto"
               >
                 {copy.cta1}
-                <ArrowLeft className="h-4 w-4" />
+                {dir === "rtl" ? <ArrowLeft className="h-4 w-4" /> : <ArrowRight className="h-4 w-4" />}
               </a>
               <a
                 href="/about"
@@ -994,14 +994,14 @@ function Hero({ onMediaLoaded }: { onMediaLoaded?: () => void }) {
         className="absolute bottom-6 left-4 grid h-11 w-11 place-items-center rounded-full border border-white/40 bg-black/20 text-white backdrop-blur-sm transition hover:bg-white hover:text-gray-900 sm:left-8"
         aria-label="Previous slide"
       >
-        <ArrowLeft className="h-5 w-5" />
+        {dir === "rtl" ? <ArrowRight className="h-5 w-5" /> : <ArrowLeft className="h-5 w-5" />}
       </button>
       <button
         onClick={next}
         className="absolute bottom-6 right-4 grid h-11 w-11 place-items-center rounded-full border border-white/40 bg-black/20 text-white backdrop-blur-sm transition hover:bg-white hover:text-gray-900 sm:right-8"
         aria-label="Next slide"
       >
-        <ArrowRight className="h-5 w-5" />
+        {dir === "rtl" ? <ArrowLeft className="h-5 w-5" /> : <ArrowRight className="h-5 w-5" />}
       </button>
     </section>
   );
@@ -1249,7 +1249,7 @@ function UseCases() {
                 </div>
 
                 {/* Text - Right side, black color */}
-                <div className="text-right" dir={dir}>
+                <div className="text-start" dir={dir}>
                   <h3 className="font-display text-2xl font-bold sm:text-3xl text-gray-900">
                     {isKu ? useCase.title : useCase.titleEn}
                   </h3>
@@ -1288,7 +1288,7 @@ function UseCases() {
             className="inline-flex items-center gap-2 rounded-full border-2 border-gray-200 px-8 py-3.5 text-[14px] font-bold text-gray-900 transition hover:border-brand hover:text-brand"
           >
             {t("home.useCases.viewAll")}
-            <ArrowLeft className="h-4 w-4" />
+            {dir === "rtl" ? <ArrowLeft className="h-4 w-4" /> : <ArrowRight className="h-4 w-4" />}
           </a>
         </Reveal>
       </div>
@@ -1590,7 +1590,7 @@ function FooterContent({ onNav: _onNav }: { onNav?: (id: string) => void }) {
         <div className="grid gap-8 sm:gap-10 pb-8 sm:pb-12 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 lg:gap-8">
           {/* 1 BRAND */}
           <Reveal>
-            <div className="text-right">
+            <div className="text-start">
               <Logo />
               <p className="mt-4 sm:mt-5 max-w-[260px] text-[12.5px] sm:text-[13.5px] font-light leading-6 sm:leading-7 text-gray-400">
                 {t("footer.brand")}
@@ -1620,7 +1620,7 @@ function FooterContent({ onNav: _onNav }: { onNav?: (id: string) => void }) {
 
           {/* 2 CONTACT */}
           <Reveal delay={100}>
-            <div className="text-right">
+            <div className="text-start">
               <h4 className="font-display text-[15px] sm:text-[17px] font-extrabold">{t("footer.contact")}</h4>
               <ul className="mt-4 sm:mt-5 space-y-3 sm:space-y-4 text-[12px] sm:text-[13.5px]">
                 <li className="flex items-center gap-2 sm:gap-3">
@@ -1653,7 +1653,7 @@ function FooterContent({ onNav: _onNav }: { onNav?: (id: string) => void }) {
 
           {/* 3 NAVIGATION */}
           <Reveal delay={180}>
-            <div className="text-right">
+            <div className="text-start">
               <h4 className="font-display text-[15px] sm:text-[16px] font-extrabold">{t("footer.links")}</h4>
               <ul className="mt-4 sm:mt-5 space-y-2 sm:space-y-3 text-[12px] sm:text-[13.5px]">
                 {NAV.filter(n => !n.isDropdown).map((n) => (
@@ -1672,7 +1672,7 @@ function FooterContent({ onNav: _onNav }: { onNav?: (id: string) => void }) {
 
           {/* 4 CONTACT FORM */}
           <Reveal delay={220}>
-            <div className="text-right">
+            <div className="text-start">
               <h4 className="font-display text-[15px] sm:text-[16px] font-extrabold">{t("footer.sendTitle")}</h4>
               {/* Always-mounted polite live region: assistive tech announces the
                   complete message the moment submission succeeds, while the
@@ -1819,6 +1819,7 @@ function Footer({ onNav }: { onNav?: (id: string) => void }) {
 
 /* ---------------------------------- Social Sidebar ---------------------------------- */
 function SocialSidebar() {
+  const { t } = useLanguage();
   const [isVisible, setIsVisible] = useState(() => {
     // Check localStorage for saved state
     const saved = localStorage.getItem('socialSidebarVisible');
@@ -1874,7 +1875,7 @@ function SocialSidebar() {
       {/* Toggle Tab (visible when sidebar is hidden) */}
       <button
         onClick={toggleSidebar}
-        aria-label="Show sidebar"
+        aria-label={t("social.show")}
         className={`fixed left-0 z-[9999] grid h-12 w-8 place-items-center rounded-r-full bg-gray-800 text-white shadow-lg transition-all duration-300 hover:bg-gray-700 ${isVisible ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
         style={{
           top: '50%',
@@ -1929,7 +1930,7 @@ function SocialSidebar() {
           }}>
             <FacebookIcon style={{ height: 'clamp(24px, 3.5vh, 32px)', width: 'clamp(24px, 3.5vh, 32px)' }} />
           </div>
-          <span className="font-semibold text-[#ff4500]" style={{ fontSize: 'clamp(13px, 2vh, 16px)' }}>فەیسبووک</span>
+          <span className="font-semibold text-[#ff4500]" style={{ fontSize: 'clamp(13px, 2vh, 16px)' }}>{t("social.facebook")}</span>
         </a>
 
         {/* YouTube */}
@@ -1947,7 +1948,7 @@ function SocialSidebar() {
           }}>
             <YoutubeIcon style={{ height: 'clamp(24px, 3.5vh, 32px)', width: 'clamp(24px, 3.5vh, 32px)' }} />
           </div>
-          <span className="font-semibold text-[#ff4500]" style={{ fontSize: 'clamp(13px, 2vh, 16px)' }}>یوتیوب</span>
+          <span className="font-semibold text-[#ff4500]" style={{ fontSize: 'clamp(13px, 2vh, 16px)' }}>{t("social.youtube")}</span>
         </a>
 
         {/* Instagram */}
@@ -1966,7 +1967,7 @@ function SocialSidebar() {
           }}>
             <InstagramIcon style={{ height: 'clamp(24px, 3.5vh, 32px)', width: 'clamp(24px, 3.5vh, 32px)' }} />
           </div>
-          <span className="font-semibold text-[#ff4500]" style={{ fontSize: 'clamp(13px, 2vh, 16px)' }}>ئینستاگرام</span>
+          <span className="font-semibold text-[#ff4500]" style={{ fontSize: 'clamp(13px, 2vh, 16px)' }}>{t("social.instagram")}</span>
         </a>
 
         {/* TikTok */}
@@ -1984,7 +1985,7 @@ function SocialSidebar() {
           }}>
             <TikTokIcon style={{ height: 'clamp(24px, 3.5vh, 32px)', width: 'clamp(24px, 3.5vh, 32px)' }} />
           </div>
-          <span className="font-semibold text-[#ff4500]" style={{ fontSize: 'clamp(13px, 2vh, 16px)' }}>تیکتۆک</span>
+          <span className="font-semibold text-[#ff4500]" style={{ fontSize: 'clamp(13px, 2vh, 16px)' }}>{t("social.tiktok")}</span>
         </a>
 
         {/* WhatsApp */}
@@ -2002,13 +2003,13 @@ function SocialSidebar() {
           }}>
             <WhatsAppIcon style={{ height: 'clamp(24px, 3.5vh, 32px)', width: 'clamp(24px, 3.5vh, 32px)' }} />
           </div>
-          <span className="font-semibold text-[#ff4500]" style={{ fontSize: 'clamp(13px, 2vh, 16px)' }}>واتسئاپ</span>
+          <span className="font-semibold text-[#ff4500]" style={{ fontSize: 'clamp(13px, 2vh, 16px)' }}>{t("social.whatsapp")}</span>
         </a>
 
         {/* Toggle Button (inside sidebar) */}
         <button
           onClick={toggleSidebar}
-          aria-label="Hide sidebar"
+          aria-label={t("social.hide")}
           className="grid place-items-center rounded-full bg-gray-200 text-gray-700 transition-all hover:bg-gray-300"
           style={{
             height: 'clamp(40px, 6vh, 48px)',
@@ -2026,6 +2027,7 @@ function SocialSidebar() {
 
 
 function BackToTop() {
+  const { t } = useLanguage();
   const [show, setShow] = useState(false);
   useEffect(() => {
     const fn = () => setShow(window.scrollY > 700);
@@ -2035,7 +2037,7 @@ function BackToTop() {
   return (
     <button
       onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-      aria-label="بگەڕێوە سەرەوە"
+      aria-label={t("common.backToTop")}
       className={`fixed bottom-6 right-6 z-30 grid h-12 w-12 place-items-center rounded-full bg-gray-700 text-white shadow-lg transition-all duration-300 hover:bg-gray-600 ${show ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-4 opacity-0"
         }`}
       style={{
@@ -2087,7 +2089,7 @@ function HomePage({ onMediaLoaded }: { onMediaLoaded?: () => void }) {
 function AppContent() {
   const [active, setActive] = useState("home");
   const { isContactModalOpen, closeContactModal, prefillMessage } = useContactModal();
-  const { dir } = useLanguage();
+  const { t, dir } = useLanguage();
   const location = useLocation();
   const [, startTransition] = useTransition();
 
@@ -2253,6 +2255,10 @@ function AppContent() {
 
   return (
     <div dir={dir} className="min-h-screen font-body text-gray-900">
+      {/* First tab stop: keyboard users can jump straight to the content */}
+      <a href="#main-content" className="skip-to-content">
+        {t("a11y.skipToContent")}
+      </a>
       <Header
         active={active}
         onNav={handleNavTransition}

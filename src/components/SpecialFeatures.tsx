@@ -1,11 +1,28 @@
 import { useEffect, useRef, useState } from "react";
-import { Link } from "lucide-react";
+import { useLanguage } from "../contexts/LanguageContext";
 
-const features = [
+interface FeatureCopy {
+  title: string;
+  description: string;
+}
+
+interface Feature {
+  id: number;
+  icon: React.ReactNode;
+  row: number;
+  ku: FeatureCopy;
+  en: FeatureCopy;
+  ar: FeatureCopy;
+}
+
+/**
+ * Feature grid content in every shipped language. Technical designators
+ * (A2, level 11, level 7, "Insulated", "Smart Lock", 3D) keep their original
+ * form across all languages.
+ */
+const features: Feature[] = [
   {
     id: 1,
-    title: "بەرگریی ئاگر لە ئاستی A2 ",
-    description: "دیوارە عەزلکراوەکان بەرگرییەکی زۆر بەرزیان بۆ ئاگر هەیە لەگەڵ توانایەکی نایاب بۆ هێشتنەوەی پلەی گەرمی (بۆ ڕێگریکردن لە گەرمای تاقەتپڕووکێنی هاوین و سەرمای زستان)، ئەمەش سەلامەتی و پاشەکەوتکردنی وزە زیاتر دەکات",
     icon: (
       <svg viewBox="0 0 64 64" fill="none" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <path d="M32 4L8 14v24c0 14.4 10.4 27.8 24 30 13.6-2.2 24-15.6 24-30V14L32 4z" />
@@ -15,12 +32,21 @@ const features = [
       </svg>
     ),
     row: 1,
-    isKurdish: true
+    ku: {
+      title: "بەرگریی ئاگر لە ئاستی A2",
+      description: "دیوارە عەزلکراوەکان بەرگرییەکی زۆر بەرزیان بۆ ئاگر هەیە لەگەڵ توانایەکی نایاب بۆ هێشتنەوەی پلەی گەرمی (بۆ ڕێگریکردن لە گەرمای تاقەتپڕووکێنی هاوین و سەرمای زستان)، ئەمەش سەلامەتی و پاشەکەوتکردنی وزە زیاتر دەکات",
+    },
+    en: {
+      title: "Fire resistance at level A2",
+      description: "The insulated walls have very high fire resistance together with an exceptional ability to retain heat (protecting against exhausting summer heat and winter cold), which increases safety and saves energy.",
+    },
+    ar: {
+      title: "مقاومة الحريق عند المستوى A2",
+      description: "تمتلك الجدران المعزولة مقاومة عالية جداً للحريق مع قدرة استثنائية على حفظ الحرارة (للحماية من حرارة الصيف القاسية وبرد الشتاء)، مما يزيد من السلامة ويوفّر الطاقة.",
+    },
   },
   {
     id: 2,
-    title: "بەرگەگرتنی با لە ئاستی ١١ ",
-    description: "تەنانەت لە کاتی هەڵکردنی گەردەلول و ڕەشەبای زۆر بەهێزیشدا (بای ئاستی ١١)، کەپسولەکانمان سەقامگیریی و پتەویی خۆیان لەدەست نادەن ئەم هێزە ئەندازیارییە تەمەندرێژییەکی زۆر و ژینگەیەکی سەلامەت و بێدەنگ بۆ کڕیارەکانمان مسۆگەر دەکات، جا پڕۆژەکەت لە هەر کوێیەکی ئەم سروشتەدا بێت",
     icon: (
       <svg viewBox="0 0 64 64" fill="none" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <path d="M12 20c2-4 6-6 10-4s6 6 4 10" />
@@ -34,12 +60,21 @@ const features = [
       </svg>
     ),
     row: 1,
-    isKurdish: false
+    ku: {
+      title: "بەرگەگرتنی با لە ئاستی ١١",
+      description: "تەنانەت لە کاتی هەڵکردنی گەردەلول و ڕەشەبای زۆر بەهێزیشدا (بای ئاستی ١١)، کەپسولەکانمان سەقامگیریی و پتەویی خۆیان لەدەست نادەن ئەم هێزە ئەندازیارییە تەمەندرێژییەکی زۆر و ژینگەیەکی سەلامەت و بێدەنگ بۆ کڕیارەکانمان مسۆگەر دەکات، جا پڕۆژەکەت لە هەر کوێیەکی ئەم سروشتەدا بێت",
+    },
+    en: {
+      title: "Wind resistance at level 11",
+      description: "Even when tornadoes and extremely strong storms hit (level 11 wind), our capsules keep their stability and strength. This engineering strength ensures great durability and a safe, quiet environment for our customers — wherever the project stands.",
+    },
+    ar: {
+      title: "تحمّل الرياح عند المستوى ١١",
+      description: "حتى عند هبوب الأعاصير والعواصف شديدة القوة (رياح من المستوى ١١)، تحافظ كبسولاتنا على استقرارها وصلابتها. وتمنح هذه القوة الهندسية متانة طويلة الأمد وبيئة آمنة وهادئة لعملائنا، أينما كان موقع المشروع.",
+    },
   },
   {
     id: 3,
-    title: "بەرگەگرتنی بومەلەرزە لە ئاستی ٧",
-    description: "بەشێوەیەک کاری ئەندازیاری بۆ کەپسولەکان کراوە کە بەرگەی جووڵە بەهێزەکانی بومەلەرزە بگرێت، بۆ دڵنیابوون لە سەلامەتی و جێگیریی پێکهاتەی کەپسولەکە و ئەوەشی لە ناویەتی",
     icon: (
       <svg viewBox="0 0 64 64" fill="none" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <path d="M20 50h24" />
@@ -51,12 +86,21 @@ const features = [
       </svg>
     ),
     row: 1,
-    isKurdish: false
+    ku: {
+      title: "بەرگەگرتنی بومەلەرزە لە ئاستی ٧",
+      description: "بەشێوەیەک کاری ئەندازیاری بۆ کەپسولەکان کراوە کە بەرگەی جووڵە بەهێزەکانی بومەلەرزە بگرێت، بۆ دڵنیابوون لە سەلامەتی و جێگیریی پێکهاتەی کەپسولەکە و ئەوەشی لە ناویەتی",
+    },
+    en: {
+      title: "Earthquake resistance at level 7",
+      description: "The capsules are engineered to withstand the strong movements of earthquakes, ensuring the safety and stability of the capsule structure and everything inside it.",
+    },
+    ar: {
+      title: "مقاومة الزلازل عند المستوى ٧",
+      description: "تمت هندسة الكبسولات لتحمّل الحركات القوية للزلازل، بما يضمن سلامة واستقرار هيكل الكبسولة وكل ما بداخلها.",
+    },
   },
   {
     id: 4,
-    title: "پانێڵی بەتەواوی عەزلکراو (Insulated)",
-    description: "بەهۆی بوونی سیستەمێکی عەزلی گشتگیر لە سەرانسەری کەپسولەکەدا، باشترین ئاستی پاراستنی پلەی گەرمی و ئاسوودەیی تەواو بۆ سەرنشینەکانی مسۆگەر دەکات",
     icon: (
       <svg viewBox="0 0 64 64" fill="none" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <path d="M8 56h48" />
@@ -72,12 +116,21 @@ const features = [
       </svg>
     ),
     row: 1,
-    isKurdish: false
+    ku: {
+      title: "پانێڵی بەتەواوی عەزلکراو (Insulated)",
+      description: "بەهۆی بوونی سیستەمێکی عەزلی گشتگیر لە سەرانسەری کەپسولەکەدا، باشترین ئاستی پاراستنی پلەی گەرمی و ئاسوودەیی تەواو بۆ سەرنشینەکانی مسۆگەر دەکات",
+    },
+    en: {
+      title: "Fully insulated panel (Insulated)",
+      description: "Thanks to a comprehensive insulation system throughout the capsule, it guarantees the best level of thermal protection and complete comfort for its occupants.",
+    },
+    ar: {
+      title: "لوح معزول بالكامل (Insulated)",
+      description: "بفضل نظام عزل شامل في كامل الكبسولة، تضمن أفضل مستويات العزل الحراري والراحة التامة لساكنيها.",
+    },
   },
   {
     id: 5,
-    title: "ڕووکەشی شووشەیی پانۆراما (بە جامی دەبڵ)",
-    description: "کەپسولەکانمان ڕووکەشێکی شووشەیی پانۆرامای سەرنجڕاکێشیان هەیە بە جامی دەبڵ، کە جگە لە بەخشینی دیمەنێکی فراوان بۆ بینینی سروشتی دەرەوە، لە هەمان کاتدا عەزلێکی نایابی دەنگ و پلەی گەرمی دابین دەکات",
     icon: (
       <svg viewBox="0 0 64 64" fill="none" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <rect x="8" y="8" width="48" height="48" rx="2" />
@@ -90,12 +143,21 @@ const features = [
       </svg>
     ),
     row: 2,
-    isKurdish: false
+    ku: {
+      title: "ڕووکەشی شووشەیی پانۆراما (بە جامی دەبڵ)",
+      description: "کەپسولەکانمان ڕووکەشێکی شووشەیی پانۆرامای سەرنجڕاکێشیان هەیە بە جامی دەبڵ، کە جگە لە بەخشینی دیمەنێکی فراوان بۆ بینینی سروشتی دەرەوە، لە هەمان کاتدا عەزلێکی نایابی دەنگ و پلەی گەرمی دابین دەکات",
+    },
+    en: {
+      title: "Panoramic glass facade (double glazing)",
+      description: "Our capsules feature a striking panoramic glass facade with double glazing that, besides offering a wide view of the outdoors, provides outstanding sound and thermal insulation at the same time.",
+    },
+    ar: {
+      title: "واجهة زجاجية بانورامية (زجاج مزدوج)",
+      description: "تتميز كبسولاتنا بواجهة زجاجية بانورامية لافتة بزجاج مزدوج، وهي إضافة إلى منحها إطلالة واسعة على الطبيعة الخارجية، توفر عزلاً ممتازاً للصوت والحرارة في آن واحد.",
+    },
   },
   {
     id: 6,
-    title: "دەرگای چوونەژوورەوەی مۆدێرن بە قفڵی زیرەک",
-    description: "دەرگاکانمان بە کوالێتییەکی بەرز و بە دیزاینێکی مۆدێرن دروستکراون کە گونجاوە بۆ شێوەی ئەندازەیی کەپسولەکە، هەروەها بە سیستەمی قفڵی زیرەک (Smart Lock) ڕێکخراون کە ئاسایشێکی تەواو و بەکارهێنانێکی سەردەمیانە بەیەکەوە کۆدەکاتەوە",
     icon: (
       <svg viewBox="0 0 64 64" fill="none" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <rect x="12" y="4" width="40" height="56" rx="2" />
@@ -107,11 +169,23 @@ const features = [
       </svg>
     ),
     row: 2,
-    isKurdish: false
+    ku: {
+      title: "دەرگای چوونەژوورەوەی مۆدێرن بە قفڵی زیرەک",
+      description: "دەرگاکانمان بە کوالێتییەکی بەرز و بە دیزاینێکی مۆدێرن دروستکراون کە گونجاوە بۆ شێوەی ئەندازەیی کەپسولەکە، هەروەها بە سیستەمی قفڵی زیرەک (Smart Lock) ڕێکخراون کە ئاسایشێکی تەواو و بەکارهێنانێکی سەردەمیانە بەیەکەوە کۆدەکاتەوە",
+    },
+    en: {
+      title: "Modern entrance door with a smart lock (Smart Lock)",
+      description: "Our doors are made with high quality and a modern design that matches the geometry of the capsule, and are equipped with a smart lock system (Smart Lock) that combines complete security with contemporary ease of use.",
+    },
+    ar: {
+      title: "باب دخول عصري بقفل ذكي",
+      description: "أبوابنا مصنوعة بجودة عالية وتصميم عصري يتناسب مع الشكل الهندسي للكبسولة، ومجهزة بنظام قفل ذكي (Smart Lock) يجمع بين الأمان الكامل وسهولة الاستخدام العصرية.",
+    },
   }
 ];
 
 export function SpecialFeatures() {
+  const { t, dir, language } = useLanguage();
   const sectionRef = useRef<HTMLDivElement>(null);
   const row2Ref = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
@@ -219,7 +293,7 @@ export function SpecialFeatures() {
         {/* Section Header */}
         <div style={{ marginBottom: 'clamp(40px, 6vw, 110px)', textAlign: 'center' }}>
           <h2
-            dir="rtl"
+            dir={dir}
             style={{
               fontFamily: 'var(--font-display)',
               fontWeight: 700,
@@ -232,10 +306,10 @@ export function SpecialFeatures() {
               textAlign: 'center'
             }}
           >
-            ئەو تایبەتمەندیانەی پێشکەشتان ئەکەین
+            {t("specials.title")}
           </h2>
           <p
-            dir="rtl"
+            dir={dir}
             style={{
               fontFamily: 'var(--font-body)',
               fontWeight: 400,
@@ -246,7 +320,7 @@ export function SpecialFeatures() {
               padding: '0 clamp(8px, 2vw, 20px)'
             }}
           >
-            کارگەی ئەنتیکا هەموو پێداویستییەکانی ژیانێکی مۆدێرن لە کوردستان و عێراق دابین دەکات
+            {t("specials.subtitle")}
           </p>
 
         </div>
@@ -262,6 +336,7 @@ export function SpecialFeatures() {
           }}
         >
           {row1Features.map((feature, index) => {
+            const copy = feature[language];
             const animationDelay = index * 120; // 0, 120, 240, 360ms
 
             const initialState = reducedMotion ? {
@@ -338,7 +413,7 @@ export function SpecialFeatures() {
 
                 {/* Title */}
                 <h3
-                  dir={feature.isKurdish ? "rtl" : "ltr"}
+                  dir={dir}
                   style={{
                     fontFamily: 'var(--font-display)',
                     fontWeight: 600,
@@ -351,12 +426,12 @@ export function SpecialFeatures() {
                     transition: reducedMotion ? 'none' : `color ${animationDuration} ${animationEasing} ${animationDelay}ms`
                   }}
                 >
-                  {feature.title}
+                  {copy.title}
                 </h3>
 
                 {/* Description */}
                 <p
-                  dir={feature.isKurdish ? "rtl" : "ltr"}
+                  dir={dir}
                   style={{
                     fontFamily: 'var(--font-body)',
                     fontWeight: 400,
@@ -369,7 +444,7 @@ export function SpecialFeatures() {
                     transition: reducedMotion ? 'none' : `color ${animationDuration} ${animationEasing} ${animationDelay}ms`
                   }}
                 >
-                  {feature.description}
+                  {copy.description}
                 </p>
               </div>
             );
@@ -389,6 +464,7 @@ export function SpecialFeatures() {
           }}
         >
           {row2Features.map((feature, index) => {
+            const copy = feature[language];
             const isLeft = index === 0; // Window card (left)
 
             const opacity = reducedMotion || isMobile ? 1 : Math.min(1, scrollProgress * 3.5);
@@ -443,7 +519,7 @@ export function SpecialFeatures() {
 
                 {/* Title */}
                 <h3
-                  dir={feature.isKurdish ? "rtl" : "ltr"}
+                  dir={dir}
                   style={{
                     fontFamily: 'var(--font-display)',
                     fontWeight: 600,
@@ -454,12 +530,12 @@ export function SpecialFeatures() {
                     margin: `0 0 ${isMobile ? '8px' : '12px'} 0`
                   }}
                 >
-                  {feature.title}
+                  {copy.title}
                 </h3>
 
                 {/* Description */}
                 <p
-                  dir={feature.isKurdish ? "rtl" : "ltr"}
+                  dir={dir}
                   style={{
                     fontFamily: 'var(--font-body)',
                     fontWeight: 400,
@@ -470,7 +546,7 @@ export function SpecialFeatures() {
                     margin: '0'
                   }}
                 >
-                  {feature.description}
+                  {copy.description}
                 </p>
               </div>
             );

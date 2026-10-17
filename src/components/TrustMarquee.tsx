@@ -1,3 +1,5 @@
+import { useLanguage } from "../contexts/LanguageContext";
+
 interface TrustLogo {
   name: string;
   src: string;
@@ -236,6 +238,25 @@ function LogoItem({ logo, prefix, idx }: { logo: { name: string; src: string }; 
 }
 
 export function TrustMarquee() {
+  const { language } = useLanguage();
+  const copy = {
+    ku: {
+      kicker: "ئەو شوێنانەی متمانەیان بە ئێمەکردووە",
+      title: "جێگای متمانەی گەورەترین کۆمپانیا و هۆتێلەکانی عێراقین!",
+      subtitle: "شانازی دەکەین بە هاوبەشی و جێبەجێکردنی پڕۆژە بۆ دیارترین کۆمپانیا، هوتێل، نەخۆشخانە، چێشتخانە و شوێنە گەشتیارییەکان",
+    },
+    en: {
+      kicker: "The places that trust us",
+      title: "The trusted choice of Iraq's largest companies and hotels!",
+      subtitle: "We are proud to partner with and deliver projects for the most prominent companies, hotels, hospitals, restaurants and tourist destinations",
+    },
+    ar: {
+      kicker: "الجهات التي وثقت بنا",
+      title: "موضع ثقة أكبر الشركات والفنادق في العراق!", // review
+      subtitle: "نفخر بشراكتنا مع أبرز الشركات والفنادق والمستشفيات والمطاعم والوجهات السياحية وتنفيذ مشاريعها",
+    },
+  }[language];
+
   return (
     <section
       style={{
@@ -267,7 +288,7 @@ export function TrustMarquee() {
           }}
         >
           <span style={{ display: "inline-block", height: "2px", width: "24px", borderRadius: "9999px", background: "#ff5a00" }} />
-          ئەو شوێنانەی متمانەیان بە ئێمەکردووە
+          {copy.kicker}
           <span style={{ display: "inline-block", height: "2px", width: "24px", borderRadius: "9999px", background: "#ff5a00" }} />
         </span>
         <h2
@@ -281,7 +302,7 @@ export function TrustMarquee() {
             fontSize: "clamp(26px, 3.5vw, 42px)",
           }}
         >
-          جێگای متمانەی گەورەترین کۆمپانیا و هۆتێلەکانی عێراقین!
+          {copy.title}
         </h2>
         <p
           style={{
@@ -292,7 +313,7 @@ export function TrustMarquee() {
             lineHeight: 1.7,
           }}
         >
-          شانازی دەکەین بە هاوبەشی و جێبەجێکردنی پڕۆژە بۆ دیارترین کۆمپانیا، هوتێل، نەخۆشخانە، چێشتخانە و شوێنە گەشتیارییەکان
+          {copy.subtitle}
         </p>
       </div>
 

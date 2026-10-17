@@ -1,13 +1,28 @@
 import { useState, useEffect } from "react";
 import { ShieldCheck, X, ZoomIn } from "lucide-react";
 import { createPortal } from "react-dom";
+import { useLanguage } from "../contexts/LanguageContext";
 
 export interface MaterialCertificate {
   id: string;
   title: string;
   issuer: string;
   image: string;
+  /** Category badge in Kurdish (source copy). */
   category?: string;
+  categoryEn?: string;
+  categoryAr?: string;
+}
+
+/** Badge copy for the active language, falling back to the Kurdish source. */
+function categoryFor(
+  cert: MaterialCertificate,
+  language: "ku" | "en" | "ar"
+): string | undefined {
+  if (!cert.category) return undefined;
+  if (language === "ar") return cert.categoryAr ?? cert.categoryEn ?? cert.category;
+  if (language === "en") return cert.categoryEn ?? cert.category;
+  return cert.category;
 }
 
 // Material and quality certificates
@@ -18,6 +33,8 @@ export const MATERIAL_CERTIFICATES: MaterialCertificate[] = [
     issuer: "NSW Government Fair Trading - Standard Electrical Certification",
     image: "/certificates/media_1790354178434.webp",
     category: "کەرەستەی کارەبایی",
+    categoryEn: "Electrical materials",
+    categoryAr: "مواد كهربائية",
   },
   {
     id: "mat-cert-2",
@@ -25,6 +42,8 @@ export const MATERIAL_CERTIFICATES: MaterialCertificate[] = [
     issuer: "UDEM International Certification - 2011/65/EU Safety Standard",
     image: "/certificates/media_1790354272934.webp",
     category: "ستانداردی ژینگەیی و کەرەستە",
+    categoryEn: "Environmental & material standard",
+    categoryAr: "معايير بيئية ومواد",
   },
   {
     id: "mat-cert-3",
@@ -32,6 +51,8 @@ export const MATERIAL_CERTIFICATES: MaterialCertificate[] = [
     issuer: "Intertek Testing Services NA - High Standard Safety & Quality",
     image: "/certificates/media_1790354285336.webp",
     category: "کوالێتی و سەلامەتی کەرەستە",
+    categoryEn: "Material quality & safety",
+    categoryAr: "جودة وسلامة المواد",
   },
   {
     id: "mat-cert-4",
@@ -39,6 +60,8 @@ export const MATERIAL_CERTIFICATES: MaterialCertificate[] = [
     issuer: "SAI Global - AS/NZS 1260 Drainage & Plumbing Standards",
     image: "/certificates/media_1790354309721.webp",
     category: "کەرەستەی ئاوەڕۆ و بۆری",
+    categoryEn: "Drainage & piping materials",
+    categoryAr: "مواد الصرف والأنابيب",
   },
   {
     id: "mat-cert-5",
@@ -46,6 +69,8 @@ export const MATERIAL_CERTIFICATES: MaterialCertificate[] = [
     issuer: "NSW Government Electrical Safety Standard Approvals",
     image: "/certificates/media_1790354324032.webp",
     category: "ستانداردی نێودەوڵەتی",
+    categoryEn: "International standard",
+    categoryAr: "معيار دولي",
   },
 ];
 
@@ -65,6 +90,8 @@ function MaterialCertCard({
   onSelect: (cert: MaterialCertificate) => void;
   compact?: boolean;
 }) {
+  const { t, language } = useLanguage();
+  const category = categoryFor(cert, language);
   return (
     <div
       key={`${prefix}-${idx}`}
@@ -87,15 +114,15 @@ function MaterialCertCard({
         <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 backdrop-blur-[2px] transition-opacity duration-300 group-hover:opacity-100">
           <span className="inline-flex items-center gap-1.5 rounded-full bg-white/95 px-3 py-1.5 text-xs font-bold text-gray-900 shadow-lg backdrop-blur">
             <ZoomIn className="h-3.5 w-3.5 text-brand" />
-            بینینی بڕوانامە
+            {t("certs.view")}
           </span>
         </div>
       </div>
 
       <div className="mt-2 px-2 pb-2 text-right">
-        {cert.category && (
+        {category && (
           <span className="category-badge inline-block rounded-md bg-brand/10 px-2 py-0.5 text-[10.5px] font-bold text-brand mb-1">
-            {cert.category}
+            {category}
           </span>
         )}
         <h4 className="line-clamp-1 text-[12.5px] sm:text-[13px] font-bold text-gray-900 group-hover:text-brand transition-colors">
@@ -118,6 +145,7 @@ export function MaterialCertificatesMarquee({
   variant = "home",
   showTitle = true,
 }: MaterialCertificatesMarqueeProps) {
+  const { t, dir, language } = useLanguage();
   const [selectedCert, setSelectedCert] = useState<MaterialCertificate | null>(null);
 
   // Lock body scroll when modal is open
@@ -152,11 +180,11 @@ export function MaterialCertificatesMarquee({
                 <ShieldCheck className="h-4 w-4" />
               </span>
               <h4 className="text-[15px] sm:text-[16px] font-bold text-gray-900 font-display">
-                بڕوانامەی کەرەستەکانمان
+                {t("certs.material.title")}
               </h4>
             </div>
             <span className="text-[12px] sm:text-[13px] text-gray-500 font-medium hidden sm:inline-block">
-              کەرەستەی کوالێتی بەرز بە پێوانە و ستانداردی جیهانی
+              {t("certs.material.subtitle")}
             </span>
           </div>
         </div>
@@ -164,16 +192,16 @@ export function MaterialCertificatesMarquee({
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center mb-7 sm:mb-9">
           <span className="inline-flex items-center gap-2 rounded-full bg-emerald-500/10 border border-emerald-500/20 px-3.5 py-1 text-[12.5px] sm:text-[13px] font-bold text-emerald-700">
             <ShieldCheck className="h-4 w-4 text-emerald-600" />
-            ستاندارد و بڕوانامەی کەرەستەکانمان
+            {t("certs.material.badge")}
           </span>
           <h3
             className="mx-auto mt-3 max-w-3xl font-display font-black leading-[1.3] text-gray-900"
             style={{ fontSize: "clamp(24px, 3.5vw, 36px)" }}
           >
-            کەرەستەی کوالێتی بەرز و بڕوانامەپێدراوی جیهانی
+            {t("certs.material.heading")}
           </h3>
           <p className="mx-auto mt-2.5 max-w-2xl text-[13.5px] sm:text-[14.5px] text-gray-600 leading-relaxed font-light">
-            سەرجەم ئەو ماددە سەرەتایی و کەرەستە ئەندازیارییانەی لە بەرهەمەکانماندا بەکاریان دەهێنین، خاوەنی بڕوانامە و ستانداردی متمانەپێکراوی جیهانین بۆ مسۆگەرکردنی بەرزترین ئاستی کوالێتی و سەلامەتی.
+            {t("certs.material.description")}
           </p>
         </div>
       ) : null}
@@ -249,7 +277,7 @@ export function MaterialCertificatesMarquee({
       {selectedCert &&
         createPortal(
           <div
-            dir="rtl"
+            dir={dir}
             role="dialog"
             aria-modal="true"
             className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm animate-fadeIn"
@@ -261,9 +289,9 @@ export function MaterialCertificatesMarquee({
             >
               <div className="flex items-center justify-between border-b border-gray-100 pb-4 mb-4">
                 <div>
-                  {selectedCert.category && (
+                  {categoryFor(selectedCert, language) && (
                     <span className="inline-block rounded-md bg-brand/10 px-2.5 py-0.5 text-xs font-bold text-brand mb-1">
-                      {selectedCert.category}
+                      {categoryFor(selectedCert, language)}
                     </span>
                   )}
                   <h3 className="text-lg font-bold text-gray-900 font-display">
@@ -273,7 +301,7 @@ export function MaterialCertificatesMarquee({
                 </div>
                 <button
                   onClick={() => setSelectedCert(null)}
-                  aria-label="داخستن"
+                  aria-label={t("common.close")}
                   className="grid h-11 w-11 place-items-center rounded-full bg-gray-100 text-gray-700 transition hover:bg-gray-200"
                 >
                   <X className="h-6 w-6" />

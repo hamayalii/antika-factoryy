@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowLeft, Sparkles, Ruler, Clock } from "lucide-react";
+import { ArrowLeft, ArrowRight, Sparkles, Ruler, Clock } from "lucide-react";
 import { localizeProduct, type VerifiedProduct } from "../data/productData";
 import { useLanguage } from "../contexts/LanguageContext";
 
@@ -10,7 +10,7 @@ interface ProductCardProps {
 
 export function ProductCard({ product }: ProductCardProps) {
     const [imageError, setImageError] = useState(false);
-    const { t, language } = useLanguage();
+    const { t, language, dir } = useLanguage();
     const lp = localizeProduct(product, language);
 
     return (
@@ -103,12 +103,16 @@ export function ProductCard({ product }: ProductCardProps) {
                 <div className="mt-5 pt-4 border-t border-gray-100 flex items-center justify-between">
                     <span className="inline-flex items-center gap-2 text-[13.5px] font-bold text-brand group-hover:text-brand-dark transition-colors">
                         {t("productCard.learnMore")}
-                        <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1" />
+                        {dir === "rtl" ? (
+                            <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1" />
+                        ) : (
+                            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                        )}
                     </span>
 
                     {/* The "other" language name, as a cross-reference subtitle. */}
                     <span className="text-[12px] font-medium text-gray-400">
-                        {language === "ku" ? product.titleEn : product.titleKu}
+                        {language === "en" ? product.titleKu : product.titleEn}
                     </span>
                 </div>
             </div>
