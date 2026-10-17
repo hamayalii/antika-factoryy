@@ -91,6 +91,28 @@
   <body>
     <a href="#main-content" class="skip-to-content">بازدان بۆ ناوەڕۆک</a>
     <div id="root"></div>
+    <!--
+      Pre-hydration language sync: apply the stored language direction to <html>
+      before React mounts so an English visitor never sees an RTL flash.
+      Keep the storage key in sync with STORAGE_KEY in src/contexts/LanguageContext.tsx.
+    -->
+    <script>
+      (function () {
+        try {
+          var lang = window.localStorage.getItem("antika-language");
+          var root = document.documentElement;
+          if (lang === "en") {
+            root.lang = "en";
+            root.dir = "ltr";
+          } else if (lang === "ar") {
+            root.lang = "ar";
+            root.dir = "rtl";
+          }
+        } catch (e) {
+          /* private browsing — the Kurdish RTL default stays */
+        }
+      })();
+    </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

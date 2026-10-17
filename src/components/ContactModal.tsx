@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
-import { X, Phone } from "lucide-react";
+import { X, Phone, Palette } from "lucide-react";
+import { useLanguage } from "../contexts/LanguageContext";
 
 const PHONE_NUMBERS = [
   {
@@ -30,9 +31,12 @@ interface ContactModalProps {
   isOpen: boolean;
   onClose: () => void;
   triggerRef?: React.RefObject<HTMLElement>;
+  /** Inquiry text to display (and attach to WhatsApp links), e.g. a custom-color request. */
+  prefillMessage?: string | null;
 }
 
-export function ContactModal({ isOpen, onClose, triggerRef }: ContactModalProps) {
+export function ContactModal({ isOpen, onClose, triggerRef, prefillMessage }: ContactModalProps) {
+  const { t } = useLanguage();
   const modalRef = useRef<HTMLDivElement>(null);
   const previousActiveElementRef = useRef<HTMLElement | null>(null);
 
@@ -135,7 +139,7 @@ export function ContactModal({ isOpen, onClose, triggerRef }: ContactModalProps)
         <button
           onClick={onClose}
           className="absolute top-4 left-4 flex h-10 w-10 items-center justify-center rounded-full bg-gray-100 text-gray-600 transition-colors hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-brand focus:ring-offset-2"
-          aria-label="داخستن"
+          aria-label={t("common.close")}
         >
           <X className="h-5 w-5" />
         </button>
@@ -149,12 +153,23 @@ export function ContactModal({ isOpen, onClose, triggerRef }: ContactModalProps)
             id="contact-modal-title"
             className="font-display text-xl font-bold text-gray-900"
           >
-            پەیوەندیمان پێوە بکە
+            {t("contactModal.title")}
           </h2>
           <p className="mt-1 text-sm text-gray-600">
-            یەکێک لە ژمارەکان هەڵبژێرە
+            {t("contactModal.subtitle")}
           </p>
         </div>
+
+        {/* Custom inquiry context (e.g. product color request) */}
+        {prefillMessage && (
+          <div className="mb-5 rounded-2xl border border-brand/20 bg-brand-soft/40 px-4 py-3 text-center">
+            <div className="mb-1 flex items-center justify-center gap-1.5 text-[11.5px] font-bold text-brand">
+              <Palette className="h-3.5 w-3.5" />
+              {t("contactModal.customColor")}
+            </div>
+            <p className="text-[13px] leading-relaxed text-gray-800">{prefillMessage}</p>
+          </div>
+        )}
 
         {/* Phone Numbers */}
         <div className="space-y-3">
@@ -173,24 +188,28 @@ export function ContactModal({ isOpen, onClose, triggerRef }: ContactModalProps)
               </div>
               <div className="flex gap-2">
                 <a
-                  href={`https://wa.me/${phone.waDigits}`}
+                  href={
+                    prefillMessage
+                      ? `https://wa.me/${phone.waDigits}?text=${encodeURIComponent(prefillMessage)}`
+                      : `https://wa.me/${phone.waDigits}`
+                  }
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-[#25D366] px-4 py-3 text-sm font-semibold text-white transition-all hover:bg-[#20bd5a] hover:shadow-md focus:outline-none focus:ring-2 focus:ring-[#25D366] focus:ring-offset-2 min-h-[44px]"
-                  aria-label={`واتساپ بۆ ${phone.display}`}
+                  aria-label={t("contactModal.whatsappAria", { phone: phone.display })}
                   data-mcp-action="contact_sales_whatsapp"
                 >
                   <WhatsAppIcon className="h-4 w-4" />
-                  <span>واتساپ</span>
+                  <span>{t("contactModal.whatsapp")}</span>
                 </a>
                 <a
                   href={`tel:${phone.international}`}
                   className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-brand px-4 py-3 text-sm font-semibold text-white transition-all hover:bg-brand-dark hover:shadow-md focus:outline-none focus:ring-2 focus:ring-brand focus:ring-offset-2 min-h-[44px]"
-                  aria-label={`پەیوەندی بە ${phone.display}`}
+                  aria-label={t("contactModal.callAria", { phone: phone.display })}
                   data-mcp-action="contact_sales_phone"
                 >
                   <Phone className="h-4 w-4" />
-                  <span>پەیوەندی</span>
+                  <span>{t("contactModal.call")}</span>
                 </a>
               </div>
             </div>

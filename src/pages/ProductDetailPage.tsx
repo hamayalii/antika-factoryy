@@ -7,6 +7,7 @@ import {
   Home,
   PhoneCall,
   MessageCircle,
+  Palette,
   Mail,
   Ruler,
   Sparkles,
@@ -19,15 +20,17 @@ import {
   Square,
   Clock,
 } from "lucide-react";
-import { getProductBySlug, getRelatedProducts, getCategoryBySlug, isHouseProduct, isKoshkProduct } from "../data/productData";
+import { getProductBySlug, getRelatedProducts, getCategoryBySlug, isHouseProduct, isKoshkProduct, productColorPalette, customColorGradient, buildColorInquiry, localizeProduct, localizeCategory, localizeColorLabel, ProductColorOption } from "../data/productData";
 import { VerificationPlaceholder } from "../components/VerificationPlaceholder";
 import { Reveal } from "../components/Reveal";
 import { SeoHead } from "../components/SeoHead";
 import { generateProductSchema, generateBreadcrumbSchema } from "../utils/schemaGenerators";
 import { SemanticTopicCluster } from "../components/SemanticTopicCluster";
 import { useContactModal } from "../contexts/ContactModalContext";
+import { useLanguage } from "../contexts/LanguageContext";
 
 export function ProductDetailPage() {
+  const { t, language } = useLanguage();
   const { slug } = useParams<{ slug: string }>();
   const product = slug ? getProductBySlug(slug) : undefined;
   const category = product ? getCategoryBySlug(product.categoryId) : undefined;
@@ -40,16 +43,16 @@ export function ProductDetailPage() {
       : "/products/capsules";
 
   const sectionTitle = product && isKoshkProduct(product)
-    ? "کۆشکەکان"
+    ? t("product.section.koshk")
     : product && isHouseProduct(product)
-      ? "خانوو"
-      : "کەپسولەکان";
+      ? t("product.section.houses")
+      : t("product.section.capsules");
 
   const sectionAllTitle = product && isKoshkProduct(product)
-    ? "بینینی سەرجەم کۆشکەکان"
+    ? t("product.section.allKoshk")
     : product && isHouseProduct(product)
-      ? "بینینی سەرجەم جۆرەکانی خانوو"
-      : "بینینی سەرجەم کەپسولەکان";
+      ? t("product.section.allHouses")
+      : t("product.section.allCapsules");
 
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [lightboxOpen, setLightboxOpen] = useState(false);
@@ -77,7 +80,7 @@ export function ProductDetailPage() {
 
     document.addEventListener("keydown", handleKeyDown);
     document.body.style.overflow = "hidden";
-    
+
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
       document.body.style.overflow = "";
@@ -87,10 +90,10 @@ export function ProductDetailPage() {
   // 404 state if product slug is invalid
   if (!product) {
     return (
-      <div className="min-h-[70vh] flex items-center justify-center bg-gray-50 px-4 py-24 text-center text-right">
+      <div className="min-h-[70vh] flex items-center justify-center bg-gray-50 px-4 py-24 text-center text-start">
         <SeoHead
-          title="بەرهەم نەدۆزرایەوە | ئەنتیکا فاکتۆری"
-          description="ئەو بەرهەمەی داوات کردووە بوونی نییە یان سڕدراوەتەوە."
+          title={t("product.notFound.title")}
+          description={t("product.notFound.desc")}
           noindex
         />
         <div className="max-w-md mx-auto">
@@ -98,16 +101,16 @@ export function ProductDetailPage() {
             <HelpCircle className="h-8 w-8" />
           </span>
           <h1 className="font-display text-2xl sm:text-3xl font-black text-gray-900 mb-3">
-            بەرهەم نەدۆزرایەوە
+            {t("product.notFound.title")}
           </h1>
           <p className="text-[15px] text-gray-600 mb-8 leading-relaxed">
-            ببورە، ئەو پەڕەیەی بەدوایدا دەگەڕێیت نەدۆزرایەوە. دەتوانیت سەرجەم بەرهەمەکان لە بەشی "ئەو کارانەی کە دەیکەین"دا ببینیت.
+            {t("product.notFound.desc")}
           </p>
           <Link
             to="/what-we-do"
             className="inline-flex items-center gap-2 rounded-full bg-brand px-8 py-3.5 text-[14px] font-bold text-white transition hover:bg-brand-dark shadow-md"
           >
-            گەڕانەوە بۆ ئەو کارانەی کە دەیکەین
+            {t("product.notFound.back")}
             <ArrowLeft className="h-4 w-4" />
           </Link>
         </div>
@@ -118,21 +121,40 @@ export function ProductDetailPage() {
   const relatedProducts = getRelatedProducts(product.slug, 3);
   const currentImage = product.images[activeImageIndex] || "/images/capsule-1.jpg";
 
+  // Language-aware view of this product: one object instead of reading the
+  // *Ku / *En fields (and deciding fallbacks) at every usage site.
+  const lp = localizeProduct(product, language);
+  const localizedCategory = category ? localizeCategory(category, language) : undefined;
+
+  // Lead-gen: every swatch (solid colors + custom) opens the ContactModal with a
+  // pre-filled inquiry (in the active language) for this product. Images are NOT swapped.
+  const handleSwatchClick = (color: ProductColorOption) => {
+    const colorLabel = color.isCustom ? null : localizeColorLabel(color, language);
+    const inquiry = buildColorInquiry(lp.title, colorLabel, language);
+    console.log("[ColorPicker] Color inquiry:", {
+      slug: product.slug,
+      product: lp.title,
+      color: colorLabel ?? "custom",
+      inquiry,
+    });
+    openContactModal(inquiry);
+  };
+
   // Generate breadcrumb paths for schema
   const breadcrumbPaths = [
-    { name: "سەرەکی", url: "/" },
+    { name: t("product.home"), url: "/" },
     { name: sectionTitle, url: sectionLink },
   ];
 
   if (category) {
     breadcrumbPaths.push({
-      name: category.titleKu,
+      name: localizedCategory?.title ?? category.titleKu,
       url: `/products/${category.slug}`,
     });
   }
 
   breadcrumbPaths.push({
-    name: product.titleKu,
+    name: lp.title,
     url: `/products/${product.slug}`,
   });
 
@@ -143,10 +165,10 @@ export function ProductDetailPage() {
   };
 
   return (
-    <div className="pt-24 min-h-screen text-right">
+    <div className="pt-24 min-h-screen text-start">
       <SeoHead
-        title={`${product.titleKu} | ئەنتیکا فاکتۆری`}
-        description={`${product.titleKu} لە پۆلێنی ${product.categoryTitleKu}ی کارگەی ئەنتیکا فاکتۆرییە. بۆ زانیاریی پێوانە و داوای نرخ، سەیری پەڕەی بەرهەم بکە.`}
+        title={t("product.seoTitle", { title: lp.title })}
+        description={t("product.seoDesc", { title: lp.title, category: lp.categoryTitle })}
         canonical={`/products/${product.slug}`}
         image={currentImage}
         type="product"
@@ -154,13 +176,13 @@ export function ProductDetailPage() {
       />
 
       {/* 1. Breadcrumb Navigation */}
-      <nav aria-label="ڕێڕەوی پەڕەکان" className="border-b border-gray-200 py-3.5">
+      <nav aria-label={t("product.breadcrumbAria")} className="border-b border-gray-200 py-3.5">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 overflow-x-hidden">
           <ol className="flex items-center gap-2 text-[13px] text-gray-500 flex-wrap">
             <li className="flex items-center gap-2">
               <Link to="/" className="flex items-center gap-1.5 transition hover:text-brand">
                 <Home className="h-3.5 w-3.5" />
-                <span>سەرەکی</span>
+                <span>{t("product.home")}</span>
               </Link>
               <ChevronLeft className="h-3.5 w-3.5 text-gray-400" />
             </li>
@@ -176,13 +198,13 @@ export function ProductDetailPage() {
             {category && (
               <li className="flex items-center gap-2">
                 <Link to={`/products/${category.slug}`} className="transition hover:text-brand">
-                  {category.titleKu}
+                  {localizedCategory?.title ?? category.titleKu}
                 </Link>
                 <ChevronLeft className="h-3.5 w-3.5 text-gray-400" />
               </li>
             )}
             <li className="font-bold text-gray-900" aria-current="page">
-              {product.titleKu}
+              {lp.title}
             </li>
           </ol>
         </div>
@@ -202,23 +224,23 @@ export function ProductDetailPage() {
                     className="inline-flex items-center gap-1.5 rounded-full bg-brand-soft px-3.5 py-1.5 text-[12.5px] font-bold text-brand transition hover:bg-brand-soft/80"
                   >
                     <Sparkles className="h-3.5 w-3.5" />
-                    {product.categoryTitleKu}
+                    {lp.categoryTitle}
                   </Link>
 
-                  {product.productFamilyKu && (
+                  {lp.productFamily && (
                     <span className="inline-flex items-center rounded-full bg-gray-100 px-3 py-1 text-xs font-semibold text-gray-700">
-                      {product.productFamilyKu}
+                      {lp.productFamily}
                     </span>
                   )}
 
                   <span className="text-xs font-semibold text-gray-400">
-                    {product.titleEn}
+                    {language === "ku" ? product.titleEn : product.titleKu}
                   </span>
 
                   {product.isComingSoon && (
                     <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-50 border border-amber-300 px-3 py-1 text-[12.5px] font-bold text-amber-800 shadow-sm">
                       <Clock className="h-3.5 w-3.5 text-amber-600" />
-                      بەم زووانە بەردەست ئەبێت..!
+                      {t("common.comingSoon")}
                     </span>
                   )}
                 </div>
@@ -229,13 +251,13 @@ export function ProductDetailPage() {
                   className="font-display font-black leading-[1.25] text-gray-900"
                   style={{ fontSize: "clamp(28px, 5vw, 44px)" }}
                 >
-                  {product.titleKu}
+                  {lp.title}
                 </h1>
               </Reveal>
 
               <Reveal delay={180}>
                 <p className="mt-5 text-[16px] sm:text-[17px] font-light leading-relaxed text-gray-600">
-                  {product.shortDescriptionKu}
+                  {lp.shortDescription}
                 </p>
               </Reveal>
 
@@ -243,20 +265,20 @@ export function ProductDetailPage() {
               <Reveal delay={260}>
                 <div className="mt-8 flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5">
                   <button
-                    onClick={openContactModal}
+                    onClick={() => openContactModal()}
                     rel="noopener noreferrer"
                     className="inline-flex items-center justify-center gap-2 rounded-full bg-brand px-7 py-3.5 text-[14.5px] font-bold text-white shadow-md transition hover:bg-brand-dark hover:shadow-lg"
                   >
                     <MessageCircle className="h-4 w-4" />
-                    {product.cta.primaryKu}
+                    {lp.ctaPrimary}
                   </button>
 
                   <button
-                    onClick={openContactModal}
+                    onClick={() => openContactModal()}
                     className="inline-flex items-center justify-center gap-2 rounded-full border-2 border-gray-200 bg-white px-7 py-3.5 text-[14.5px] font-bold text-gray-800 transition hover:border-brand hover:text-brand"
                   >
                     <PhoneCall className="h-4 w-4" />
-                    {product.cta.secondaryKu}
+                    {lp.ctaSecondary}
                   </button>
                 </div>
               </Reveal>
@@ -269,7 +291,7 @@ export function ProductDetailPage() {
                   <div className="relative aspect-[4/3] w-full overflow-hidden bg-gray-100">
                     <img
                       src={currentImage}
-                      alt={`${product.titleKu} - ئەنتیکا فاکتۆری`}
+                      alt={t("product.imageAlt", { title: lp.title })}
                       className="h-full w-full object-cover cursor-pointer transition-transform duration-500 hover:scale-105"
                       onClick={() => setLightboxOpen(true)}
                       loading="eager"
@@ -294,10 +316,10 @@ export function ProductDetailPage() {
                     <button
                       onClick={() => setLightboxOpen(true)}
                       className="absolute bottom-4 left-4 inline-flex items-center gap-1.5 rounded-full bg-black/60 px-3.5 py-1.5 text-xs font-semibold text-white backdrop-blur hover:bg-black/80 transition"
-                      aria-label="گەورەکردنی وێنە"
+                      aria-label={t("product.zoomAria")}
                     >
                       <Maximize2 className="h-3.5 w-3.5" />
-                      گەورەکردن
+                      {t("product.zoom")}
                     </button>
                   </div>
 
@@ -312,11 +334,11 @@ export function ProductDetailPage() {
                             ? "border-brand ring-2 ring-brand/30"
                             : "border-transparent opacity-70 hover:opacity-100"
                             }`}
-                          aria-label={`پیشاندانی وێنەی ${idx + 1}`}
+                          aria-label={t("product.thumbAria", { n: idx + 1 })}
                         >
                           <img
                             src={img}
-                            alt={`${product.titleKu} وێنەی ${idx + 1}`}
+                            alt={t("product.imageAltN", { title: lp.title, n: idx + 1 })}
                             className="h-full w-full object-cover"
                             loading="lazy"
                             decoding="async"
@@ -341,26 +363,26 @@ export function ProductDetailPage() {
           <Reveal className="mb-10 text-center">
             <span className="inline-flex items-center gap-2 text-[13.5px] font-bold text-brand">
               <span className="h-[2px] w-5 rounded bg-brand" />
-              زانیاری و پێوانەی بەرهەمەکە
+              {t("product.specsKicker")}
               <span className="h-[2px] w-5 rounded bg-brand" />
             </span>
             <h2 className="mt-3 font-display text-2xl sm:text-3xl font-black text-gray-900">
-              تایبەتمەندییە پشتڕاستکراوەکان
+              {t("product.specsTitle")}
             </h2>
           </Reveal>
 
           {/* Coming soon notice banner */}
           {product.isComingSoon && (
-            <div className="max-w-3xl mx-auto mb-8 rounded-2xl bg-amber-50 border-2 border-amber-300 p-5 text-right flex items-center gap-4 shadow-sm">
+            <div className="max-w-3xl mx-auto mb-8 rounded-2xl bg-amber-50 border-2 border-amber-300 p-5 text-start flex items-center gap-4 shadow-sm">
               <span className="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-amber-500 text-white shadow-md">
                 <Clock className="h-6 w-6" />
               </span>
               <div>
                 <h3 className="font-display text-[16px] font-extrabold text-amber-900">
-                  بەم زووانە بەردەست ئەبێت..!
+                  {t("common.comingSoon")}
                 </h3>
                 <p className="text-[13.5px] text-amber-800 mt-1 leading-relaxed">
-                  ئەم بەرهەمە لە قۆناغی ئامادەکاری و دیزایندایە و بەم زووانە بەردەست دەبێت. بۆ داواکاری پێشوەختە پەیوەندیمان پێوە بکە.
+                  {t("product.comingSoonDesc")}
                 </p>
               </div>
             </div>
@@ -373,11 +395,11 @@ export function ProductDetailPage() {
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 px-6 py-4.5 bg-amber-50/80 border-b border-amber-200">
                   <dt className="text-[14px] font-bold text-amber-900 flex items-center gap-2">
                     <Clock className="h-4 w-4 text-amber-600 shrink-0" />
-                    دۆخی بەرهەم
+                    {t("product.status")}
                   </dt>
                   <dd className="sm:col-span-2 text-[14.5px] font-bold text-amber-800 flex items-center gap-2">
                     <span className="h-2 w-2 rounded-full bg-amber-500 animate-pulse" />
-                    بەم زووانە بەردەست ئەبێت..!
+                    {t("common.comingSoon")}
                   </dd>
                 </div>
               )}
@@ -386,10 +408,10 @@ export function ProductDetailPage() {
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 px-6 py-4.5 bg-white">
                 <dt className="text-[14px] font-bold text-gray-900 flex items-center gap-2">
                   <Building2 className="h-4 w-4 text-brand shrink-0" />
-                  جۆری بەرهەم
+                  {t("product.type")}
                 </dt>
                 <dd className="sm:col-span-2 text-[14.5px] text-gray-700 font-medium">
-                  {product.categoryTitleKu}
+                  {lp.categoryTitle}
                 </dd>
               </div>
 
@@ -398,49 +420,49 @@ export function ProductDetailPage() {
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 px-6 py-4.5 bg-gray-50/60">
                   <dt className="text-[14px] font-bold text-gray-900 flex items-center gap-2">
                     <Hash className="h-4 w-4 text-brand shrink-0" />
-                    کۆدی مۆدێل
+                    {t("product.modelCode")}
                   </dt>
                   <dd className="sm:col-span-2 text-[14.5px] font-mono font-bold text-gray-800">
-                    {product.modelCode}
+                    {lp.modelCode}
                   </dd>
                 </div>
               )}
 
               {/* Product Family */}
-              {product.productFamilyKu && (
+              {lp.productFamily && (
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 px-6 py-4.5 bg-white">
                   <dt className="text-[14px] font-bold text-gray-900 flex items-center gap-2">
                     <Sparkles className="h-4 w-4 text-brand shrink-0" />
-                    زنجیرە / خێزانی بەرهەم
+                    {t("product.family")}
                   </dt>
                   <dd className="sm:col-span-2 text-[14.5px] text-gray-700 font-medium">
-                    {product.productFamilyKu}
+                    {lp.productFamily}
                   </dd>
                 </div>
               )}
 
               {/* Levels if applicable */}
-              {product.levels && (
+              {lp.levels && (
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 px-6 py-4.5 bg-gray-50/60">
                   <dt className="text-[14px] font-bold text-gray-900 flex items-center gap-2">
                     <Building2 className="h-4 w-4 text-brand shrink-0" />
-                    جۆر
+                    {t("product.levels")}
                   </dt>
                   <dd className="sm:col-span-2 text-[14.5px] text-gray-700 font-medium">
-                    {product.levels}
+                    {lp.levels}
                   </dd>
                 </div>
               )}
 
               {/* Raw Dimensions */}
-              {product.dimensionsRaw && (
+              {lp.dimensions && (
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 px-6 py-4.5 bg-white">
                   <dt className="text-[14px] font-bold text-gray-900 flex items-center gap-2">
                     <Ruler className="h-4 w-4 text-brand shrink-0" />
-                    پێوانەی تەواوەتی
+                    {t("product.fullDimensions")}
                   </dt>
                   <dd className="sm:col-span-2 text-[15px] font-bold text-gray-900" dir="ltr">
-                    {product.dimensionsRaw}
+                    {lp.dimensions}
                   </dd>
                 </div>
               )}
@@ -450,7 +472,7 @@ export function ProductDetailPage() {
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 px-6 py-4.5 bg-gray-50/60">
                   <dt className="text-[14px] font-bold text-gray-900 flex items-center gap-2">
                     <Ruler className="h-4 w-4 text-brand shrink-0" />
-                    بەرزی
+                    {t("product.height")}
                   </dt>
                   <dd className="sm:col-span-2 text-[14.5px] text-gray-700 font-medium" dir="ltr">
                     {product.heightRaw}
@@ -462,7 +484,7 @@ export function ProductDetailPage() {
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 px-6 py-4.5 bg-white">
                   <dt className="text-[14px] font-bold text-gray-900 flex items-center gap-2">
                     <Ruler className="h-4 w-4 text-brand shrink-0" />
-                    پانی
+                    {t("product.width")}
                   </dt>
                   <dd className="sm:col-span-2 text-[14.5px] text-gray-700 font-medium" dir="ltr">
                     {product.widthRaw}
@@ -474,7 +496,7 @@ export function ProductDetailPage() {
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 px-6 py-4.5 bg-gray-50/60">
                   <dt className="text-[14px] font-bold text-gray-900 flex items-center gap-2">
                     <Ruler className="h-4 w-4 text-brand shrink-0" />
-                    درێژی
+                    {t("product.length")}
                   </dt>
                   <dd className="sm:col-span-2 text-[14.5px] text-gray-700 font-medium" dir="ltr">
                     {product.lengthRaw}
@@ -487,7 +509,7 @@ export function ProductDetailPage() {
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 px-6 py-4.5 bg-white">
                   <dt className="text-[14px] font-bold text-gray-900 flex items-center gap-2">
                     <Square className="h-4 w-4 text-brand shrink-0" />
-                    ڕووبەری تەواو
+                    {t("product.totalArea")}
                   </dt>
                   <dd className="sm:col-span-2 text-[15px] font-bold text-brand" dir="ltr">
                     {product.areaRaw}
@@ -505,18 +527,53 @@ export function ProductDetailPage() {
           <div className="max-w-3xl mx-auto">
             <Reveal>
               <h3 className="font-display text-xl sm:text-2xl font-black text-gray-900 mb-4">
-                تایبەتمەندی بەرهەم
+                {t("product.detailsTitle")}
               </h3>
 
-              {product.descriptionKu ? (
+              {lp.description ? (
                 <div className="rounded-2xl bg-white p-7 shadow-sm border border-gray-100">
                   <p className="text-[15.5px] leading-8 text-gray-600 font-light">
-                    {product.descriptionKu}
+                    {lp.description}
                   </p>
                 </div>
               ) : (
-                <VerificationPlaceholder message="زانیاریی وردی ئەم بەرهەمە بە زوویی زیاد دەکرێت." />
+                <VerificationPlaceholder message={t("product.detailsPlaceholder")} />
               )}
+            </Reveal>
+
+            {/* Available Colors — lead-gen swatches (opens pre-filled inquiry) */}
+            <Reveal delay={100}>
+              <div className="mt-8 rounded-2xl bg-white p-7 shadow-sm border border-gray-100">
+                <div className="mb-5 flex items-center justify-between flex-wrap gap-3">
+                  <h4 className="inline-flex items-center gap-2 font-display text-lg font-black text-gray-900">
+                    <Palette className="h-5 w-5 text-brand" />
+                    {t("product.colors")}
+                  </h4>
+                  <span className="text-[12px] font-semibold text-gray-500">
+                    {t("product.colorsHint")}
+                  </span>
+                </div>
+                <div className="flex flex-wrap items-center gap-3">
+                  {productColorPalette.map((color) => {
+                    const colorLabel = localizeColorLabel(color, language);
+                    return (
+                      <button
+                        key={color.key}
+                        type="button"
+                        onClick={() => handleSwatchClick(color)}
+                        title={colorLabel}
+                        aria-label={t("product.colorAria", { color: colorLabel })}
+                        className="h-9 w-9 shrink-0 rounded-full border-2 border-white shadow-sm ring-1 ring-gray-200 opacity-90 transition-all duration-200 hover:scale-110 hover:opacity-100 hover:shadow-md"
+                        style={
+                          color.hex
+                            ? { backgroundColor: color.hex }
+                            : { background: customColorGradient }
+                        }
+                      />
+                    );
+                  })}
+                </div>
+              </div>
             </Reveal>
           </div>
         </div>
@@ -527,23 +584,23 @@ export function ProductDetailPage() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
           <Reveal>
             <h2 className="font-display text-2xl sm:text-3xl font-black">
-              داوای نرخ یان ڕاوێژ دەربارەی {product.titleKu}
+              {t("product.inquiryTitle", { product: lp.title })}
             </h2>
             <p className="mx-auto mt-4 max-w-xl text-[15.5px] text-white/90 font-light">
-              بۆ زانینی پێوانەی گونجاو و تێچوو و شێوازی جێبەجێکردن، پەیوەندیمان پێوە بکە.
+              {t("product.inquiryDesc")}
             </p>
           </Reveal>
 
           <Reveal delay={150}>
             <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
               <a
-                href={`https://wa.me/9647501234567?text=${encodeURIComponent(`سڵاو دەربارەی ${product.titleKu}`)}`}
+                href={`https://wa.me/9647501234567?text=${encodeURIComponent(t("product.whatsappGreeting", { product: lp.title }))}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-[14.5px] font-bold text-brand shadow hover:bg-gray-100 transition w-full sm:w-auto justify-center"
               >
                 <MessageCircle className="h-4 w-4" />
-                واتسئاپ: <span dir="ltr">+964 750 123 4567</span>
+                {t("product.whatsapp")} <span dir="ltr">+964 750 123 4567</span>
               </a>
 
               <a
@@ -551,7 +608,7 @@ export function ProductDetailPage() {
                 className="inline-flex items-center gap-2 rounded-full border-2 border-white px-7 py-3.5 text-[14.5px] font-bold text-white hover:bg-white/10 transition w-full sm:w-auto justify-center"
               >
                 <PhoneCall className="h-4 w-4" />
-                تەلەفۆن: <span dir="ltr">+964 750 123 4567</span>
+                {t("product.phone")} <span dir="ltr">+964 750 123 4567</span>
               </a>
 
               <a
@@ -570,6 +627,8 @@ export function ProductDetailPage() {
       <SemanticTopicCluster
         relatedProducts={relatedProducts}
         currentProductSlug={product.slug}
+        viewAllHref={sectionLink}
+        viewAllLabel={sectionAllTitle}
         className="py-16 sm:py-24 border-t border-gray-100"
       />
 
@@ -579,7 +638,7 @@ export function ProductDetailPage() {
           <div
             role="dialog"
             aria-modal="true"
-            aria-label="پێشانگای وێنە"
+            aria-label={t("product.galleryAria")}
             className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/90 p-4 backdrop-blur-sm"
             onClick={() => setLightboxOpen(false)}
           >
@@ -590,14 +649,14 @@ export function ProductDetailPage() {
               <button
                 onClick={() => setLightboxOpen(false)}
                 className="absolute top-4 left-4 grid h-11 w-11 place-items-center rounded-full bg-black/50 text-white hover:bg-black/70 transition"
-                aria-label="داخستن"
+                aria-label={t("common.close")}
               >
                 <X className="h-6 w-6" />
               </button>
 
               <img
                 src={currentImage}
-                alt={product.titleKu}
+                alt={lp.title}
                 className="max-h-[85dvh] w-auto max-w-full rounded-xl object-contain shadow-2xl"
               />
 
@@ -608,7 +667,7 @@ export function ProductDetailPage() {
                       setActiveImageIndex((prev) => (prev - 1 + product.images.length) % product.images.length)
                     }
                     className="grid h-11 w-11 place-items-center rounded-full bg-black/50 text-white hover:bg-black/70 transition"
-                    aria-label="وێنەی پێشوو"
+                    aria-label={t("product.prevImage")}
                   >
                     <ChevronRight className="h-6 w-6" />
                   </button>
@@ -620,7 +679,7 @@ export function ProductDetailPage() {
                       setActiveImageIndex((prev) => (prev + 1) % product.images.length)
                     }
                     className="grid h-11 w-11 place-items-center rounded-full bg-black/50 text-white hover:bg-black/70 transition"
-                    aria-label="وێنەی دواتر"
+                    aria-label={t("product.nextImage")}
                   >
                     <ChevronLeft className="h-6 w-6" />
                   </button>

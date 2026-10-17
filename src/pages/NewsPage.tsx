@@ -404,7 +404,7 @@ export function NewsPage() {
             </p>
             <div className="flex flex-wrap items-center justify-center gap-3">
               <button
-                onClick={openContactModal}
+                onClick={() => openContactModal()}
                 className="rounded-full bg-brand px-6 sm:px-8 py-2.5 sm:py-3 text-[13.5px] sm:text-[14px] font-bold text-white shadow-lg transition hover:bg-brand-dark"
               >
                 {lang === "ku" ? "پەیوەندیمان پێوە بکە" : "تواصل معنا"}

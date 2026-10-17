@@ -29,7 +29,10 @@ import { TrustMarquee } from "./components/TrustMarquee";
 import { SpecialFeatures } from "./components/SpecialFeatures";
 import { FactoryInfoSection } from "./components/FactoryInfoSection";
 import { ContactModal } from "./components/ContactModal";
+import { LanguageSwitcher } from "./components/LanguageSwitcher";
 import { ContactModalProvider, useContactModal } from "./contexts/ContactModalContext";
+import { LanguageProvider, useLanguage } from "./contexts/LanguageContext";
+import type { TranslationKey } from "./i18n/translations";
 import { SelectiveHydration } from "./components/SelectiveHydration";
 import { Typewriter } from "./components/ui/Typewriter";
 import {
@@ -183,16 +186,16 @@ function Logo({
 }
 
 /* ---------------------------------- Header ---------------------------------- */
-const NAV = [
-  { id: "home", label: "سەرەکی", path: "/" },
-  { id: "capsules", label: "کەپسولەکان", isDropdown: true },
-  { id: "houses", label: "خانووەکان", isDropdown: true },
-  { id: "cabins", label: "کابینەکان", isDropdown: true },
-  { id: "koshk", label: "کۆشکەکان", isDropdown: true },
-  { id: "artworks", label: "کارە هونەریەکان", isDropdown: true },
-  { id: "workImages", label: "وێنەی کارەکانمان", path: "/gallery", isDropdown: false },
-  { id: "news", label: "هەواڵەکان", path: "/news", isDropdown: false },
-  { id: "about", label: "دەربارەی ئێمە", path: "/about" },
+const NAV: { id: string; labelKey: TranslationKey; path?: string; isDropdown?: boolean }[] = [
+  { id: "home", labelKey: "nav.home", path: "/" },
+  { id: "capsules", labelKey: "nav.capsules", isDropdown: true },
+  { id: "houses", labelKey: "nav.houses", isDropdown: true },
+  { id: "cabins", labelKey: "nav.cabins", isDropdown: true },
+  { id: "koshk", labelKey: "nav.koshk", isDropdown: true },
+  { id: "artworks", labelKey: "nav.artworks", isDropdown: true },
+  { id: "workImages", labelKey: "nav.workImages", path: "/gallery", isDropdown: false },
+  { id: "news", labelKey: "nav.news", path: "/news", isDropdown: false },
+  { id: "about", labelKey: "nav.about", path: "/about" },
 ];
 
 // Navbar gradient color mapping (RTL order: right to left)
@@ -223,39 +226,39 @@ const generateNavbarGradient = () => {
 };
 
 const CAPSULE_ITEMS = [
-  { id: "al", label: "کەپسولەکانی نیشتەجێبوون", path: "/products/al", isComingSoon: false },
-  { id: "am", label: "کەپسولەکانی ئیش و کار", path: "/products/am", isComingSoon: false },
-  { id: "as", label: "کەپسولەکانی خزمەتگوزاری", path: "/products/as", isComingSoon: false },
-];
+  { id: "al", labelKey: "menu.al", path: "/products/al", isComingSoon: false },
+  { id: "am", labelKey: "menu.am", path: "/products/am", isComingSoon: false },
+  { id: "as", labelKey: "menu.as", path: "/products/as", isComingSoon: false },
+] as const;
 
 const HOUSE_ITEMS = [
-  { id: "container-house", label: "خانووی حاویە", path: "/products/cl", isComingSoon: false },
-  { id: "cabin-house", label: "خانووی کوخ", path: "/products/kl", isComingSoon: true },
-];
+  { id: "container-house", labelKey: "menu.container-house", path: "/products/cl", isComingSoon: false },
+  { id: "cabin-house", labelKey: "menu.cabin-house", path: "/products/kl", isComingSoon: true },
+] as const;
 
 const CABIN_ITEMS = [
-  { id: "standard-house", label: "کابینەیی ئاسایی", path: "/products/zl", isComingSoon: true },
-  { id: "garden-house", label: "خانووی باخچە", path: "/products/pl", isComingSoon: true },
-  { id: "concrete-house", label: "خانووی کۆنکریت", path: "/products/concrete-house-model", isComingSoon: true },
-];
+  { id: "standard-house", labelKey: "menu.standard-house", path: "/products/zl", isComingSoon: true },
+  { id: "garden-house", labelKey: "menu.garden-house", path: "/products/pl", isComingSoon: true },
+  { id: "concrete-house", labelKey: "menu.concrete-house", path: "/products/concrete-house-model", isComingSoon: true },
+] as const;
 
 const KOSHK_ITEMS = [
-  { id: "ka-b", label: "کۆشکی KA · B", path: "/products/ka-b", isComingSoon: false },
-  { id: "ka-p", label: "کۆشکی KA · P", path: "/products/ka-p", isComingSoon: false },
-  { id: "ka-g", label: "کۆشکی KA · G", path: "/products/ka-g", isComingSoon: false },
-  { id: "ka-a", label: "کۆشکی KA · A", path: "/products/ka-a", isComingSoon: false },
-  { id: "am-a2", label: "کۆشکی AM • A2", path: "/products/am-a2", isComingSoon: false },
-  { id: "am-m", label: "کۆشکی AM • M", path: "/products/am-m", isComingSoon: false },
-  { id: "am-h", label: "کۆشکی AM • H", path: "/products/am-h", isComingSoon: false },
-  { id: "am-s", label: "کۆشکی AM • S", path: "/products/am-s", isComingSoon: false },
-  { id: "am-k", label: "کۆشکی AM • K", path: "/products/am-k", isComingSoon: false },
-  { id: "am-r", label: "کۆشکی AM • R", path: "/products/am-r", isComingSoon: false },
-];
+  { id: "ka-b", labelKey: "menu.koshk.ka-b", path: "/products/ka-b", isComingSoon: false },
+  { id: "ka-p", labelKey: "menu.koshk.ka-p", path: "/products/ka-p", isComingSoon: false },
+  { id: "ka-g", labelKey: "menu.koshk.ka-g", path: "/products/ka-g", isComingSoon: false },
+  { id: "ka-a", labelKey: "menu.koshk.ka-a", path: "/products/ka-a", isComingSoon: false },
+  { id: "am-a2", labelKey: "menu.koshk.am-a2", path: "/products/am-a2", isComingSoon: false },
+  { id: "am-m", labelKey: "menu.koshk.am-m", path: "/products/am-m", isComingSoon: false },
+  { id: "am-h", labelKey: "menu.koshk.am-h", path: "/products/am-h", isComingSoon: false },
+  { id: "am-s", labelKey: "menu.koshk.am-s", path: "/products/am-s", isComingSoon: false },
+  { id: "am-k", labelKey: "menu.koshk.am-k", path: "/products/am-k", isComingSoon: false },
+  { id: "am-r", labelKey: "menu.koshk.am-r", path: "/products/am-r", isComingSoon: false },
+] as const;
 
 const ARTWORK_ITEMS = [
-  { id: "lighting", label: "عامودی لایت", path: "/products/lighting", isComingSoon: false },
-  { id: "shelves", label: "ڕەفەکان", path: "/products/shelves", isComingSoon: false },
-];
+  { id: "lighting", labelKey: "menu.lighting", path: "/products/lighting", isComingSoon: false },
+  { id: "shelves", labelKey: "menu.shelves", path: "/products/shelves", isComingSoon: false },
+] as const;
 
 function Header({
   active,
@@ -265,6 +268,7 @@ function Header({
   onNav: (id: string) => void;
 }) {
   const { openContactModal } = useContactModal();
+  const { t } = useLanguage();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
@@ -427,7 +431,7 @@ function Header({
                       : isOverlay ? "text-white/90 hover:text-white" : "text-gray-600 hover:text-gray-900"
                       }`}
                   >
-                    {n.label}
+                    {t(n.labelKey)}
                     <ChevronDown className={`h-3.5 w-3.5 transition-transform duration-200 ${openDropdown === n.id ? 'rotate-180' : ''}`} />
                   </button>
 
@@ -451,8 +455,8 @@ function Header({
                           onClick={() => setOpenDropdown(null)}
                           className="block px-4 py-2 text-[13px] font-medium text-gray-700 hover:bg-gray-50 hover:text-brand transition-colors"
                         >
-                          {item.label}
-                          {item.isComingSoon && <span className="mr-2 text-[11px] text-gray-500">- بەم زووانە..!</span>}
+                          {t(item.labelKey)}
+                          {item.isComingSoon && <span className="mr-2 text-[11px] text-gray-500">- {t("common.comingSoonShort")}</span>}
                         </Link>
                       ))}
                       {n.id === 'houses' && HOUSE_ITEMS.map((item) => (
@@ -462,8 +466,8 @@ function Header({
                           onClick={() => setOpenDropdown(null)}
                           className="block px-4 py-2 text-[13px] font-medium text-gray-700 hover:bg-gray-50 hover:text-brand transition-colors"
                         >
-                          {item.label}
-                          {item.isComingSoon && <span className="mr-2 text-[11px] text-gray-500">- بەم زووانە..!</span>}
+                          {t(item.labelKey)}
+                          {item.isComingSoon && <span className="mr-2 text-[11px] text-gray-500">- {t("common.comingSoonShort")}</span>}
                         </Link>
                       ))}
                       {n.id === 'artworks' && ARTWORK_ITEMS.map((item) => (
@@ -473,8 +477,8 @@ function Header({
                           onClick={() => setOpenDropdown(null)}
                           className="block px-4 py-2 text-[13px] font-medium text-gray-700 hover:bg-gray-50 hover:text-brand transition-colors"
                         >
-                          {item.label}
-                          {item.isComingSoon && <span className="mr-2 text-[11px] text-gray-500">- بەم زووانە..!</span>}
+                          {t(item.labelKey)}
+                          {item.isComingSoon && <span className="mr-2 text-[11px] text-gray-500">- {t("common.comingSoonShort")}</span>}
                         </Link>
                       ))}
                       {n.id === 'cabins' && CABIN_ITEMS.map((item) => (
@@ -484,8 +488,8 @@ function Header({
                           onClick={() => setOpenDropdown(null)}
                           className="block px-4 py-2 text-[13px] font-medium text-gray-700 hover:bg-gray-50 hover:text-brand transition-colors"
                         >
-                          {item.label}
-                          {item.isComingSoon && <span className="mr-2 text-[11px] text-gray-500">- بەم زووانە..!</span>}
+                          {t(item.labelKey)}
+                          {item.isComingSoon && <span className="mr-2 text-[11px] text-gray-500">- {t("common.comingSoonShort")}</span>}
                         </Link>
                       ))}
                       {n.id === 'koshk' && KOSHK_ITEMS.map((item) => (
@@ -495,8 +499,8 @@ function Header({
                           onClick={() => setOpenDropdown(null)}
                           className="block px-4 py-2 text-[13px] font-medium text-gray-700 hover:bg-gray-50 hover:text-brand transition-colors"
                         >
-                          {item.label}
-                          {item.isComingSoon && <span className="mr-2 text-[11px] text-gray-500">- بەم زووانە..!</span>}
+                          {t(item.labelKey)}
+                          {item.isComingSoon && <span className="mr-2 text-[11px] text-gray-500">- {t("common.comingSoonShort")}</span>}
                         </Link>
                       ))}
                     </div>
@@ -511,7 +515,7 @@ function Header({
                     : isOverlay ? "text-white/90 hover:text-white" : "text-gray-600 hover:text-gray-900"
                     }`}
                 >
-                  {n.label}
+                  {t(n.labelKey)}
                 </Link>
               )
             ))}
@@ -519,20 +523,21 @@ function Header({
 
           {/* CTA LEFT */}
           <div className="flex items-center gap-2">
+            <LanguageSwitcher />
             <button
-              onClick={openContactModal}
+              onClick={() => openContactModal()}
               className={`hidden items-center gap-2 rounded-full px-6 py-3 text-[13px] font-bold transition sm:inline-flex ${isOverlay
                 ? "border border-white/70 bg-white/10 text-white hover:bg-white hover:text-gray-900"
                 : "bg-brand text-white hover:bg-brand-dark"
                 }`}
             >
-              پەیوەندیمان پێوە بکە
+              {t("header.contactCta")}
               <ArrowLeft className="h-4 w-4" strokeWidth={2.5} />
             </button>
             <button
               ref={menuButtonRef}
               onClick={() => setOpen(!open)}
-              aria-label={open ? "داخستنی مێنیو" : "کردنەوەی مێنیو"}
+              aria-label={open ? t("header.menuClose") : t("header.menuOpen")}
               aria-expanded={open}
               aria-controls="mobile-menu"
               className={`grid h-11 w-11 place-items-center rounded-full border transition hover:border-brand hover:text-brand lg:hidden sm:h-12 sm:w-12 ${isOverlay
@@ -551,7 +556,7 @@ function Header({
           id="mobile-menu"
           role="dialog"
           aria-modal="true"
-          aria-label="مێنیوی سەرەکی"
+          aria-label={t("header.mainMenu")}
           className={`mx-auto max-w-7xl overflow-hidden shadow-lg transition-all duration-300 lg:hidden ${open ? "max-h-[800px] opacity-100" : "max-h-0 opacity-0"
             }`}
           style={{ backgroundColor: '#FFFFFF' }}
@@ -564,7 +569,7 @@ function Header({
                     onClick={() => setMobileDropdowns({ ...mobileDropdowns, [n.id]: !mobileDropdowns[n.id] })}
                     className="flex items-center justify-between rounded-xl px-4 py-3 text-[13.5px] font-semibold text-gray-700 w-full text-right"
                   >
-                    {n.label}
+                    {t(n.labelKey)}
                     <ChevronDown className={`h-4 w-4 transition-transform ${mobileDropdowns[n.id] ? 'rotate-180' : ''}`} />
                   </button>
                   <div className={`flex flex-col pl-4 pr-8 pb-3 space-y-1 overflow-hidden transition-all duration-300 ${mobileDropdowns[n.id] ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}>
@@ -585,8 +590,8 @@ function Header({
                         onClick={() => { setOpen(false); setMobileDropdowns({}); }}
                         className="text-[12.5px] text-gray-600 hover:text-brand transition-colors py-1.5"
                       >
-                        {item.label}
-                        {item.isComingSoon && <span className="mr-2 text-[10.5px] text-gray-500">- بەم زوانە بەردەست ئەبێت..!</span>}
+                        {t(item.labelKey)}
+                        {item.isComingSoon && <span className="mr-2 text-[10.5px] text-gray-500">- {t("common.comingSoon")}</span>}
                       </Link>
                     ))}
                     {n.id === 'houses' && HOUSE_ITEMS.map((item) => (
@@ -596,8 +601,8 @@ function Header({
                         onClick={() => { setOpen(false); setMobileDropdowns({}); }}
                         className="text-[12.5px] text-gray-600 hover:text-brand transition-colors py-1.5"
                       >
-                        {item.label}
-                        {item.isComingSoon && <span className="mr-2 text-[10.5px] text-gray-500">- بەم زوانە بەردەست ئەبێت..!</span>}
+                        {t(item.labelKey)}
+                        {item.isComingSoon && <span className="mr-2 text-[10.5px] text-gray-500">- {t("common.comingSoon")}</span>}
                       </Link>
                     ))}
                     {n.id === 'artworks' && ARTWORK_ITEMS.map((item) => (
@@ -607,8 +612,8 @@ function Header({
                         onClick={() => { setOpen(false); setMobileDropdowns({}); }}
                         className="text-[12.5px] text-gray-600 hover:text-brand transition-colors py-1.5"
                       >
-                        {item.label}
-                        {item.isComingSoon && <span className="mr-2 text-[10.5px] text-gray-500">- بەم زوانە بەردەست ئەبێت..!</span>}
+                        {t(item.labelKey)}
+                        {item.isComingSoon && <span className="mr-2 text-[10.5px] text-gray-500">- {t("common.comingSoon")}</span>}
                       </Link>
                     ))}
                     {n.id === 'cabins' && CABIN_ITEMS.map((item) => (
@@ -618,8 +623,8 @@ function Header({
                         onClick={() => { setOpen(false); setMobileDropdowns({}); }}
                         className="text-[12.5px] text-gray-600 hover:text-brand transition-colors py-1.5"
                       >
-                        {item.label}
-                        {item.isComingSoon && <span className="mr-2 text-[10.5px] text-gray-500">- بەم زوانە بەردەست ئەبێت..!</span>}
+                        {t(item.labelKey)}
+                        {item.isComingSoon && <span className="mr-2 text-[10.5px] text-gray-500">- {t("common.comingSoon")}</span>}
                       </Link>
                     ))}
                     {n.id === 'koshk' && KOSHK_ITEMS.map((item) => (
@@ -629,8 +634,8 @@ function Header({
                         onClick={() => { setOpen(false); setMobileDropdowns({}); }}
                         className="text-[12.5px] text-gray-600 hover:text-brand transition-colors py-1.5"
                       >
-                        {item.label}
-                        {item.isComingSoon && <span className="mr-2 text-[10.5px] text-gray-500">- بەم زوانە بەردەست ئەبێت..!</span>}
+                        {t(item.labelKey)}
+                        {item.isComingSoon && <span className="mr-2 text-[10.5px] text-gray-500">- {t("common.comingSoon")}</span>}
                       </Link>
                     ))}
                   </div>
@@ -645,7 +650,7 @@ function Header({
                     : "text-gray-700 hover:bg-gray-50"
                     }`}
                 >
-                  {n.label}
+                  {t(n.labelKey)}
                   <span className="text-xs text-gray-400">0{i + 1}</span>
                 </Link>
               )
@@ -657,7 +662,7 @@ function Header({
               }}
               className="mt-2 inline-flex items-center justify-center gap-2 rounded-xl bg-brand px-4 py-3 text-[13.5px] font-semibold text-white"
             >
-              پەیوەندیمان پێوە بکە
+              {t("header.contactCta")}
               <ArrowLeft className="h-4 w-4" />
             </button>
           </nav>
@@ -670,42 +675,77 @@ function Header({
 /* ---------------------------------- Hero Slider ---------------------------------- */
 const HERO_SLIDES = [
   {
-    tag: "سلێمانی - کوردستان، عێراق",
-    title: "داهێنان لە دیزاین، وردی لە دروستکردن",
-    desc: (
-      <>
-        پێشکەشکردنی یەکە نیشتەجێبوونە مۆدێرنەکانمان بە ستانداری
-        <br />
-        جیهانی، تێکەڵەیەک لە دیمەنی پانۆرامایی ٢٧٠ پلە و ژیانێکی زیرەک
-        <br />
-        لەگەڵ سیستەمێکی بەهێز و بەردەوامی بیناسازی
-      </>
-    ),
     img: "/images/hero-antika.webp",
     mobileImg: "/images/hero-mobile-1.webp",
-    cta1: "بینینی کارەکانمان",
-    cta2: "دەربارەی ئێمە",
+    ku: {
+      tag: "سلێمانی - کوردستان، عێراق",
+      title: "داهێنان لە دیزاین، وردی لە دروستکردن",
+      desc: (
+        <>
+          پێشکەشکردنی یەکە نیشتەجێبوونە مۆدێرنەکانمان بە ستانداری
+          <br />
+          جیهانی، تێکەڵەیەک لە دیمەنی پانۆرامایی ٢٧٠ پلە و ژیانێکی زیرەک
+          <br />
+          لەگەڵ سیستەمێکی بەهێز و بەردەوامی بیناسازی
+        </>
+      ),
+      cta1: "بینینی کارەکانمان",
+      cta2: "دەربارەی ئێمە",
+    },
+    en: {
+      tag: "Sulaymaniyah - Kurdistan, Iraq",
+      title: "Innovation in design, precision in manufacturing",
+      desc: (
+        <>
+          Presenting our modern residential units to a global
+          <br />
+          standard — a blend of a 270° panoramic view and smart living
+          <br />
+          with a robust, durable construction system
+        </>
+      ),
+      cta1: "View our work",
+      cta2: "About us",
+    },
   },
   {
-    tag: "سلێمانی - کوردستان، عێراق",
-    title: "دیزاینێکی نوێ بۆ شێوازی ژیانێکی نوێ",
-    desc: (
-      <>
-        تێکەڵەیەک لە دیزاینی مۆدێرن و بەکارهێنانی جۆراوجۆر،
-        <br />
-        لە ئۆفیسی سەربەخۆ و ژووری کۆبوونەوەوە تا کافێ و
-        <br />
-        یەکەی گواستراوەی بازرگانی بە بەرزترین کوالێتی و نرخ
-      </>
-    ),
     img: "/images/hero-2.webp",
     mobileImg: "/images/hero-mobile-2.webp",
-    cta1: "خزمەتگوزارییەکان",
-    cta2: "پەیوەندی",
+    ku: {
+      tag: "سلێمانی - کوردستان، عێراق",
+      title: "دیزاینێکی نوێ بۆ شێوازی ژیانێکی نوێ",
+      desc: (
+        <>
+          تێکەڵەیەک لە دیزاینی مۆدێرن و بەکارهێنانی جۆراوجۆر،
+          <br />
+          لە ئۆفیسی سەربەخۆ و ژووری کۆبوونەوەوە تا کافێ و
+          <br />
+          یەکەی گواستراوەی بازرگانی بە بەرزترین کوالێتی و نرخ
+        </>
+      ),
+      cta1: "خزمەتگوزارییەکان",
+      cta2: "پەیوەندی",
+    },
+    en: {
+      tag: "Sulaymaniyah - Kurdistan, Iraq",
+      title: "A new design for a new way of living",
+      desc: (
+        <>
+          A blend of modern design and versatile use,
+          <br />
+          from private offices and meeting rooms to cafés
+          <br />
+          and mobile commercial units at the highest quality and price
+        </>
+      ),
+      cta1: "Our Services",
+      cta2: "Contact",
+    },
   },
 ];
 
 function Hero({ onMediaLoaded }: { onMediaLoaded?: () => void }) {
+  const { language } = useLanguage();
   const [current, setCurrent] = useState(0);
   const [previous, setPrevious] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
@@ -755,6 +795,8 @@ function Hero({ onMediaLoaded }: { onMediaLoaded?: () => void }) {
   const prev = () => goTo((current - 1 + HERO_SLIDES.length) % HERO_SLIDES.length);
 
   const slide = HERO_SLIDES[displayedSlide];
+  // Arabic is not translated yet and resolves to the English hero copy.
+  const copy = language === "ku" ? slide.ku : slide.en;
 
   return (
     <section
@@ -832,17 +874,17 @@ function Hero({ onMediaLoaded }: { onMediaLoaded?: () => void }) {
               className="inline-flex items-center gap-2 border-b-2 border-brand px-1 pb-2 text-[12px] font-semibold text-white drop-shadow-md transition-opacity duration-200 hover:opacity-80 no-underline"
             >
               <MapPin className="h-3.5 w-3.5 text-brand shrink-0" aria-hidden="true" />
-              <span className="whitespace-nowrap">{slide.tag}</span>
+              <span className="whitespace-nowrap">{copy.tag}</span>
             </a>
           </div>
           <div className="hero-text-item">
             <h1 className="mt-4 font-display font-black leading-[1.2] text-white drop-shadow-lg" style={{ fontSize: 'clamp(28px, 7vw, 42px)' }}>
-              {slide.title}
+              {copy.title}
             </h1>
           </div>
           <div className="hero-text-item">
             <p className="mt-4 text-[15px] font-light leading-relaxed text-white/85 drop-shadow-md">
-              {slide.desc}
+              {copy.desc}
             </p>
           </div>
         </div>
@@ -865,14 +907,14 @@ function Hero({ onMediaLoaded }: { onMediaLoaded?: () => void }) {
               href="/products"
               className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-brand px-8 py-4 text-[15px] font-bold text-white shadow-lg transition hover:bg-brand-dark"
             >
-              {slide.cta1}
+              {copy.cta1}
               <ArrowLeft className="h-4 w-4" />
             </a>
             <a
               href="/about"
               className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-white/70 bg-black/20 px-8 py-4 text-[15px] font-bold text-white backdrop-blur-sm transition hover:bg-brand/12 hover:backdrop-blur-md hover:border-brand/30 hover:shadow-[0_4px_16px_rgba(255,90,0,0.15)]"
             >
-              {slide.cta2}
+              {copy.cta2}
             </a>
           </div>
         </div>
@@ -900,17 +942,17 @@ function Hero({ onMediaLoaded }: { onMediaLoaded?: () => void }) {
               className="inline-flex items-center gap-2 border-b-2 border-brand px-1 pb-2 text-[13px] font-semibold text-white drop-shadow-md transition-opacity duration-200 hover:opacity-80 no-underline"
             >
               <MapPin className="h-4 w-4 text-brand shrink-0" aria-hidden="true" />
-              <span className="whitespace-nowrap">{slide.tag}</span>
+              <span className="whitespace-nowrap">{copy.tag}</span>
             </a>
           </div>
           <div className="hero-text-item">
             <h1 className="mt-6 font-display font-black leading-[1.2] text-white drop-shadow-lg" style={{ fontSize: 'clamp(36px, 6vw, 68px)' }}>
-              {slide.title}
+              {copy.title}
             </h1>
           </div>
           <div className="hero-text-item">
             <p className="mt-6 text-[17px] font-light leading-relaxed text-white/90 drop-shadow-md lg:text-[19px]">
-              {slide.desc}
+              {copy.desc}
             </p>
           </div>
           <div className="hero-text-item" style={{ animationDelay: '280ms' }}>
@@ -919,14 +961,14 @@ function Hero({ onMediaLoaded }: { onMediaLoaded?: () => void }) {
                 href="/products"
                 className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-brand px-8 py-4 text-[15px] font-bold text-white shadow-lg transition hover:bg-brand-dark sm:w-auto"
               >
-                {slide.cta1}
+                {copy.cta1}
                 <ArrowLeft className="h-4 w-4" />
               </a>
               <a
                 href="/about"
                 className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-white/70 bg-black/10 px-8 py-4 text-[15px] font-bold text-white backdrop-blur-sm transition hover:bg-brand/12 hover:backdrop-blur-md hover:border-brand/30 hover:shadow-[0_4px_16px_rgba(255,90,0,0.15)] sm:w-auto"
               >
-                {slide.cta2}
+                {copy.cta2}
               </a>
             </div>
           </div>
@@ -979,6 +1021,17 @@ const USE_CASES = [
     benefits: [
       "ڕاکێشانی سەرنجی خێرا لە شوێنە گشتییەکان و مۆڵەکاندا",
       "ئاسانی لە گواستنەوەی کۆشکەکە بۆ جێگەیەکی نوێ بەپێی جووڵەی بازاڕ"
+    ],
+    titleEn: "Commercial Kiosk",
+    descEn: "A modern kiosk designed for points of sale, ticket counters, small shops or mobile (transportable) retail — so your business stands out instantly in the market.",
+    featuresEn: [
+      "An open design facing customers with strong, protected glazing",
+      "Dedicated space for your logo, light box and company branding",
+      "A robust lock and security system for the equipment inside"
+    ],
+    benefitsEn: [
+      "Instant attention in public spaces and malls",
+      "Easy relocation of the kiosk to a new spot as your market moves"
     ]
   },
   {
@@ -993,6 +1046,17 @@ const USE_CASES = [
     benefits: [
       "جیاکردنەوەی ژینگەی کار لە ژیانی تایبەتی لە ماڵەوە (Remote Work)",
       "بەخشینی سیمایەکی ناوازە و پڕۆفیشناڵ بە کۆمپانیاکەت لە کاتی کۆبوونەوەکاندا"
+    ],
+    titleEn: "Office & Private Seating Space",
+    descEn: "A multi-purpose capsule for creating an independent workspace in your yard, or a modern meeting room for companies and commercial spaces.",
+    featuresEn: [
+      "Strong acoustic insulation for silence and deep focus",
+      "Modern decor and lighting with space for desks and office equipment",
+      "A layout customizable to the client's taste and needs"
+    ],
+    benefitsEn: [
+      "Separates your work environment from private home life (remote work)",
+      "Gives your company a distinctive, professional image during meetings"
     ]
   },
   {
@@ -1007,6 +1071,17 @@ const USE_CASES = [
     benefits: [
       "ڕاکێشانی گەشتیاران بەهۆی دیزاینە ناوازە و قەبارە گونجاوەکەی",
       "دامەزراندنی زۆر خێرا لە ناوچە دوورەدەستەکان بێ پێویستبوون بە ئامێری بیناسازیی قورس"
+    ],
+    titleEn: "Resort Housing & Tourist Stays",
+    descEn: "A contemporary architectural solution for tourist villages, summer resorts and mountain areas. These capsules are designed to give guests a comfortable stay in the harshest weather conditions.",
+    featuresEn: [
+      "Strong thermal insulation against snow, heavy rain and high temperatures",
+      "Panoramic double-glazed windows for viewing natural scenery",
+      "Anti-corrosion, rust-proof structure for long-term outdoor use"
+    ],
+    benefitsEn: [
+      "Attracts tourists with its distinctive design and suitable size",
+      "Very fast installation in remote areas without heavy construction machinery"
     ]
   },
   {
@@ -1020,6 +1095,16 @@ const USE_CASES = [
     benefits: [
       "دەستبەجێ بەکارهێنان بێ بەفیڕۆدانی کاتی بیناسازی لە شوێنی پڕۆژەکەدا",
       "دابینکردنی ژینگەیەکی ئاسوودە و بەرزکردنەوەی ئاستی بەرهەمهێنانی کارمەندان"
+    ],
+    titleEn: "Work Camps & Project Sites",
+    descEn: "A fast, ready-to-use work unit for construction, oil and contracting companies. It provides a quick solution for housing employees and engineers on site.",
+    featuresEn: [
+      "A strong steel structure for tough on-site conditions",
+      "Easy lifting and transport by forklift or crane to another project"
+    ],
+    benefitsEn: [
+      "Immediate use with no construction time lost at the project site",
+      "A comfortable environment that raises employee productivity"
     ]
   },
   {
@@ -1034,6 +1119,17 @@ const USE_CASES = [
     benefits: [
       "دەستپێکردنی پڕۆژە بە تێچووی زۆر کەمتر لە بەکرێگرتنی دوکان و چێشتخانە",
       "توانای گواستنەوەی ئاسان بۆ بەشداریکردن لە فێستیڤاڵ و شوێنە قەرەباڵغەکاندا"
+    ],
+    titleEn: "Food Trucks & Kiosks",
+    descEn: "Food and beverage preparation trucks and kiosks in various sizes, designed to launch your food project in a highly attractive, modern way.",
+    featuresEn: [
+      "Stainless-steel interior, rust-proof and easy to clean",
+      "Dedicated fittings for equipment (fridge, barista, grill) plus clean water and drainage",
+      "A serving window suited to handing products to customers"
+    ],
+    benefitsEn: [
+      "Start your project at a far lower cost than renting a shop and kitchen",
+      "Easy transport to festivals and busy locations"
     ]
   },
   {
@@ -1048,11 +1144,24 @@ const USE_CASES = [
     benefits: [
       "کەمکردنەوەی بەرچاوی تێچووی مانگانەی کارەبا و سووتەمەنی",
       "دابینکردنی ژینگەیەکی ئارام و تەندروست بۆ بەسەربردنی چەن مانگێک یان پشوودانی کۆتایی هەفتە"
+    ],
+    titleEn: "Small Residential Unit",
+    descEn: "A complete residential unit suited to a compact size — for those who want a small, independent home on their own land or in nature, a garden or a farm, built to the highest living standards.",
+    featuresEn: [
+      "Modern interior design (bedroom, kitchen, and bathroom/WC)",
+      "Eco-friendly materials that prevent energy waste (cooling and heating)",
+      "Natural lighting integrated through smart glazing"
+    ],
+    benefitsEn: [
+      "A significant reduction in monthly electricity and fuel costs",
+      "A calm, healthy environment for spending a few months or weekend getaways"
     ]
   },
 ];
 
 function UseCases() {
+  const { t, language, dir } = useLanguage();
+  const isKu = language === "ku";
   const [activeCase, setActiveCase] = useState(USE_CASES[0]);
 
   const handleKeyDown = (e: React.KeyboardEvent, useCase: typeof USE_CASES[0]) => {
@@ -1072,11 +1181,11 @@ function UseCases() {
         <Reveal className="mb-12 text-center">
           <span className="inline-flex items-center gap-2 text-[14px] font-bold text-brand">
             <span className="h-[2px] w-6 rounded bg-brand" />
-            بەرهەمەکانمان لە کوێ بەکارئەهێنرێت؟
+            {t("home.useCases.kicker")}
             <span className="h-[2px] w-6 rounded bg-brand" />
           </span>
           <h2 className="mx-auto mt-4 max-w-2xl font-display font-black leading-[1.3] text-gray-900" style={{ fontSize: 'clamp(28px, 4vw, 48px)' }}>
-            گونجاو بۆ هەر پڕۆژەیەک کە لە خەیاڵتایە!
+            {t("home.useCases.title")}
           </h2>
         </Reveal>
 
@@ -1103,7 +1212,7 @@ function UseCases() {
                   }
                 `}
               >
-                {useCase.title}
+                {isKu ? useCase.title : useCase.titleEn}
               </button>
             ))}
           </div>
@@ -1129,7 +1238,7 @@ function UseCases() {
                 <div className="relative aspect-[4/3] overflow-hidden">
                   <img
                     src={useCase.img}
-                    alt={useCase.title}
+                    alt={isKu ? useCase.title : useCase.titleEn}
                     className="h-full w-full object-contain"
                     loading="lazy"
                     decoding="async"
@@ -1140,18 +1249,18 @@ function UseCases() {
                 </div>
 
                 {/* Text - Right side, black color */}
-                <div className="text-right" dir="rtl">
+                <div className="text-right" dir={dir}>
                   <h3 className="font-display text-2xl font-bold sm:text-3xl text-gray-900">
-                    {useCase.title}
+                    {isKu ? useCase.title : useCase.titleEn}
                   </h3>
                   <p className="mt-3 text-sm sm:text-base text-gray-600 leading-relaxed">
-                    {useCase.desc}
+                    {isKu ? useCase.desc : useCase.descEn}
                   </p>
                   {useCase.features && (
                     <div className="mt-4">
-                      <h4 className="font-bold text-gray-900 mb-2">تایبەتمەندییەکان:</h4>
+                      <h4 className="font-bold text-gray-900 mb-2">{t("home.useCases.features")}</h4>
                       <ul className="list-disc list-inside text-sm sm:text-base text-gray-600 space-y-1">
-                        {useCase.features.map((feature, index) => (
+                        {(isKu ? useCase.features : useCase.featuresEn ?? []).map((feature, index) => (
                           <li key={index}>{feature}</li>
                         ))}
                       </ul>
@@ -1159,9 +1268,9 @@ function UseCases() {
                   )}
                   {useCase.benefits && (
                     <div className="mt-4">
-                      <h4 className="font-bold text-gray-900 mb-2">سوودەکان:</h4>
+                      <h4 className="font-bold text-gray-900 mb-2">{t("home.useCases.benefits")}</h4>
                       <ul className="list-disc list-inside text-sm sm:text-base text-gray-600 space-y-1">
-                        {useCase.benefits.map((benefit, index) => (
+                        {(isKu ? useCase.benefits : useCase.benefitsEn ?? []).map((benefit, index) => (
                           <li key={index}>{benefit}</li>
                         ))}
                       </ul>
@@ -1178,7 +1287,7 @@ function UseCases() {
             href="/products"
             className="inline-flex items-center gap-2 rounded-full border-2 border-gray-200 px-8 py-3.5 text-[14px] font-bold text-gray-900 transition hover:border-brand hover:text-brand"
           >
-            هەموو ببینە
+            {t("home.useCases.viewAll")}
             <ArrowLeft className="h-4 w-4" />
           </a>
         </Reveal>
@@ -1191,15 +1300,16 @@ function UseCases() {
 
 /* ---------------------------------- Slanted Parallax Banner ---------------------------------- */
 function SlantedBanner() {
+  const { t } = useLanguage();
   return (
-    <section className="slanted-parallax-section relative isolate min-h-[360px] sm:min-h-[480px] lg:min-h-[560px] flex items-center justify-center" aria-label="کەپسولی نیشتەجێبوون و مۆدێرنی کارگەی ئەنتیکا">
+    <section className="slanted-parallax-section relative isolate min-h-[360px] sm:min-h-[480px] lg:min-h-[560px] flex items-center justify-center" aria-label={t("home.banner.aria")}>
       <div className="relative z-10 mx-auto max-w-4xl px-4 text-center">
         <Reveal>
           <h3 className="font-display text-[24px] sm:text-[36px] md:text-[44px] font-black text-white drop-shadow-xl leading-[1.3]">
-            کوالیتی بەرز و پێکهاتەی بەهێز
+            {t("home.banner.title")}
           </h3>
           <p className="mt-2 text-[13px] sm:text-[16px] text-gray-200/90 max-w-xl mx-auto drop-shadow font-medium">
-            بەرهەمهێنانی زیرەکانە بە پێشکەوتووترین شێوازی ئەندازیاری
+            {t("home.banner.subtitle")}
           </p>
         </Reveal>
       </div>
@@ -1212,37 +1322,47 @@ const PROCESS_STEPS = [
   {
     n: "01",
     title: "ڕاوێژکردن",
+    titleEn: "Consultation",
     desc: "پەیوەندی بکە و داواکاریەکەت بڵێ بۆ دیزاین",
+    descEn: "Get in touch and tell us your design brief",
   },
   {
     n: "02",
     title: "دیزاین",
+    titleEn: "Design",
     desc: "دیزاینی تایبەت و پلانێکی وردبینی بۆ پرۆژەکەت",
+    descEn: "A custom design and a detailed plan for your project",
   },
   {
     n: "03",
     title: "بەرهەمهێنان",
+    titleEn: "Manufacturing",
     desc: "دروستکردن لە کارگەی خۆمان بە کوالێتی بەرز",
+    descEn: "Built in our own factory to high quality",
   },
   {
     n: "04",
     title: "دابەشکردن",
+    titleEn: "Delivery",
     desc: "گەیاندن و دابەشکردن لە کاتی دیاریکراودا",
+    descEn: "Delivered and installed on the agreed schedule",
   },
 ];
 
 function Process() {
+  const { t, language } = useLanguage();
+  const isKu = language === "ku";
   return (
     <section className="process-diagonal-section">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <Reveal className="mb-12 text-center">
           <span className="inline-flex items-center gap-2 text-[14px] font-bold text-brand">
             <span className="h-[2px] w-6 rounded bg-brand" />
-            پرۆسەکەمان
+            {t("home.process.kicker")}
             <span className="h-[2px] w-6 rounded bg-brand" />
           </span>
           <h2 className="mx-auto mt-4 max-w-2xl font-display font-black leading-[1.3] text-gray-900" style={{ fontSize: 'clamp(28px, 4vw, 48px)' }}>
-            ٤ قۆناغی سادە
+            {t("home.process.title")}
           </h2>
         </Reveal>
 
@@ -1253,8 +1373,8 @@ function Process() {
                 <div className="mx-auto mb-4 grid h-16 w-16 place-items-center rounded-full bg-brand text-white font-display text-2xl font-black">
                   {step.n}
                 </div>
-                <h3 className="font-display text-[18px] font-bold text-gray-900">{step.title}</h3>
-                <p className="mt-2 text-[14px] text-gray-600">{step.desc}</p>
+                <h3 className="font-display text-[18px] font-bold text-gray-900">{isKu ? step.title : step.titleEn}</h3>
+                <p className="mt-2 text-[14px] text-gray-600">{isKu ? step.desc : step.descEn}</p>
               </div>
             </Reveal>
           ))}
@@ -1275,18 +1395,19 @@ function Capabilities() {
 
 /* ---------------------------------- Contact CTA Band ---------------------------------- */
 function ContactCTA() {
+  const { t } = useLanguage();
   return (
     <section className="contact-cta-parallax relative isolate">
       <div className="relative z-10 mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8 py-20 sm:py-32">
         <Reveal>
-          <span className="inline-flex items-center gap-2 rounded-full border border-brand/40 bg-brand/20 px-4 py-1.5 text-[13px] font-bold text-brand-light backdrop-blur-md mb-4">
-            کارگەی ئەنتیکا
+          <span className="inline-flex items-center gap-2 rounded-full border border-brand/40 bg-brand/20 px-4 py-1.5 text-[13px] font-bold text-white backdrop-blur-md mb-4">
+            {t("home.ctaBand.badge")}
           </span>
           <h2 className="font-display text-[28px] sm:text-[36px] md:text-[46px] font-black leading-[1.3] text-white drop-shadow-lg">
-            ئامادەیت پرۆژەکەت دەست پێ بکەین؟
+            {t("home.ctaBand.title")}
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-[15px] sm:text-[16.5px] font-medium text-white/90 drop-shadow-md">
-            پەیوەندی بکە بە ئێمەوە بۆ ڕاوێژپێکردن و زانیاری نرخ
+            {t("home.ctaBand.subtitle")}
           </p>
         </Reveal>
         <Reveal delay={150}>
@@ -1342,14 +1463,24 @@ function FooterReveal({ children, footerContent }: { children: React.ReactNode; 
   }, []);
 
   useEffect(() => {
-    // Wait for footer to render before measuring
-    const timer = setTimeout(() => {
+    const el = footerRef.current;
+    if (!el) return;
+
+    // Watch the footer's own box, not just the viewport: the footer is wrapped
+    // in SelectiveHydration, so it mounts AFTER the first paint. A one-shot
+    // measurement can catch the 1px placeholder and permanently lock in a
+    // ~0px reserved margin, leaving the fixed footer hidden behind the page
+    // content. The ResizeObserver re-measures when the real footer mounts
+    // (1px -> full height) and whenever the footer's content height changes,
+    // e.g. when the contact form swaps to the success message.
+    const observer = new ResizeObserver(() => {
       measureFooterHeight();
-    }, 100);
+    });
+    observer.observe(el);
 
     window.addEventListener('resize', measureFooterHeight);
     return () => {
-      clearTimeout(timer);
+      observer.disconnect();
       window.removeEventListener('resize', measureFooterHeight);
     };
   }, [measureFooterHeight]);
@@ -1403,6 +1534,7 @@ async function submitContactMessage(payload: {
 }
 
 function FooterContent({ onNav: _onNav }: { onNav?: (id: string) => void }) {
+  const { t, dir } = useLanguage();
   const [form, setForm] = useState({ name: "", email: "", msg: "" });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -1461,10 +1593,10 @@ function FooterContent({ onNav: _onNav }: { onNav?: (id: string) => void }) {
             <div className="text-right">
               <Logo />
               <p className="mt-4 sm:mt-5 max-w-[260px] text-[12.5px] sm:text-[13.5px] font-light leading-6 sm:leading-7 text-gray-400">
-                ئەنتیکا، تێکەڵەیەک لە هونەر و تەلارسازیی هاوچەرخ
+                {t("footer.brand")}
               </p>
               <div className="mt-4 sm:mt-6">
-                <p className="text-[12px] sm:text-[13px] font-bold text-gray-300">ئێمە لە سۆشیال میدیا</p>
+                <p className="text-[12px] sm:text-[13px] font-bold text-gray-300">{t("footer.social")}</p>
                 <div className="mt-2 sm:mt-3 flex gap-2 sm:gap-3">
                   {[
                     { icon: FacebookIcon, l: "Facebook" },
@@ -1489,7 +1621,7 @@ function FooterContent({ onNav: _onNav }: { onNav?: (id: string) => void }) {
           {/* 2 CONTACT */}
           <Reveal delay={100}>
             <div className="text-right">
-              <h4 className="font-display text-[15px] sm:text-[17px] font-extrabold">پەیوەندیمان پێوە بکە</h4>
+              <h4 className="font-display text-[15px] sm:text-[17px] font-extrabold">{t("footer.contact")}</h4>
               <ul className="mt-4 sm:mt-5 space-y-3 sm:space-y-4 text-[12px] sm:text-[13.5px]">
                 <li className="flex items-center gap-2 sm:gap-3">
                   <span className="grid h-8 w-8 sm:h-9 sm:w-9 shrink-0 place-items-center rounded-full bg-brand text-white">
@@ -1507,13 +1639,13 @@ function FooterContent({ onNav: _onNav }: { onNav?: (id: string) => void }) {
                   <span className="grid h-8 w-8 sm:h-9 sm:w-9 shrink-0 place-items-center rounded-full bg-brand text-white">
                     <MapPin className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                   </span>
-                  <span className="text-gray-400">سلێمانی، عێراق</span>
+                  <span className="text-gray-400">{t("footer.location")}</span>
                 </li>
                 <li className="flex items-center gap-2 sm:gap-3">
                   <span className="grid h-8 w-8 sm:h-9 sm:w-9 shrink-0 place-items-center rounded-full bg-brand text-white">
                     <Clock className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                   </span>
-                  <span className="text-gray-400">شەممە - پێنجشەممە، 9:00 - 6:00</span>
+                  <span className="text-gray-400">{t("footer.hours")}</span>
                 </li>
               </ul>
             </div>
@@ -1522,7 +1654,7 @@ function FooterContent({ onNav: _onNav }: { onNav?: (id: string) => void }) {
           {/* 3 NAVIGATION */}
           <Reveal delay={180}>
             <div className="text-right">
-              <h4 className="font-display text-[15px] sm:text-[16px] font-extrabold">بەستەرەکان</h4>
+              <h4 className="font-display text-[15px] sm:text-[16px] font-extrabold">{t("footer.links")}</h4>
               <ul className="mt-4 sm:mt-5 space-y-2 sm:space-y-3 text-[12px] sm:text-[13.5px]">
                 {NAV.filter(n => !n.isDropdown).map((n) => (
                   <li key={n.id}>
@@ -1530,7 +1662,7 @@ function FooterContent({ onNav: _onNav }: { onNav?: (id: string) => void }) {
                       to={n.path || "/"}
                       className="text-gray-400 transition hover:text-brand"
                     >
-                      {n.label}
+                      {t(n.labelKey)}
                     </Link>
                   </li>
                 ))}
@@ -1541,20 +1673,20 @@ function FooterContent({ onNav: _onNav }: { onNav?: (id: string) => void }) {
           {/* 4 CONTACT FORM */}
           <Reveal delay={220}>
             <div className="text-right">
-              <h4 className="font-display text-[15px] sm:text-[16px] font-extrabold">نامە بنێرە</h4>
+              <h4 className="font-display text-[15px] sm:text-[16px] font-extrabold">{t("footer.sendTitle")}</h4>
               {/* Always-mounted polite live region: assistive tech announces the
                   complete message the moment submission succeeds, while the
                   animated visual layer stays purely decorative. */}
-              <div role="status" aria-live="polite" dir="rtl" className="sr-only">
-                {isSubmitted ? "سوپاس بۆ پەیامەکەت، بە زووترین کات وەڵامت دەدەینەوە..." : ""}
+              <div role="status" aria-live="polite" dir={dir} className="sr-only">
+                {isSubmitted ? t("footer.success") : ""}
               </div>
               {isSubmitted ? (
                 <div
-                  dir="rtl"
+                  dir={dir}
                   aria-hidden="true"
                   className="mt-4 sm:mt-5 text-brand font-semibold text-[15px] sm:text-lg leading-7 sm:leading-8"
                 >
-                  <Typewriter speed={50} text="سوپاس بۆ پەیامەکەت، بە زووترین کات وەڵامت دەدەینەوە..." />
+                  <Typewriter speed={50} text={t("footer.success")} />
                 </div>
               ) : (
                 <form
@@ -1563,7 +1695,7 @@ function FooterContent({ onNav: _onNav }: { onNav?: (id: string) => void }) {
                 >
                   <input
                     type="text"
-                    placeholder="ناو"
+                    placeholder={t("footer.form.name")}
                     value={form.name}
                     onChange={(e) => setForm({ ...form, name: e.target.value })}
                     className="w-full rounded-lg border border-gray-700 bg-gray-800 px-3 sm:px-4 py-2.5 sm:py-3 text-[12px] sm:text-[13px] text-white placeholder:text-gray-500 transition focus:border-brand focus:outline-none"
@@ -1571,14 +1703,14 @@ function FooterContent({ onNav: _onNav }: { onNav?: (id: string) => void }) {
                   />
                   <input
                     type="email"
-                    placeholder="ئیمەیڵ"
+                    placeholder={t("footer.form.email")}
                     value={form.email}
                     onChange={(e) => setForm({ ...form, email: e.target.value })}
                     className="w-full rounded-lg border border-gray-700 bg-gray-800 px-3 sm:px-4 py-2.5 sm:py-3 text-[12px] sm:text-[13px] text-white placeholder:text-gray-500 transition focus:border-brand focus:outline-none"
                     required
                   />
                   <textarea
-                    placeholder="نامەکەت"
+                    placeholder={t("footer.form.message")}
                     value={form.msg}
                     onChange={(e) => setForm({ ...form, msg: e.target.value })}
                     onFocus={() => setShowMachineModal(true)}
@@ -1591,7 +1723,7 @@ function FooterContent({ onNav: _onNav }: { onNav?: (id: string) => void }) {
                     disabled={isSubmitting}
                     className="flex w-full items-center justify-center gap-2 rounded-full bg-brand px-4 sm:px-5 py-3 sm:py-3.5 text-[13px] sm:text-[14.5px] font-bold text-white transition hover:bg-brand-dark disabled:cursor-not-allowed disabled:opacity-60"
                   >
-                    ناردن
+                    {t("footer.form.send")}
                     <Send className="h-3.5 w-3.5 sm:h-4 sm:w-4 -scale-x-100" />
                   </button>
                 </form>
@@ -1603,13 +1735,13 @@ function FooterContent({ onNav: _onNav }: { onNav?: (id: string) => void }) {
         {/* bottom bar */}
         <div className="flex flex-col items-center justify-between gap-3 sm:gap-4 border-t border-gray-800 py-4 sm:py-6 sm:flex-row">
           <div className="flex items-center gap-2 text-[11px] sm:text-[12.5px] font-medium text-gray-500">
-            <Link to="/#works" className="px-3 py-2 sm:px-4 sm:py-4 transition hover:text-brand">دیزاین</Link>
+            <Link to="/#works" className="px-3 py-2 sm:px-4 sm:py-4 transition hover:text-brand">{t("footer.bar.design")}</Link>
             <span className="h-1 w-1 rounded-full bg-gray-700" />
-            <Link to="/about" className="px-3 py-2 sm:px-4 sm:py-4 transition hover:text-brand">هونەر</Link>
+            <Link to="/about" className="px-3 py-2 sm:px-4 sm:py-4 transition hover:text-brand">{t("footer.bar.art")}</Link>
             <span className="h-1 w-1 rounded-full bg-gray-700" />
-            <Link to="/#contact" className="px-3 py-2 sm:px-4 sm:py-4 transition hover:text-brand">ئەندازیاری</Link>
+            <Link to="/#contact" className="px-3 py-2 sm:px-4 sm:py-4 transition hover:text-brand">{t("footer.bar.engineering")}</Link>
           </div>
-          <p className="text-[11px] sm:text-[12.5px] text-gray-500">© 2026 ANTIKA FACTORY. هەموو مافەکان پارێزراون.</p>
+          <p className="text-[11px] sm:text-[12.5px] text-gray-500">© 2026 ANTIKA FACTORY. {t("footer.rights")}</p>
         </div>
       </div>
 
@@ -1621,8 +1753,8 @@ function FooterContent({ onNav: _onNav }: { onNav?: (id: string) => void }) {
           <div
             role="dialog"
             aria-modal="true"
-            aria-label="ئامێری نووسین"
-            dir="rtl"
+            aria-label={t("footer.machine.aria")}
+            dir={dir}
             className="fixed inset-0 z-[10000] flex flex-col items-center justify-center bg-black/80 backdrop-blur-md"
             onClick={(e) => {
               // Close only when the dark backdrop itself is clicked.
@@ -1632,23 +1764,23 @@ function FooterContent({ onNav: _onNav }: { onNav?: (id: string) => void }) {
             <button
               type="button"
               onClick={() => setShowMachineModal(false)}
-              aria-label="داخستن"
+              aria-label={t("common.close")}
               className="absolute right-4 top-4 z-20 grid h-11 w-11 place-items-center rounded-full bg-white/10 text-white transition hover:bg-white/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
             >
               <X className="h-5 w-5" />
             </button>
 
             <p className="mb-3 px-6 text-center text-[12px] sm:text-[13px] text-white/50">
-              هەرچی بنووسیت لەسەر کاغەزەکە دەردەکەوێت
+              {t("footer.machine.hint")}
             </p>
 
             <div className="relative aspect-[932/492] w-[min(92vw,880px)] max-h-[min(64vh,560px)]">
               <Suspense fallback={null}>
                 <TypewriterMachine
-                  text={form.msg || "تکایە پەیامەکەت بنووسە..."}
+                  text={form.msg || t("footer.machine.placeholder")}
                   color="#ff5a00"
                   interactive={false}
-                  rtl={true}
+                  rtl={dir === "rtl"}
                   loop={false}
                   columns={32}
                   speed={16}
@@ -1665,8 +1797,8 @@ function FooterContent({ onNav: _onNav }: { onNav?: (id: string) => void }) {
                 ref={machineInputRef}
                 value={form.msg}
                 onChange={(e) => setForm({ ...form, msg: e.target.value })}
-                dir="rtl"
-                aria-label="نامەکەت"
+                dir={dir}
+                aria-label={t("footer.form.message")}
                 spellCheck={false}
                 autoComplete="off"
                 className="absolute inset-0 z-10 h-full w-full cursor-text resize-none border-0 bg-transparent p-0 opacity-0 outline-none"
@@ -1954,7 +2086,8 @@ function HomePage({ onMediaLoaded }: { onMediaLoaded?: () => void }) {
 /* ----------------------------------- App ----------------------------------- */
 function AppContent() {
   const [active, setActive] = useState("home");
-  const { isContactModalOpen, closeContactModal } = useContactModal();
+  const { isContactModalOpen, closeContactModal, prefillMessage } = useContactModal();
+  const { dir } = useLanguage();
   const location = useLocation();
   const [, startTransition] = useTransition();
 
@@ -2119,7 +2252,7 @@ function AppContent() {
   }, [location.pathname]);
 
   return (
-    <div dir="rtl" className="min-h-screen font-body text-gray-900">
+    <div dir={dir} className="min-h-screen font-body text-gray-900">
       <Header
         active={active}
         onNav={handleNavTransition}
@@ -2193,6 +2326,7 @@ function AppContent() {
       <ContactModal
         isOpen={isContactModalOpen}
         onClose={closeContactModal}
+        prefillMessage={prefillMessage}
       />
     </div>
   );
@@ -2200,10 +2334,12 @@ function AppContent() {
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <ContactModalProvider>
-        <AppContent />
-      </ContactModalProvider>
-    </BrowserRouter>
+    <LanguageProvider>
+      <BrowserRouter>
+        <ContactModalProvider>
+          <AppContent />
+        </ContactModalProvider>
+      </BrowserRouter>
+    </LanguageProvider>
   );
 }
