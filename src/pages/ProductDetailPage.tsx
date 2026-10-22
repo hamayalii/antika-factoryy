@@ -374,10 +374,8 @@ export function ProductDetailPage() {
       <section className="py-14 sm:py-20 border-t border-gray-100">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <Reveal className="mb-10 text-center">
-            <span className="inline-flex items-center gap-2 text-[13.5px] font-bold text-brand">
-              <span className="h-[2px] w-5 rounded bg-brand" />
+            <span className="text-[13.5px] font-bold text-brand">
               {t("product.specsKicker")}
-              <span className="h-[2px] w-5 rounded bg-brand" />
             </span>
             <h2 className="mt-3 font-display text-2xl sm:text-3xl font-black text-gray-900">
               {t("product.specsTitle")}

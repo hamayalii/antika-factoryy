@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useCallback, useTransition, lazy, Suspense } from "react";
+﻿import { useEffect, useRef, useState, useCallback, useTransition, lazy, Suspense } from "react";
 import { createPortal } from "react-dom";
 import { BrowserRouter, Routes, Route, Link, useLocation } from "react-router-dom";
 
@@ -1251,10 +1251,8 @@ function UseCases() {
     <section className="bg-white py-16 sm:py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <Reveal className="mb-12 text-center">
-          <span className="inline-flex items-center gap-2 text-[14px] font-bold text-brand">
-            <span className="h-[2px] w-6 rounded bg-brand" />
+          <span className="text-[14px] font-bold text-brand">
             {t("home.useCases.kicker")}
-            <span className="h-[2px] w-6 rounded bg-brand" />
           </span>
           <h2 className="mx-auto mt-4 max-w-2xl font-display font-black leading-[1.3] text-gray-900" style={{ fontSize: 'clamp(28px, 4vw, 48px)' }}>
             {t("home.useCases.title")}
@@ -1437,10 +1435,10 @@ function Process() {
     <section className="process-diagonal-section">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <Reveal className="mb-12 text-center">
-          <span className="inline-flex items-center gap-2 text-[14px] font-bold text-brand">
-            <span className="h-[2px] w-6 rounded bg-brand" />
+          <span className="text-[14px] font-bold text-brand">
+
             {t("home.process.kicker")}
-            <span className="h-[2px] w-6 rounded bg-brand" />
+
           </span>
           <h2 className="mx-auto mt-4 max-w-2xl font-display font-black leading-[1.3] text-gray-900" style={{ fontSize: 'clamp(28px, 4vw, 48px)' }}>
             {t("home.process.title")}

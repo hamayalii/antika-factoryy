@@ -89,10 +89,8 @@ function AboutAntikaFactory() {
         {/* Text Column - first in DOM */}
         <Reveal animation="slide-right" className="flex items-center">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full ltr:lg:pr-16 ltr:xl:pr-24 space-y-6 py-16 lg:py-24">
-            <span className="inline-flex items-center gap-2 text-[14px] font-bold text-brand">
-              <span className="h-[2px] w-6 rounded bg-brand" />
+            <span className="text-[14px] font-bold text-brand">
               {copy.kicker}
-              <span className="h-[2px] w-6 rounded bg-brand" />
             </span>
             <h2 className="font-display font-black leading-[1.3] text-gray-900" style={{ fontSize: 'clamp(28px, 4vw, 42px)' }}>
               {copy.title}
@@ -192,10 +190,8 @@ function WhyAntikaProducts() {
     <section className="bg-white py-16 sm:py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <Reveal className="mb-12 text-center">
-          <span className="inline-flex items-center gap-2 text-[14px] font-bold text-brand">
-            <span className="h-[2px] w-6 rounded bg-brand" />
+          <span className="text-[14px] font-bold text-brand">
             {copy.kicker}
-            <span className="h-[2px] w-6 rounded bg-brand" />
           </span>
           <h2 className="mx-auto mt-4 max-w-2xl font-display font-black leading-[1.3] text-gray-900" style={{ fontSize: 'clamp(28px, 4vw, 42px)' }}>
             {copy.title}
@@ -260,10 +256,8 @@ function LatestNewsActivities() {
           {/* Text Content - Right */}
           <Reveal animation="slide-right" className="order-1 lg:order-1">
             <div className="space-y-6">
-              <span className="inline-flex items-center gap-2 text-[14px] font-bold text-white">
-                <span className="h-[2px] w-6 rounded bg-brand" />
+              <span className="text-[14px] font-bold text-white">
                 {copy.kicker}
-                <span className="h-[2px] w-6 rounded bg-brand" />
               </span>
               <h2 className="font-display font-black leading-[1.3] text-white" style={{ fontSize: 'clamp(28px, 4vw, 42px)' }}>
                 {copy.title}

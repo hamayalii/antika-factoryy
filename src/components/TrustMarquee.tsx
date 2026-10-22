@@ -279,17 +279,12 @@ export function TrustMarquee() {
       >
         <span
           style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: "8px",
             fontSize: "14px",
             fontWeight: 700,
             color: "#ff5a00",
           }}
         >
-          <span style={{ display: "inline-block", height: "2px", width: "24px", borderRadius: "9999px", background: "#ff5a00" }} />
           {copy.kicker}
-          <span style={{ display: "inline-block", height: "2px", width: "24px", borderRadius: "9999px", background: "#ff5a00" }} />
         </span>
         <h2
           style={{
