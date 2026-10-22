@@ -84,51 +84,49 @@ function AboutAntikaFactory() {
   }[language];
 
   return (
-    <section className="bg-gray-50 py-16 sm:py-24">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          {/* Text Column - slides from right in RTL */}
-          <Reveal animation="slide-right" className="order-2 lg:order-1">
-            <div className="space-y-6">
-              <span className="inline-flex items-center gap-2 text-[14px] font-bold text-brand">
-                <span className="h-[2px] w-6 rounded bg-brand" />
-                {copy.kicker}
-                <span className="h-[2px] w-6 rounded bg-brand" />
-              </span>
-              <h2 className="font-display font-black leading-[1.3] text-gray-900" style={{ fontSize: 'clamp(28px, 4vw, 42px)' }}>
-                {copy.title}
-              </h2>
-              <p className="text-base sm:text-lg text-gray-600 leading-relaxed">
-                {copy.body}
-              </p>
-              <Link
-                to="/about"
-                className="inline-flex items-center gap-2 rounded-full bg-brand px-8 py-3.5 text-[14px] font-bold text-white transition hover:bg-brand-dark hover:shadow-lg"
-              >
-                {copy.cta}
-                {dir === "rtl" ? <ArrowLeft className="h-4 w-4" /> : <ArrowRight className="h-4 w-4" />}
-              </Link>
-            </div>
-          </Reveal>
+    <section className="bg-gray-50 w-full max-w-full px-0 overflow-hidden">
+      <div className="grid grid-cols-1 lg:grid-cols-2 items-stretch min-h-[500px] lg:min-h-[600px]">
+        {/* Text Column - first in DOM */}
+        <Reveal animation="slide-right" className="flex items-center">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full ltr:lg:pr-16 ltr:xl:pr-24 space-y-6 py-16 lg:py-24">
+            <span className="inline-flex items-center gap-2 text-[14px] font-bold text-brand">
+              <span className="h-[2px] w-6 rounded bg-brand" />
+              {copy.kicker}
+              <span className="h-[2px] w-6 rounded bg-brand" />
+            </span>
+            <h2 className="font-display font-black leading-[1.3] text-gray-900" style={{ fontSize: 'clamp(28px, 4vw, 42px)' }}>
+              {copy.title}
+            </h2>
+            <p className="text-base sm:text-lg text-gray-600 leading-relaxed">
+              {copy.body}
+            </p>
+            <Link
+              to="/about"
+              className="inline-flex items-center gap-2 rounded-full bg-brand px-8 py-3.5 text-[14px] font-bold text-white transition hover:bg-brand-dark hover:shadow-lg"
+            >
+              {copy.cta}
+              {dir === "rtl" ? <ArrowLeft className="h-4 w-4" /> : <ArrowRight className="h-4 w-4" />}
+            </Link>
+          </div>
+        </Reveal>
 
-          {/* Image Column - slides from left in RTL */}
-          <Reveal animation="slide-left" delay={200} className="order-1 lg:order-2">
-            <div className="relative">
-              <div className="aspect-[4/3] overflow-hidden rounded">
-                <img
-                  src="/images/factory-preview.webp"
-                  alt={copy.imageAlt}
-                  className="h-full w-full object-cover"
-                  loading="lazy"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
-              </div>
-              <div className="absolute bottom-4 right-4 sm:bottom-6 sm:right-8 lg:bottom-8 lg:right-18 z-10 badge-float hidden lg:block" style={{ transform: 'scale(clamp(0.6, 8vw, 1))' }}>
-                <AwardBadge title={copy.badgeTitle} subtitle={copy.badgeSubtitle} />
-              </div>
+        {/* Image Column - second in DOM */}
+        <Reveal animation="slide-left" delay={200} className="relative p-0 m-0 w-full h-full">
+          <div className="relative h-full w-full min-h-[300px] lg:min-h-[600px]">
+            <div className="absolute inset-0 ltr:lg:[clip-path:polygon(15%_0,100%_0,100%_100%,0_100%)] rtl:lg:[clip-path:polygon(0_0,85%_0,100%_100%,0_100%)]">
+              <img
+                src="/images/factory-preview.webp"
+                alt={copy.imageAlt}
+                className="h-full w-full object-cover"
+                loading="lazy"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
             </div>
-          </Reveal>
-        </div>
+            <div className="absolute bottom-4 right-4 sm:bottom-6 sm:right-8 lg:bottom-8 ltr:lg:right-4 rtl:lg:right-16 z-10 badge-float hidden lg:block" style={{ transform: 'scale(clamp(0.6, 8vw, 1))' }}>
+              <AwardBadge title={copy.badgeTitle} subtitle={copy.badgeSubtitle} />
+            </div>
+          </div>
+        </Reveal>
       </div>
     </section>
   );
