@@ -527,7 +527,8 @@ export function SpecialFeatures() {
                     lineHeight: '1.15',
                     color: '#FFFFFF',
                     marginBottom: isMobile ? '8px' : '12px',
-                    margin: `0 0 ${isMobile ? '8px' : '12px'} 0`
+                    margin: `0 0 ${isMobile ? '8px' : '12px'} 0`,
+                    textAlign: 'center'
                   }}
                 >
                   {copy.title}
@@ -543,7 +544,8 @@ export function SpecialFeatures() {
                     lineHeight: '1.45',
                     color: '#FFFFFF',
                     maxWidth: isMobile ? '300px' : '255px',
-                    margin: '0'
+                    margin: '0',
+                    textAlign: 'center'
                   }}
                 >
                   {copy.description}
