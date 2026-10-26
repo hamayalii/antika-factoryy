@@ -787,7 +787,7 @@ export const verifiedProducts: VerifiedProduct[] = [
         slug: "al-f",
         categoryId: "al",
         categoryTitleKu: "کەپسولەکانی نیشتەجێبوونی AL",
-        titleKu: "ئەپڵی دووقات",
+        titleKu: "ئەپڵی دووقات AL · F",
         titleEn: "Apple Two-Level Model (AL.F)",
         titleAr: "أبل بطابقين",
         productFamilyKu: "کەپسولی ئەپڵ",
