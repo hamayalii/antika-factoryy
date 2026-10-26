@@ -1,6 +1,6 @@
-﻿import { useEffect, useRef, useState, useCallback, useTransition, lazy, Suspense } from "react";
+import { useEffect, useRef, useState, useCallback, useTransition, lazy, Suspense } from "react";
 import { createPortal } from "react-dom";
-import { BrowserRouter, Routes, Route, Link, useLocation } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Link, useLocation, useSearchParams } from "react-router-dom";
 
 // Route-level code splitting: O(1) initial load through lazy imports
 const CapsulesPage = lazy(() => import("./pages/CapsulesPage").then(m => ({ default: m.CapsulesPage })));
@@ -31,6 +31,7 @@ import { LanguageSwitcher } from "./components/LanguageSwitcher";
 import { ContactModalProvider, useContactModal } from "./contexts/ContactModalContext";
 import { LanguageProvider, useLanguage } from "./contexts/LanguageContext";
 import type { TranslationKey } from "./i18n/translations";
+import { SPECIAL_WORKS_ITEMS, type SpecialWorkItem } from "./data/specialWorksData";
 import { SelectiveHydration } from "./components/SelectiveHydration";
 import { Typewriter } from "./components/ui/Typewriter";
 import {
@@ -189,6 +190,7 @@ const NAV: { id: string; labelKey: TranslationKey; path?: string; isDropdown?: b
   { id: "capsules", labelKey: "nav.capsules", isDropdown: true },
   { id: "houses", labelKey: "nav.houses", isDropdown: true },
   { id: "cabins", labelKey: "nav.cabins", isDropdown: true },
+  { id: "specialWorks", labelKey: "nav.specialWorks", isDropdown: true },
   { id: "koshk", labelKey: "nav.koshk", isDropdown: true },
   { id: "artworks", labelKey: "nav.artworks", isDropdown: true },
   { id: "workImages", labelKey: "nav.workImages", path: "/gallery", isDropdown: false },
@@ -202,6 +204,7 @@ const NAV_GRADIENT_COLORS = [
   { id: 'capsules', color: '#FEEFE5' },
   { id: 'houses', color: '#FEEFE5' },
   { id: 'cabins', color: '#DBE9F6' },
+  { id: 'specialWorks', color: '#F6EFF4' },
   { id: 'koshk', color: '#FBF2DE' },
   { id: 'artworks', color: '#F0F3FD' },
   { id: 'workImages', color: '#FFFDFE' },
@@ -279,6 +282,51 @@ function Header({
   const location = useLocation();
   const isHome = location.pathname === "/";
   const isOverlay = isHome && !scrolled && !open;
+
+  const [isSpecialWorksInView, setIsSpecialWorksInView] = useState(false);
+
+  // Dedicated scroll-spy observer: active ONLY while special-works is in the viewport/active zone
+  useEffect(() => {
+    if (location.pathname !== "/") {
+      setIsSpecialWorksInView(false);
+      return;
+    }
+
+    let obs: IntersectionObserver | null = null;
+    const observeElement = () => {
+      const el = document.getElementById("special-works");
+      if (!el) return;
+
+      obs = new IntersectionObserver(
+        ([entry]) => {
+          setIsSpecialWorksInView(entry.isIntersecting);
+        },
+        {
+          rootMargin: "-20% 0px -35% 0px",
+          threshold: 0.1,
+        }
+      );
+      obs.observe(el);
+    };
+
+    const timer = setTimeout(observeElement, 50);
+
+    return () => {
+      clearTimeout(timer);
+      if (obs) obs.disconnect();
+    };
+  }, [location.pathname]);
+
+  const isSpecialWorksRouteActive = SPECIAL_WORKS_ITEMS.some((item) =>
+    location.pathname === `/solutions/${item.id}` ||
+    location.pathname === `/products/${item.id}` ||
+    (location.pathname === "/" && location.hash === `#${item.id}`)
+  );
+
+  const isSpecialWorksActive = (
+    (location.pathname === "/" && isSpecialWorksInView) ||
+    isSpecialWorksRouteActive
+  );
 
   useEffect(() => {
     const fn = () => setScrolled(window.scrollY > 24);
@@ -420,9 +468,27 @@ function Header({
                 >
                   <button
                     onClick={() => setOpenDropdown(openDropdown === n.id ? null : n.id)}
-                    className={`nav-link flex items-center gap-1 text-[14px] font-medium transition-colors ${(n.id === 'capsules' && (location.pathname.includes('/products/al') || location.pathname.includes('/products/am') || location.pathname.includes('/products/as'))) ||
+                    onKeyDown={(e) => {
+                      if (e.key === 'ArrowDown' || e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        setOpenDropdown(n.id);
+                        setTimeout(() => {
+                          const dropdownEl = dropdownRefs.current[n.id];
+                          const firstLink = dropdownEl?.querySelector('a') as HTMLElement | null;
+                          firstLink?.focus();
+                        }, 50);
+                      } else if (e.key === 'Escape') {
+                        setOpenDropdown(null);
+                      }
+                    }}
+                    aria-haspopup="true"
+                    aria-expanded={openDropdown === n.id}
+                    aria-controls={`dropdown-${n.id}`}
+                    className={`nav-link flex items-center gap-1 text-[14px] font-medium transition-colors focus-visible:ring-2 focus-visible:ring-brand focus-visible:outline-none rounded-lg ${(n.id === 'capsules' && (location.pathname.includes('/products/al') || location.pathname.includes('/products/am') || location.pathname.includes('/products/as'))) ||
                       (n.id === 'houses' && (location.pathname.includes('/products/cl') || location.pathname.includes('/products/kl') || location.pathname.includes('/products/container-house'))) ||
                       (n.id === 'cabins' && (location.pathname.includes('/products/zl') || location.pathname.includes('/products/pl') || location.pathname.includes('/products/concrete-house-model') || location.pathname.includes('/products/standard-house') || location.pathname.includes('/products/garden-house') || location.pathname.includes('/products/cabin-house') || location.pathname.includes('/products/concrete-house'))) ||
+                      (n.id === 'koshk' && (location.pathname.includes('/products/koshk') || location.pathname.includes('/products/ka-') || location.pathname.includes('/products/am-'))) ||
+                      (n.id === 'specialWorks' && isSpecialWorksActive) ||
                       (n.id === 'artworks' && (location.pathname.includes('/products/lighting') || location.pathname.includes('/products/shelves')))
                       ? "active"
                       : isOverlay ? "text-white/90 hover:text-white" : "text-gray-600 hover:text-gray-900"
@@ -433,14 +499,27 @@ function Header({
                   </button>
 
                   {/* Dropdown Menu */}
-                  <div className={`absolute top-full right-0 pt-2 w-52 transition-all duration-200 ${openDropdown === n.id ? 'opacity-100 visible translate-y-0 pointer-events-auto' : 'opacity-0 invisible -translate-y-2 pointer-events-none'}`}>
+                  <div
+                    id={`dropdown-${n.id}`}
+                    role="region"
+                    aria-label={t(n.labelKey)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Escape') {
+                        e.preventDefault();
+                        setOpenDropdown(null);
+                        const btn = dropdownRefs.current[n.id]?.querySelector('button') as HTMLElement | null;
+                        btn?.focus();
+                      }
+                    }}
+                    className={`absolute top-full start-0 rtl:right-0 rtl:left-auto ltr:left-0 ltr:right-auto pt-2 w-56 transition-all duration-200 ${openDropdown === n.id ? 'opacity-100 visible translate-y-0 pointer-events-auto' : 'opacity-0 invisible -translate-y-2 pointer-events-none'}`}
+                  >
                     <div className="rounded-xl shadow-xl ring-1 ring-black/5 py-2" style={{ backgroundColor: NAV_GRADIENT_COLORS.find(c => c.id === n.id)?.color || '#FFFFFF' }}>
                       {n.id === 'capsules' && CAPSULE_ITEMS.map((item) => (
                         <Link
                           key={item.id}
                           to={item.path}
                           onClick={() => setOpenDropdown(null)}
-                          className="block px-4 py-2 text-[13px] font-medium text-gray-700 hover:bg-gray-50 hover:text-brand transition-colors"
+                          className="block px-4 py-2 text-[13px] font-medium text-gray-700 hover:bg-gray-50 hover:text-brand transition-colors focus-visible:bg-gray-50 focus-visible:text-brand focus:outline-none"
                         >
                           {t(item.labelKey)}
                           {item.isComingSoon && <span className="ms-2 text-[11px] text-gray-500">- {t("common.comingSoonShort")}</span>}
@@ -451,7 +530,7 @@ function Header({
                           key={item.id}
                           to={item.path}
                           onClick={() => setOpenDropdown(null)}
-                          className="block px-4 py-2 text-[13px] font-medium text-gray-700 hover:bg-gray-50 hover:text-brand transition-colors"
+                          className="block px-4 py-2 text-[13px] font-medium text-gray-700 hover:bg-gray-50 hover:text-brand transition-colors focus-visible:bg-gray-50 focus-visible:text-brand focus:outline-none"
                         >
                           {t(item.labelKey)}
                           {item.isComingSoon && <span className="ms-2 text-[11px] text-gray-500">- {t("common.comingSoonShort")}</span>}
@@ -462,7 +541,7 @@ function Header({
                           key={item.id}
                           to={item.path}
                           onClick={() => setOpenDropdown(null)}
-                          className="block px-4 py-2 text-[13px] font-medium text-gray-700 hover:bg-gray-50 hover:text-brand transition-colors"
+                          className="block px-4 py-2 text-[13px] font-medium text-gray-700 hover:bg-gray-50 hover:text-brand transition-colors focus-visible:bg-gray-50 focus-visible:text-brand focus:outline-none"
                         >
                           {t(item.labelKey)}
                           {item.isComingSoon && <span className="ms-2 text-[11px] text-gray-500">- {t("common.comingSoonShort")}</span>}
@@ -473,10 +552,26 @@ function Header({
                           key={item.id}
                           to={item.path}
                           onClick={() => setOpenDropdown(null)}
-                          className="block px-4 py-2 text-[13px] font-medium text-gray-700 hover:bg-gray-50 hover:text-brand transition-colors"
+                          className="block px-4 py-2 text-[13px] font-medium text-gray-700 hover:bg-gray-50 hover:text-brand transition-colors focus-visible:bg-gray-50 focus-visible:text-brand focus:outline-none"
                         >
                           {t(item.labelKey)}
                           {item.isComingSoon && <span className="ms-2 text-[11px] text-gray-500">- {t("common.comingSoonShort")}</span>}
+                        </Link>
+                      ))}
+                      {n.id === 'specialWorks' && SPECIAL_WORKS_ITEMS.map((item) => (
+                        <Link
+                          key={item.id}
+                          to={`/?work=${item.id}#special-works`}
+                          onClick={() => {
+                            setOpenDropdown(null);
+                            const element = document.getElementById('special-works');
+                            if (element) {
+                              element.scrollIntoView({ behavior: 'smooth' });
+                            }
+                          }}
+                          className="block px-4 py-2 text-[13px] font-medium text-gray-700 hover:bg-gray-50 hover:text-brand transition-colors focus-visible:bg-gray-50 focus-visible:text-brand focus:outline-none"
+                        >
+                          {t(item.menuKey)}
                         </Link>
                       ))}
                       {n.id === 'koshk' && KOSHK_ITEMS.map((item) => (
@@ -484,7 +579,7 @@ function Header({
                           key={item.id}
                           to={item.path}
                           onClick={() => setOpenDropdown(null)}
-                          className="block px-4 py-2 text-[13px] font-medium text-gray-700 hover:bg-gray-50 hover:text-brand transition-colors"
+                          className="block px-4 py-2 text-[13px] font-medium text-gray-700 hover:bg-gray-50 hover:text-brand transition-colors focus-visible:bg-gray-50 focus-visible:text-brand focus:outline-none"
                         >
                           {t(item.labelKey)}
                           {item.isComingSoon && <span className="ms-2 text-[11px] text-gray-500">- {t("common.comingSoonShort")}</span>}
@@ -497,7 +592,13 @@ function Header({
                 <Link
                   key={n.id}
                   to={n.path || "/"}
-                  className={`nav-link text-[13px] font-medium transition-colors ${(location.pathname === "/" ? active === n.id : location.pathname === n.path)
+                  className={`nav-link text-[13px] font-medium transition-colors ${(
+                    n.id === "home"
+                      ? location.pathname === "/" && !isSpecialWorksActive && (active === "home" || !active)
+                      : location.pathname === "/"
+                        ? active === n.id
+                        : location.pathname === n.path
+                  )
                     ? "active"
                     : isOverlay ? "text-white/90 hover:text-white" : "text-gray-600 hover:text-gray-900"
                     }`}
@@ -554,12 +655,21 @@ function Header({
                 <div key={n.id} className="flex flex-col border-b border-gray-100 last:border-0">
                   <button
                     onClick={() => setMobileDropdowns({ ...mobileDropdowns, [n.id]: !mobileDropdowns[n.id] })}
-                    className="flex items-center justify-between rounded-xl px-4 py-3 text-[13.5px] font-semibold text-gray-700 w-full text-start"
+                    aria-expanded={!!mobileDropdowns[n.id]}
+                    aria-controls={`mobile-dropdown-${n.id}`}
+                    className={`flex items-center justify-between rounded-xl px-4 py-3 text-[13.5px] font-semibold w-full text-start transition-colors ${
+                      (n.id === 'specialWorks' && isSpecialWorksActive)
+                        ? 'text-brand'
+                        : 'text-gray-700'
+                    }`}
                   >
                     {t(n.labelKey)}
                     <ChevronDown className={`h-4 w-4 transition-transform ${mobileDropdowns[n.id] ? 'rotate-180' : ''}`} />
                   </button>
-                  <div className={`flex flex-col ps-4 pe-8 pb-3 space-y-1 overflow-hidden transition-all duration-300 ${mobileDropdowns[n.id] ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}>
+                  <div
+                    id={`mobile-dropdown-${n.id}`}
+                    className={`flex flex-col ps-4 pe-8 pb-3 space-y-1 overflow-hidden transition-all duration-300 ${mobileDropdowns[n.id] ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}
+                  >
                     {n.id === 'capsules' && CAPSULE_ITEMS.map((item) => (
                       <Link
                         key={item.id}
@@ -604,6 +714,23 @@ function Header({
                         {item.isComingSoon && <span className="ms-2 text-[10.5px] text-gray-500">- {t("common.comingSoon")}</span>}
                       </Link>
                     ))}
+                    {n.id === 'specialWorks' && SPECIAL_WORKS_ITEMS.map((item) => (
+                      <Link
+                        key={item.id}
+                        to={`/?work=${item.id}#special-works`}
+                        onClick={() => {
+                          setOpen(false);
+                          setMobileDropdowns({});
+                          const element = document.getElementById('special-works');
+                          if (element) {
+                            element.scrollIntoView({ behavior: 'smooth' });
+                          }
+                        }}
+                        className="text-[12.5px] text-gray-600 hover:text-brand transition-colors py-1.5 focus-visible:text-brand focus:outline-none"
+                      >
+                        {t(item.menuKey)}
+                      </Link>
+                    ))}
                     {n.id === 'koshk' && KOSHK_ITEMS.map((item) => (
                       <Link
                         key={item.id}
@@ -622,7 +749,11 @@ function Header({
                   key={n.id}
                   to={n.path || "/"}
                   onClick={() => setOpen(false)}
-                  className={`flex items-center justify-between rounded-xl px-4 py-3 text-[13.5px] font-semibold transition border-b border-gray-100 last:border-0 ${active === n.id && location.pathname === "/"
+                  className={`flex items-center justify-between rounded-xl px-4 py-3 text-[13.5px] font-semibold transition border-b border-gray-100 last:border-0 ${(
+                    n.id === 'home'
+                      ? location.pathname === "/" && !isSpecialWorksActive && active === "home"
+                      : active === n.id && location.pathname === "/"
+                  )
                     ? "bg-brand-soft text-brand"
                     : "text-gray-700 hover:bg-gray-50"
                     }`}
@@ -1014,241 +1145,67 @@ function Hero({ onMediaLoaded }: { onMediaLoaded?: () => void }) {
 }
 
 /* ---------------------------------- Use Cases Grid ---------------------------------- */
-const USE_CASES = [
-  {
-    img: "/images/Commercial-Kiosks.webp",
-    title: "کۆشکی بازرگانی",
-    desc: "کۆشکی مۆدێرن بۆ خاڵەکانی فرۆشتن، شوێنی بلیت بڕین، دوکانی بچووک، یان دوکانی گەڕۆک(گواستراوە) دیزاین کراوە تا بزنسەکەت لە بازاڕدا دەستبەجێ دیار و جیاواز بێت",
-    features: [
-      "دیزاینێکی کراوە بە ڕووی کڕیاردا لەگەڵ شووشەی بەهێز و پارێزراو",
-      "شوێنی تایبەت بۆ دانانی لۆگۆ، تابلۆی ڕووناکی، و بڕاندینگی کۆمپانیا",
-      "سیستەمی قوفڵ و پاراستنی بەهێز بۆ کەلوپەلەکانی ناوەوە"
-    ],
-    benefits: [
-      "ڕاکێشانی سەرنجی خێرا لە شوێنە گشتییەکان و مۆڵەکاندا",
-      "ئاسانی لە گواستنەوەی کۆشکەکە بۆ جێگەیەکی نوێ بەپێی جووڵەی بازاڕ"
-    ],
-    titleEn: "Commercial Kiosk",
-    descEn: "A modern kiosk designed for points of sale, ticket counters, small shops or mobile (transportable) retail — so your business stands out instantly in the market.",
-    featuresEn: [
-      "An open design facing customers with strong, protected glazing",
-      "Dedicated space for your logo, light box and company branding",
-      "A robust lock and security system for the equipment inside"
-    ],
-    benefitsEn: [
-      "Instant attention in public spaces and malls",
-      "Easy relocation of the kiosk to a new spot as your market moves"
-    ],
-    titleAr: "الكشك التجاري",
-    descAr: "كشك عصري مصمَّم لنقاط البيع، وشبابيك بيع التذاكر، والمتاجر الصغيرة، أو المتاجر المتنقلة (القابلة للنقل) — ليبرز نشاطك التجاري فوراً وبشكل مميز في السوق.",
-    featuresAr: [
-      "تصميم مفتوح يواجه الزبائن مع زجاج قوي ومحمي",
-      "مساحة مخصصة لوضع الشعار ولوحة إضاءة وهوية الشركة",
-      "نظام قفل وحماية قوي للمعدات الداخلية"
-    ],
-    benefitsAr: [
-      "جذب الانتباه بسرعة في الأماكن العامة والمولات",
-      "سهولة نقل الكشك إلى موقع جديد بحسب حركة السوق"
-    ]
-  },
-  {
-    img: "/images/Office-seating.webp",
-    title: "ئۆفیس و شوێنی دانیشتنی تایبەت",
-    desc: "کەپسولی فرە-مەبەست بۆ دروستکردنی شوێنێکی کاری سەربەخۆ لە حەوشەی ماڵەکەت، یان وەک ژوورێکی کۆڕ و کۆبوونەوەی مۆدێرن بۆ کۆمپانیا و شوێنە بازرگانییەکان",
-    features: [
-      "عەزلی دەنگی بەهێز (Acoustic Insulation) بۆ دەستەبەرکردنی بێدەنگی و تەرکیزی بەرز",
-      "دیکۆر و ڕووناکی مۆدێرن لەگەڵ شوێنی پێویست بۆ مێز و کەلوپەلی ئۆفیس",
-      "مۆدێلی گۆڕاو بەپێی حەز و پێداویستییەکانی موشتەری"
-    ],
-    benefits: [
-      "جیاکردنەوەی ژینگەی کار لە ژیانی تایبەتی لە ماڵەوە (Remote Work)",
-      "بەخشینی سیمایەکی ناوازە و پڕۆفیشناڵ بە کۆمپانیاکەت لە کاتی کۆبوونەوەکاندا"
-    ],
-    titleEn: "Office & Private Seating Space",
-    descEn: "A multi-purpose capsule for creating an independent workspace in your yard, or a modern meeting room for companies and commercial spaces.",
-    featuresEn: [
-      "Strong acoustic insulation for silence and deep focus",
-      "Modern decor and lighting with space for desks and office equipment",
-      "A layout customizable to the client's taste and needs"
-    ],
-    benefitsEn: [
-      "Separates your work environment from private home life (remote work)",
-      "Gives your company a distinctive, professional image during meetings"
-    ],
-    titleAr: "مكتب ومساحة جلوس خاصة",
-    descAr: "كبسولة متعددة الاستخدامات لإنشاء مساحة عمل مستقلة في حديقة منزلك، أو كقاعة اجتماعات عصرية للشركات والأماكن التجارية.",
-    featuresAr: [
-      "عزل صوتي قوي (Acoustic Insulation) لتوفير الهدوء والتركيز العالي",
-      "ديكور وإضاءة عصرية مع مساحة كافية للمكتب ومعدات العمل",
-      "نموذج قابل للتغيير بحسب رغبة العميل واحتياجاته"
-    ],
-    benefitsAr: [
-      "فصل بيئة العمل عن الحياة الخاصة في المنزل (Remote Work)",
-      "إعطاء شركتك صورة مميزة واحترافية أثناء الاجتماعات"
-    ]
-  },
-  {
-    img: "/images/Resort Housing.webp",
-    title: "خانوو و شوێنی مانەوەی گەشتیاری",
-    desc: "چارەسەرێکی تەلارسازیی هاوچەرخ بۆ گوندە گەشتیارییەکان، هاوینە هەوارەکان، و ناوچە شاخاوییەکان. ئەم کەپسولانە بە تایبەت دیزاین کراون بۆ ئەوەی ببنە شوێنێکی ئاسوودەی مانەوەی گەشتیاران لەسەختترین دۆخەکانی کەش و هەوادا",
-    features: [
-      "عەزلی گەرمی و سەرمای بەهێز بۆ بەرگەگرتنی بەفر، بارانی بەخوڕ و پلەی گەرمیی بەرز",
-      "پەنجەرەی شووشەیی دەبڵ (Double Glazed)ی پانۆڕامی بۆ بینینی دیمەنە سروشتییەکان",
-      "پێکهاتەی دژە ڕزین و دژە ژەنگ بۆ بەکارهێنانی درێژخایەن لە سروشتدا"
-    ],
-    benefits: [
-      "ڕاکێشانی گەشتیاران بەهۆی دیزاینە ناوازە و قەبارە گونجاوەکەی",
-      "دامەزراندنی زۆر خێرا لە ناوچە دوورەدەستەکان بێ پێویستبوون بە ئامێری بیناسازیی قورس"
-    ],
-    titleEn: "Resort Housing & Tourist Stays",
-    descEn: "A contemporary architectural solution for tourist villages, summer resorts and mountain areas. These capsules are designed to give guests a comfortable stay in the harshest weather conditions.",
-    featuresEn: [
-      "Strong thermal insulation against snow, heavy rain and high temperatures",
-      "Panoramic double-glazed windows for viewing natural scenery",
-      "Anti-corrosion, rust-proof structure for long-term outdoor use"
-    ],
-    benefitsEn: [
-      "Attracts tourists with its distinctive design and suitable size",
-      "Very fast installation in remote areas without heavy construction machinery"
-    ],
-    titleAr: "إسكان المنتجعات والإقامات السياحية",
-    descAr: "حل معماري معاصر للقرى السياحية والمصايف والمناطق الجبلية. صُممت هذه الكبسولات خصيصاً لتكون مكاناً مريحاً لإقامة السياح في أقسى الظروف الجوية.",
-    featuresAr: [
-      "عزل حراري وبردي قوي لتحمّل الثلوج والأمطار الغزيرة ودرجات الحرارة المرتفعة",
-      "نوافذ زجاجية مزدوجة (Double Glazed) بانورامية لمشاهدة المناظر الطبيعية",
-      "هيكل مقاوم للتآكل والصدأ للاستخدام الطويل في الطبيعة"
-    ],
-    benefitsAr: [
-      "جذب السياح بفضل تصميمه الفريد وحجمه المناسب",
-      "تركيب سريع جداً في المناطق النائية دون الحاجة إلى معدات بناء ثقيلة"
-    ]
-  },
-  {
-    img: "/images/Site-Accommodation.webp",
-    title: "کەمپی کار و پڕۆژەکان",
-    desc: "یەکەی کاری خێرا و ئامادەکراو بۆ کۆمپانیاکانی بیناسازی، نەوت، و بەڵێندەرایەتی. چارەسەرێکی خێرا دەبەخشێت بۆ نیشتەجێکردنی کارمەند و ئەندازیاران لە شوێنی کارکردندا",
-    features: [
-      "پێکهاتەی ئاسنی بەهێز بۆ بەرگەگرتنی کارکردنی سەختی مەیدانی",
-      "توانای هەڵگرتن و گوواستنەوەی ئاسان بە فۆڕکلیفت یان کرێن بۆ پڕۆژەی تر",
-    ],
-    benefits: [
-      "دەستبەجێ بەکارهێنان بێ بەفیڕۆدانی کاتی بیناسازی لە شوێنی پڕۆژەکەدا",
-      "دابینکردنی ژینگەیەکی ئاسوودە و بەرزکردنەوەی ئاستی بەرهەمهێنانی کارمەندان"
-    ],
-    titleEn: "Work Camps & Project Sites",
-    descEn: "A fast, ready-to-use work unit for construction, oil and contracting companies. It provides a quick solution for housing employees and engineers on site.",
-    featuresEn: [
-      "A strong steel structure for tough on-site conditions",
-      "Easy lifting and transport by forklift or crane to another project"
-    ],
-    benefitsEn: [
-      "Immediate use with no construction time lost at the project site",
-      "A comfortable environment that raises employee productivity"
-    ],
-    titleAr: "مخيمات العمل ومواقع المشاريع",
-    descAr: "وحدة عمل سريعة وجاهزة للاستخدام لشركات البناء والنفط والمقاولات. توفّر حلاً سريعاً لإسكان الموظفين والمهندسين في موقع العمل.",
-    featuresAr: [
-      "هيكل فولاذي قوي لتحمّل ظروف العمل الميداني القاسية",
-      "إمكانية الرفع والنقل بسهولة بواسطة الرافعة الشوكية أو الرافعة إلى مشروع آخر"
-    ],
-    benefitsAr: [
-      "استخدام فوري دون إهدار وقت البناء في موقع المشروع",
-      "توفير بيئة مريحة ورفع إنتاجية الموظفين"
-    ]
-  },
-  {
-    img: "/images/Food-Trucks.webp",
-    title: "عارەبانە و کۆشکی خواردەمەنی",
-    desc: "عەرەبانە و کۆشکی ئامادەکردنی خواردن و خواردنەوە بە قەبارەی جیاواز، دیزاینکراوە بۆ دەستپێکردنی پڕۆژەی خواردەمەنی بە شێوازێکی زۆر سەرنجڕاکێش و مۆدێرن",
-    features: [
-      "دروستکردنی ڕووی ناوەوە بە ئینۆکس (Stainless Steel)ی دژە ژەنگ و ئاسان بۆ پاککردنەوە",
-      "داڕشتنی شوێنی تایبەت بۆ ئامێرەکان (ساردکەرەوە، بارێستا، گریڵ) و تۆڕی ئاوی پاک و ئاوەڕۆ",
-      "پەنجەرەی گونجاو (Serving Window) بۆ پێشکەشکردنی بەرهەمەکان بە کڕیاران"
-    ],
-    benefits: [
-      "دەستپێکردنی پڕۆژە بە تێچووی زۆر کەمتر لە بەکرێگرتنی دوکان و چێشتخانە",
-      "توانای گواستنەوەی ئاسان بۆ بەشداریکردن لە فێستیڤاڵ و شوێنە قەرەباڵغەکاندا"
-    ],
-    titleEn: "Food Trucks & Kiosks",
-    descEn: "Food and beverage preparation trucks and kiosks in various sizes, designed to launch your food project in a highly attractive, modern way.",
-    featuresEn: [
-      "Stainless-steel interior, rust-proof and easy to clean",
-      "Dedicated fittings for equipment (fridge, barista, grill) plus clean water and drainage",
-      "A serving window suited to handing products to customers"
-    ],
-    benefitsEn: [
-      "Start your project at a far lower cost than renting a shop and kitchen",
-      "Easy transport to festivals and busy locations"
-    ],
-    titleAr: "عربات وأكشاك الطعام",
-    descAr: "عربات وأكشاك لتحضير الطعام والمشروبات بأحجام مختلفة، صُممت لبدء مشروعك الغذائي بأسلوب جذاب وعصري للغاية.",
-    featuresAr: [
-      "تصميم داخلي من الستانلس ستيل (Stainless Steel) المقاوم للصدأ وسهل التنظيف",
-      "تجهيز مساحات مخصصة للمعدات (ثلاجة، ماكينة قهوة، شواية) مع شبكة مياه نظيفة وصرف",
-      "نافذة تقديم مناسبة (Serving Window) لتقديم المنتجات للزبائن"
-    ],
-    benefitsAr: [
-      "بدء المشروع بتكلفة أقل بكثير من استئجار متجر ومطبخ",
-      "إمكانية النقل بسهولة للمشاركة في المهرجانات والأماكن المزدحمة"
-    ]
-  },
-  {
-    img: "/images/Tiny-House.webp",
-    title: "یەکەی نیشتەجێبوونی بچووک",
-    desc: "یەکەیەکی نیشتەجێبوونی تەواو گونجاو بە قەبارەیەکی بچووک بۆ ئەوانەی دەیانەوێت ماڵێکی بچووک و سەربەخۆ لەسەر زەوی خۆیان یان لەناو سروشت، باخ، مەزرەعە بەپێی بەرزترین ستانداردەکانی ژیان دروست بکەن",
-    features: [
-      "دیزاینی مۆدێرنی ناوەوە (ژووری نووستن، چێشتخانە، و حەمام/توالێت)",
-      "بەکارهێنانی مەواددی دۆستی ژینگە و نەهێشتنی بەفیڕۆچوونی وزە (ساردکەرەوە و گەرمکەرەوە)",
-      "تێکهەڵکێشکردنی سیستەمی ڕووناکی سروشتی لە ڕێگەی شووشەی ژیرەوە"
-    ],
-    benefits: [
-      "کەمکردنەوەی بەرچاوی تێچووی مانگانەی کارەبا و سووتەمەنی",
-      "دابینکردنی ژینگەیەکی ئارام و تەندروست بۆ بەسەربردنی چەن مانگێک یان پشوودانی کۆتایی هەفتە"
-    ],
-    titleEn: "Small Residential Unit",
-    descEn: "A complete residential unit suited to a compact size — for those who want a small, independent home on their own land or in nature, a garden or a farm, built to the highest living standards.",
-    featuresEn: [
-      "Modern interior design (bedroom, kitchen, and bathroom/WC)",
-      "Eco-friendly materials that prevent energy waste (cooling and heating)",
-      "Natural lighting integrated through smart glazing"
-    ],
-    benefitsEn: [
-      "A significant reduction in monthly electricity and fuel costs",
-      "A calm, healthy environment for spending a few months or weekend getaways"
-    ],
-    titleAr: "وحدة سكنية صغيرة",
-    descAr: "وحدة سكنية كاملة بحجم صغير تناسب من يريد منزلاً صغيراً ومستقلاً على أرضه أو وسط الطبيعة، أو حديقة، أو مزرعة، وفق أعلى معايير المعيشة.",
-    featuresAr: [
-      "تصميم داخلي عصري (غرفة نوم، مطبخ، وحمام/دورة مياه)",
-      "استخدام مواد صديقة للبيئة ومنع هدر الطاقة (تبريد وتدفئة)",
-      "دمج الإضاءة الطبيعية من خلال الزجاج الذكي"
-    ],
-    benefitsAr: [
-      "خفض ملحوظ في التكاليف الشهرية للكهرباء والوقود",
-      "توفير بيئة هادئة وصحية لقضاء عدة أشهر أو عطلات نهاية الأسبوع"
-    ]
-  },
-];
-
 function UseCases() {
   const { t, language, dir } = useLanguage();
   const isKu = language === "ku";
   const isAr = language === "ar";
-  const [activeCase, setActiveCase] = useState(USE_CASES[0]);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const location = useLocation();
+  const workParam = searchParams.get('work');
 
-  const handleKeyDown = (e: React.KeyboardEvent, useCase: typeof USE_CASES[0]) => {
-    const currentIndex = USE_CASES.findIndex(c => c.img === useCase.img);
-    
-    if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+  const [activeCase, setActiveCase] = useState<SpecialWorkItem>(() => {
+    if (workParam) {
+      const match = SPECIAL_WORKS_ITEMS.find((c) => c.id === workParam);
+      if (match) return match;
+    }
+    return SPECIAL_WORKS_ITEMS[0];
+  });
+
+  // Sync tab with URL search parameter or hash
+  useEffect(() => {
+    if (workParam) {
+      const match = SPECIAL_WORKS_ITEMS.find((c) => c.id === workParam);
+      if (match && match.id !== activeCase.id) {
+        setActiveCase(match);
+      }
+    } else if (location.hash) {
+      const hashId = location.hash.replace('#', '');
+      const match = SPECIAL_WORKS_ITEMS.find((c) => c.id === hashId);
+      if (match && match.id !== activeCase.id) {
+        setActiveCase(match);
+      }
+    }
+  }, [workParam, location.hash, activeCase.id]);
+
+  const handleSelectCase = (useCase: SpecialWorkItem) => {
+    setActiveCase(useCase);
+    setSearchParams(
+      (prev) => {
+        const next = new URLSearchParams(prev);
+        next.set("work", useCase.id);
+        return next;
+      },
+      { replace: true }
+    );
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent, useCase: SpecialWorkItem) => {
+    const currentIndex = SPECIAL_WORKS_ITEMS.findIndex((c) => c.id === useCase.id);
+
+    if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
       e.preventDefault();
-      const direction = e.key === 'ArrowRight' ? 1 : -1;
-      const newIndex = (currentIndex + direction + USE_CASES.length) % USE_CASES.length;
-      setActiveCase(USE_CASES[newIndex]);
+      const rtlMultiplier = dir === "rtl" ? -1 : 1;
+      const direction = (e.key === "ArrowRight" ? 1 : -1) * rtlMultiplier;
+      const newIndex = (currentIndex + direction + SPECIAL_WORKS_ITEMS.length) % SPECIAL_WORKS_ITEMS.length;
+      const nextItem = SPECIAL_WORKS_ITEMS[newIndex];
+      handleSelectCase(nextItem);
+      const nextButton = document.getElementById(`tab-${nextItem.id}`);
+      nextButton?.focus();
     }
   };
 
   return (
-    <section className="bg-white py-16 sm:py-24">
+    <section id="special-works" className="bg-white py-16 sm:py-24 scroll-mt-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <Reveal className="mb-12 text-center">
           <span className="text-[14px] font-bold text-brand">
@@ -1264,25 +1221,28 @@ function UseCases() {
           <div
             className="flex overflow-x-auto snap-x snap-mandatory scrollbar-hide gap-3 pb-4 md:flex-wrap md:justify-center md:overflow-visible md:pb-0"
             role="tablist"
+            aria-label={t("nav.specialWorks")}
           >
-            {USE_CASES.map((useCase) => (
+            {SPECIAL_WORKS_ITEMS.map((useCase) => (
               <button
-                key={useCase.title}
-                onClick={() => setActiveCase(useCase)}
-                onMouseEnter={() => setActiveCase(useCase)}
+                key={useCase.id}
+                id={`tab-${useCase.id}`}
+                onClick={() => handleSelectCase(useCase)}
+                onMouseEnter={() => handleSelectCase(useCase)}
                 onKeyDown={(e) => handleKeyDown(e, useCase)}
                 role="tab"
-                aria-selected={activeCase.img === useCase.img}
-                tabIndex={activeCase.img === useCase.img ? 0 : -1}
+                aria-controls={`panel-${useCase.id}`}
+                aria-selected={activeCase.id === useCase.id}
+                tabIndex={activeCase.id === useCase.id ? 0 : -1}
                 className={`
-                  snap-center whitespace-nowrap py-2.5 px-4 rounded-full text-sm font-medium transition-all duration-300
-                  ${activeCase.img === useCase.img
+                  snap-center whitespace-nowrap py-2.5 px-4 rounded-full text-sm font-medium transition-all duration-300 focus-visible:ring-2 focus-visible:ring-brand focus-visible:outline-none
+                  ${activeCase.id === useCase.id
                     ? 'bg-brand-soft border-2 border-brand text-brand'
                     : 'bg-white border border-gray-200 text-gray-700 hover:border-brand/50 hover:bg-gray-50'
                   }
                 `}
               >
-                {isAr ? useCase.titleAr : isKu ? useCase.title : useCase.titleEn}
+                {t(useCase.menuKey)}
               </button>
             ))}
           </div>
@@ -1291,18 +1251,20 @@ function UseCases() {
         {/* Main Image Display - Grid stacking for constant height */}
         <div className="mb-12 mx-auto max-w-5xl">
           <div className="grid grid-cols-1 grid-rows-1" dir="ltr">
-            {USE_CASES.map((useCase) => (
+            {SPECIAL_WORKS_ITEMS.map((useCase) => (
               <div
-                key={useCase.img}
+                key={useCase.id}
+                id={`panel-${useCase.id}`}
+                role="tabpanel"
+                aria-labelledby={`tab-${useCase.id}`}
                 className={`
                   col-start-1 row-start-1 grid grid-cols-1 md:grid-cols-2 gap-8 items-center transition-all duration-300 ease-in-out
-                  ${activeCase.img === useCase.img
+                  ${activeCase.id === useCase.id
                     ? 'opacity-100 visible pointer-events-auto'
                     : 'opacity-0 invisible pointer-events-none'
                   }
                 `}
-                role="tabpanel"
-                aria-hidden={activeCase.img !== useCase.img}
+                aria-hidden={activeCase.id !== useCase.id}
               >
                 {/* Image - Left side */}
                 <div className="relative aspect-[4/3] overflow-hidden">
@@ -2311,12 +2273,12 @@ function AppContent() {
   useEffect(() => {
     if (location.pathname !== "/") return;
 
-    const ids = ["home", "products", "works", "contact"];
+    const ids = ["home", "special-works", "products", "works", "contact"];
     const obs = new IntersectionObserver(
       (entries) => {
         entries.forEach((e) => {
           if (e.isIntersecting) {
-            setActive(e.target.id === "works" ? "products" : e.target.id);
+            setActive(e.target.id === "works" ? "products" : e.target.id === "special-works" ? "specialWorks" : e.target.id);
           }
         });
       },

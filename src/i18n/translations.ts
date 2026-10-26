@@ -24,6 +24,7 @@ export const ku = {
   "nav.capsules": "کەپسولەکان",
   "nav.houses": "خانووەکان",
   "nav.cabins": "کابینەکان",
+  "nav.specialWorks": "کارە تایبەتەکانمان",
   "nav.koshk": "کۆشکەکان",
   "nav.artworks": "کارە هونەریەکان",
   "nav.workImages": "وێنەی کارەکانمان",
@@ -51,6 +52,12 @@ export const ku = {
   "menu.koshk.am-r": "کۆشکی AM • R",
   "menu.lighting": "عامودی لایت",
   "menu.shelves": "ڕەفەکان",
+  "menu.special.kiosk": "کۆشکی بازرگانی",
+  "menu.special.office": "ئۆفیس و شوێنی دانیشتنی تایبەت",
+  "menu.special.resortHousing": "خانوو و شوێنی مانەوەی گەشتیاری",
+  "menu.special.camps": "کەمپی کار و پڕۆژەکان",
+  "menu.special.foodTrucks": "عارەبانە و کۆشکی خواردەمەنی",
+  "menu.special.tinyHouse": "یەکەی نیشتەجێبوونی بچووک",
 
   /* ---------------- Header / shared chrome ---------------- */
   "header.contactCta": "پەیوەندیمان پێوە بکە",
@@ -424,6 +431,7 @@ export const en: Record<TranslationKey, string> = {
   "nav.capsules": "Capsules",
   "nav.houses": "Houses",
   "nav.cabins": "Cabins",
+  "nav.specialWorks": "Our Special Works",
   "nav.koshk": "Kiosks",
   "nav.artworks": "Artworks",
   "nav.workImages": "Our Work",
@@ -451,6 +459,12 @@ export const en: Record<TranslationKey, string> = {
   "menu.koshk.am-r": "AM • R Kiosk",
   "menu.lighting": "Lighting",
   "menu.shelves": "Shelves",
+  "menu.special.kiosk": "Commercial Kiosk",
+  "menu.special.office": "Office & Private Seating Space",
+  "menu.special.resortHousing": "Resort Housing & Tourist Stays",
+  "menu.special.camps": "Work Camps & Projects",
+  "menu.special.foodTrucks": "Food Trucks & Kiosks",
+  "menu.special.tinyHouse": "Compact Residential Unit",
 
   /* ---------------- Header / shared chrome ---------------- */
   "header.contactCta": "Contact Us",
@@ -825,6 +839,7 @@ export const ar: Partial<Record<TranslationKey, string>> = {
   "nav.capsules": "الكبسولات",
   "nav.houses": "المنازل",
   "nav.cabins": "الكابينات",
+  "nav.specialWorks": "أعمالنا الخاصة",
   "nav.koshk": "الأكشاك",
   "nav.artworks": "الأعمال الفنية",
   "nav.workImages": "صور أعمالنا",
@@ -852,6 +867,12 @@ export const ar: Partial<Record<TranslationKey, string>> = {
   "menu.koshk.am-r": "كشك AM • R",
   "menu.lighting": "الإضاءة",
   "menu.shelves": "الأرفف",
+  "menu.special.kiosk": "الكشك التجاري",
+  "menu.special.office": "مكتب ومساحة جلوس خاصة",
+  "menu.special.resortHousing": "إسكان المنتجعات والإقامات السياحية",
+  "menu.special.camps": "مخيمات العمل ومواقع المشاريع",
+  "menu.special.foodTrucks": "عربات وأكشاك الطعام",
+  "menu.special.tinyHouse": "وحدة سكنية صغيرة",
 
   /* ---------------- Header / shared chrome ---------------- */
   "header.contactCta": "تواصل معنا",
