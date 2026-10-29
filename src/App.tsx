@@ -32,6 +32,8 @@ import { ContactModalProvider, useContactModal } from "./contexts/ContactModalCo
 import { LanguageProvider, useLanguage } from "./contexts/LanguageContext";
 import type { TranslationKey } from "./i18n/translations";
 import { SPECIAL_WORKS_ITEMS, type SpecialWorkItem } from "./data/specialWorksData";
+import { ARTWORKS_DATA } from "./data/artworksData";
+import { ArtworksSection } from "./components/ArtworksSection";
 import { SelectiveHydration } from "./components/SelectiveHydration";
 import { Typewriter } from "./components/ui/Typewriter";
 import {
@@ -256,10 +258,7 @@ const KOSHK_ITEMS = [
   { id: "am-r", labelKey: "menu.koshk.am-r", path: "/products/am-r", isComingSoon: false },
 ] as const;
 
-const ARTWORK_ITEMS = [
-  { id: "lighting", labelKey: "menu.lighting", path: "/products/lighting", isComingSoon: false },
-  { id: "shelves", labelKey: "menu.shelves", path: "/products/shelves", isComingSoon: false },
-] as const;
+const ARTWORK_ITEMS = ARTWORKS_DATA;
 
 function Header({
   active,
@@ -326,6 +325,46 @@ function Header({
   const isSpecialWorksActive = (
     (location.pathname === "/" && isSpecialWorksInView) ||
     isSpecialWorksRouteActive
+  );
+
+  const [isArtworksInView, setIsArtworksInView] = useState(false);
+
+  // Dedicated scroll-spy observer: active ONLY while artworks is in the viewport/active zone
+  useEffect(() => {
+    if (location.pathname !== "/") {
+      setIsArtworksInView(false);
+      return;
+    }
+
+    let obs: IntersectionObserver | null = null;
+    const observeElement = () => {
+      const el = document.getElementById("artworks");
+      if (!el) return;
+
+      obs = new IntersectionObserver(
+        ([entry]) => {
+          setIsArtworksInView(entry.isIntersecting);
+        },
+        {
+          rootMargin: "-20% 0px -35% 0px",
+          threshold: 0.1,
+        }
+      );
+      obs.observe(el);
+    };
+
+    const timer = setTimeout(observeElement, 50);
+
+    return () => {
+      clearTimeout(timer);
+      if (obs) obs.disconnect();
+    };
+  }, [location.pathname]);
+
+  const isArtworksActive = (
+    (location.pathname === "/" && isArtworksInView) ||
+    location.hash === "#artworks" ||
+    location.search.includes("artwork=")
   );
 
   useEffect(() => {
@@ -489,7 +528,7 @@ function Header({
                       (n.id === 'cabins' && (location.pathname.includes('/products/zl') || location.pathname.includes('/products/pl') || location.pathname.includes('/products/concrete-house-model') || location.pathname.includes('/products/standard-house') || location.pathname.includes('/products/garden-house') || location.pathname.includes('/products/cabin-house') || location.pathname.includes('/products/concrete-house'))) ||
                       (n.id === 'koshk' && (location.pathname.includes('/products/koshk') || location.pathname.includes('/products/ka-') || location.pathname.includes('/products/am-'))) ||
                       (n.id === 'specialWorks' && isSpecialWorksActive) ||
-                      (n.id === 'artworks' && (location.pathname.includes('/products/lighting') || location.pathname.includes('/products/shelves')))
+                      (n.id === 'artworks' && (location.pathname.includes('/products/lighting') || location.pathname.includes('/products/shelves') || isArtworksActive))
                       ? "active"
                       : isOverlay ? "text-white/90 hover:text-white" : "text-gray-600 hover:text-gray-900"
                       }`}
@@ -511,9 +550,9 @@ function Header({
                         btn?.focus();
                       }
                     }}
-                    className={`absolute top-full start-0 rtl:right-0 rtl:left-auto ltr:left-0 ltr:right-auto pt-2 w-56 transition-all duration-200 ${openDropdown === n.id ? 'opacity-100 visible translate-y-0 pointer-events-auto' : 'opacity-0 invisible -translate-y-2 pointer-events-none'}`}
+                    className={`absolute top-full start-0 rtl:right-0 rtl:left-auto ltr:left-0 ltr:right-auto pt-2 ${n.id === 'artworks' ? 'w-64 sm:w-72' : 'w-56'} transition-all duration-200 ${openDropdown === n.id ? 'opacity-100 visible translate-y-0 pointer-events-auto' : 'opacity-0 invisible -translate-y-2 pointer-events-none'}`}
                   >
-                    <div className="rounded-xl shadow-xl ring-1 ring-black/5 py-2" style={{ backgroundColor: NAV_GRADIENT_COLORS.find(c => c.id === n.id)?.color || '#FFFFFF' }}>
+                    <div className="rounded-xl shadow-xl ring-1 ring-black/5 py-2 max-h-[380px] overflow-y-auto scrollbar-thin" style={{ backgroundColor: NAV_GRADIENT_COLORS.find(c => c.id === n.id)?.color || '#FFFFFF' }}>
                       {n.id === 'capsules' && CAPSULE_ITEMS.map((item) => (
                         <Link
                           key={item.id}
@@ -536,15 +575,22 @@ function Header({
                           {item.isComingSoon && <span className="ms-2 text-[11px] text-gray-500">- {t("common.comingSoonShort")}</span>}
                         </Link>
                       ))}
-                      {n.id === 'artworks' && ARTWORK_ITEMS.map((item) => (
+                      {n.id === 'artworks' && ARTWORKS_DATA.map((item) => (
                         <Link
                           key={item.id}
                           to={item.path}
-                          onClick={() => setOpenDropdown(null)}
+                          onClick={() => {
+                            setOpenDropdown(null);
+                            if (item.path.includes('#artworks')) {
+                              const element = document.getElementById('artworks');
+                              if (element) {
+                                element.scrollIntoView({ behavior: 'smooth' });
+                              }
+                            }
+                          }}
                           className="block px-4 py-2 text-[13px] font-medium text-gray-700 hover:bg-gray-50 hover:text-brand transition-colors focus-visible:bg-gray-50 focus-visible:text-brand focus:outline-none"
                         >
-                          {t(item.labelKey)}
-                          {item.isComingSoon && <span className="ms-2 text-[11px] text-gray-500">- {t("common.comingSoonShort")}</span>}
+                          {item.title}
                         </Link>
                       ))}
                       {n.id === 'cabins' && CABIN_ITEMS.map((item) => (
@@ -692,15 +738,23 @@ function Header({
                         {item.isComingSoon && <span className="ms-2 text-[10.5px] text-gray-500">- {t("common.comingSoon")}</span>}
                       </Link>
                     ))}
-                    {n.id === 'artworks' && ARTWORK_ITEMS.map((item) => (
+                    {n.id === 'artworks' && ARTWORKS_DATA.map((item) => (
                       <Link
                         key={item.id}
                         to={item.path}
-                        onClick={() => { setOpen(false); setMobileDropdowns({}); }}
+                        onClick={() => {
+                          setOpen(false);
+                          setMobileDropdowns({});
+                          if (item.path.includes('#artworks')) {
+                            const element = document.getElementById('artworks');
+                            if (element) {
+                              element.scrollIntoView({ behavior: 'smooth' });
+                            }
+                          }
+                        }}
                         className="text-[12.5px] text-gray-600 hover:text-brand transition-colors py-1.5"
                       >
-                        {t(item.labelKey)}
-                        {item.isComingSoon && <span className="ms-2 text-[10.5px] text-gray-500">- {t("common.comingSoon")}</span>}
+                        {item.title}
                       </Link>
                     ))}
                     {n.id === 'cabins' && CABIN_ITEMS.map((item) => (
@@ -2109,6 +2163,9 @@ function HomePage({ onMediaLoaded }: { onMediaLoaded?: () => void }) {
       <SelectiveHydration threshold={0.1} rootMargin="0px 0px 400px 0px">
         <SpecialFeatures />
       </SelectiveHydration>
+      <SelectiveHydration threshold={0.1} rootMargin="0px 0px 400px 0px">
+        <ArtworksSection />
+      </SelectiveHydration>
       <SlantedBanner />
       <SelectiveHydration threshold={0.1} rootMargin="0px 0px 400px 0px">
         <Process />
@@ -2273,12 +2330,20 @@ function AppContent() {
   useEffect(() => {
     if (location.pathname !== "/") return;
 
-    const ids = ["home", "special-works", "products", "works", "contact"];
+    const ids = ["home", "special-works", "artworks", "products", "works", "contact"];
     const obs = new IntersectionObserver(
       (entries) => {
         entries.forEach((e) => {
           if (e.isIntersecting) {
-            setActive(e.target.id === "works" ? "products" : e.target.id === "special-works" ? "specialWorks" : e.target.id);
+            setActive(
+              e.target.id === "works"
+                ? "products"
+                : e.target.id === "special-works"
+                ? "specialWorks"
+                : e.target.id === "artworks"
+                ? "artworks"
+                : e.target.id
+            );
           }
         });
       },
